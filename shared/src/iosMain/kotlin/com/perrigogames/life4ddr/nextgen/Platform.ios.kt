@@ -1,5 +1,7 @@
 package com.perrigogames.life4ddr.nextgen
 
+import platform.Foundation.NSNumber
+import platform.Foundation.NSNumberFormatter
 import platform.UIKit.UIDevice
 
 class IOSPlatform: Platform {
@@ -7,3 +9,11 @@ class IOSPlatform: Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
+
+actual fun Int.longNumberString(): String {
+    return NSNumberFormatter().let { format ->
+        format.usesGroupingSeparator = true
+        // format.locale = NSLocale.currentLocale() TODO figure out locale
+        format.stringFromNumber(NSNumber(this))!!
+    }
+}
