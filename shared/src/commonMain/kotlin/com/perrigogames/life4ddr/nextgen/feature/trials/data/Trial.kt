@@ -9,6 +9,7 @@
 
 package com.perrigogames.life4ddr.nextgen.feature.trials.data
 
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.data.MajorVersioned
 import com.perrigogames.life4ddr.nextgen.data.PlacementRank
 import com.perrigogames.life4ddr.nextgen.data.PlacementRankSerializer
@@ -21,16 +22,17 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRankSerializer
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialType
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialTypeSerializer
+import dev.icerock.moko.resources.desc.image.asImageDesc
+import dev.icerock.moko.resources.getImageByFileName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
+import kotlin.getValue
 import kotlin.math.min
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 // TODO InstantIso8601Serializer
-// TODO MokoResources
 // TODO KotlinxDatetime
 
 @Serializable
@@ -66,9 +68,9 @@ data class Trial(
     @SerialName("cover_override") val coverOverride: Boolean = false,
 ) {
 
-//    val coverResource by lazy {
-//        MR.images.getImageByFileName(id)?.asImageDesc()
-//    }
+    val coverResource by lazy {
+        MR.images.getImageByFileName(id)?.asImageDesc()
+    }
 
     val isRetired: Boolean = state == TrialState.RETIRED
     val isEvent: Boolean = type == TrialType.EVENT // FIXME KotlinxDatetime

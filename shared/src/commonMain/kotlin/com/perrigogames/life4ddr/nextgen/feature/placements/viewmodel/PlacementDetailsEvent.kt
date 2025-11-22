@@ -1,18 +1,19 @@
 package com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel
 
-// TODO MokoResources
+import dev.icerock.moko.resources.desc.StringDesc
+
 sealed class PlacementDetailsEvent {
 
     data object ShowCamera: PlacementDetailsEvent()
 
     data class ShowTooltip(
-        val title: String, // TODO MokoResources
-        val message: String, // TODO MokoResources
-        val ctaText: String, // TODO MokoResources
+        val title: StringDesc,
+        val message: StringDesc,
+        val ctaText: StringDesc,
         val ctaAction: PlacementDetailsAction,
     ) : PlacementDetailsEvent()
 
     data class NavigateToMainScreen(
-        val submissionUrl: String? = null, // TODO MokoResources
+        val submissionUrl: StringDesc? = null,
     ) : PlacementDetailsEvent()
 }
