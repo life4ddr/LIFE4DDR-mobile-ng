@@ -1,7 +1,12 @@
 package com.perrigogames.life4ddr.nextgen.enums
 
-// TODO MokoResources
-/*
+import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.data.PlacementRank
+import com.perrigogames.life4ddr.nextgen.feature.ladder.enum.RankGoalUserType
+import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
+import dev.icerock.moko.resources.desc.ResourceFormatted
+import dev.icerock.moko.resources.desc.StringDesc
+
 val DifficultyClass.nameRes get() = when(this) {
     DifficultyClass.BEGINNER -> MR.strings.beginner
     DifficultyClass.BASIC -> MR.strings.basic
@@ -260,4 +265,3 @@ val ClearType.colorRes get() = when(this) {
     ClearType.SINGLE_DIGIT_PERFECTS -> MR.colors.perfect
     ClearType.MARVELOUS_FULL_COMBO -> MR.colors.marvelous
 }
-*/

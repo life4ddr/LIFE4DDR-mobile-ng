@@ -1,4 +1,3 @@
-import dev.icerock.gradle.MRVisibility
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -27,10 +26,12 @@ kotlin {
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.sqldelight.coroutines)
+            api(libs.moko.resources.core)
             api(libs.moko.resources.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            api(libs.moko.resources.test)
         }
         androidMain.dependencies {
             implementation(libs.sqldelight.android)

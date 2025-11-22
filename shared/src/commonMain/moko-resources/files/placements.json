@@ -1,0 +1,110 @@
+{
+    "version": 2,
+    "major_version": 1,
+    "trials": [
+        {
+            "id": "copper_placement",
+            "name": "COPPER",
+            "type": "placement",
+            "placement_rank": "copper",
+            "songs": [
+                {
+                    "skillId": "qdbDo1oP6D9ioODd1dQO0QObObidilbP",
+                    "difficulty_class": "basic",
+                    "ex": 537,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/TECH-NOID-jacket.webp"
+                },
+                {
+                    "skillId": "I61ioI01IOPDPbP1OO0l98PD0iDbid0D",
+                    "difficulty_class": "basic",
+                    "ex": 834,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/ZEPHYRANTHES-jacket.webp"
+                },
+                {
+                    "skillId": "Qbbqd9O98bl0DobQ9l6blO8iOPP8QdDd",
+                    "difficulty_class": "difficult",
+                    "ex": 1775,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Sephirot-jacket.webp"
+                }
+            ]
+        },
+        {
+            "id": "bronze_placement",
+            "name": "BRONZE",
+            "type": "placement",
+            "placement_rank": "bronze",
+            "songs": [
+                {
+                    "skillId": "Qo9P1oOoDQIoOb8Dd0PdOdoD1D1Pbd8D",
+                    "difficulty_class": "expert",
+                    "ex": 621,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/AFTER+THE+GAME+OF+LOVE-jacket.webp"
+                },
+                {
+                    "skillId": "Oi1DI99DO6i6llQ8DDD6oDqOQqiP118d",
+                    "difficulty_class": "expert",
+                    "ex": 969,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/DANCE+ALL+NIGHT+(DDR+EDITION)-jacket.webp"
+                },
+                {
+                    "skillId": "l6qQi9qlO8diPd18dl6DdqPid01P91iQ",
+                    "difficulty_class": "expert",
+                    "ex": 1062,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Ha-lle-lu-jah-jacket.webp"
+                }
+            ]
+        },
+        {
+            "id": "silver_placement",
+            "name": "SILVER",
+            "type": "placement",
+            "placement_rank": "silver",
+            "songs": [
+                {
+                    "skillId": "iIP09bOq1l1b9b1l011IDIQ6Iill90Io",
+                    "difficulty_class": "expert",
+                    "ex": 1080,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/BROKEN+MY+HEART-jacket.webp"
+                },
+                {
+                    "skillId": "bPb96lbDP9OdI0Oi1189iOPPdllPIDQb",
+                    "difficulty_class": "expert",
+                    "ex": 1266,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Ishtar-jacket.webp"
+                },
+                {
+                    "skillId": "Do6oPoo1QbOPo9DIii0Q0180l8b1Doqi",
+                    "difficulty_class": "challenge",
+                    "ex": 1542,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/SABER+WING+(satellite+silhouette+remix)-jacket.webp"
+                }
+            ]
+        },
+        {
+            "id": "gold_placement",
+            "name": "GOLD",
+            "type": "placement",
+            "placement_rank": "gold",
+            "songs": [
+                {
+                    "skillId": "i19IOi90Dq90ll989iIdOP9diodqi968",
+                    "difficulty_class": "challenge",
+                    "ex": 1482,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Confession-jacket.webp"
+                },
+                {
+                    "skillId": "6obQo6d0oQ6QoQql0I60b81IO8IOl1IO",
+                    "difficulty_class": "expert",
+                    "ex": 1494,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Air+Heroes-jacket.webp"
+                },
+                {
+                    "skillId": "60P9IPOdi1OIbD61D8i0D9ODoq6QOIPO",
+                    "difficulty_class": "challenge",
+                    "ex": 2025,
+                    "url": "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/RISING+FIRE+HAWK-jacket.webp"
+                }
+            ]
+        }
+    ]
+}
