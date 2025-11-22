@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization)
             implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.ksoup.entities)
             implementation(libs.koin.core)
             implementation(libs.sqldelight.coroutines)
             api(libs.moko.resources.core)
