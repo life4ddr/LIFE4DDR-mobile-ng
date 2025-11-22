@@ -1,0 +1,34 @@
+package com.perrigogames.life4ddr.nextgen.model
+
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlin.coroutines.CoroutineContext
+
+// TODO Koin
+// TODO Logger
+@Deprecated("This should have a replacement by now")
+open class BaseModel /*: KoinComponent*/ {
+    val mainScope = MainScope(Dispatchers.Main)
+    val ktorScope = MainScope(Dispatchers.Main)
+
+    open fun onDestroy() {
+        mainScope.job.cancel()
+        ktorScope.job.cancel()
+    }
+}
+
+@Deprecated("This should have a replacement by now")
+class MainScope(private val mainContext: CoroutineContext) : CoroutineScope/*, KoinComponent*/ {
+
+//    private val logger: Logger by injectLogger("MainScope")
+
+    override val coroutineContext: CoroutineContext
+        get() = mainContext + job + exceptionHandler
+
+    internal val job = SupervisorJob()
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+//        logger.e(throwable) { "Coroutine exception encountered" }
+    }
+}
