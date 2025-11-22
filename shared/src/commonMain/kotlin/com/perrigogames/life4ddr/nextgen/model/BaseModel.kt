@@ -4,12 +4,12 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import org.koin.core.component.KoinComponent
 import kotlin.coroutines.CoroutineContext
 
-// TODO Koin
 // TODO Logger
 @Deprecated("This should have a replacement by now")
-open class BaseModel /*: KoinComponent*/ {
+open class BaseModel : KoinComponent {
     val mainScope = MainScope(Dispatchers.Main)
     val ktorScope = MainScope(Dispatchers.Main)
 

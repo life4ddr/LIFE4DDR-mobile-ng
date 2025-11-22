@@ -22,6 +22,8 @@ kotlin {
             // put your Multiplatform dependencies here
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.kotlinx.serialization)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

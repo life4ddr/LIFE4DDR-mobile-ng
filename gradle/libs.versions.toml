@@ -15,6 +15,7 @@ junit = "4.13.2"
 kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
+koin-bom = "4.1.0"
 ktor = "3.3.2"
 logback = "1.5.21"
 
@@ -32,6 +33,8 @@ androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
 ktor-serverCore = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-serverNetty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-serverTestHost = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
