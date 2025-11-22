@@ -1,9 +1,11 @@
+import dev.icerock.gradle.MRVisibility
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.mokoResources)
 }
 
 kotlin {
@@ -25,6 +27,7 @@ kotlin {
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.sqldelight.coroutines)
+            api(libs.moko.resources.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -58,4 +61,8 @@ sqldelight {
         packageName.set("com.perrigogames.life4ddr.nextgen")
 //        dialect("sqlite:3.24")
     }
+}
+
+multiplatformResources {
+    resourcesPackage.set("com.perrigogames.life4ddr.nextgen")
 }

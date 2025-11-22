@@ -12,3 +12,13 @@ plugins {
     alias(libs.plugins.ktor) apply false
     alias(libs.plugins.sqldelight) apply false
 }
+
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath(libs.moko.resources.generator)
+    }
+}
