@@ -1,4 +1,4 @@
-package com.perrigogames.life4ddr.nextgen.data
+package com.perrigogames.life4ddr.nextgen.feature.profile.data
 
 /**
  * Sealed class denoting the different social networks available in the app, as well as

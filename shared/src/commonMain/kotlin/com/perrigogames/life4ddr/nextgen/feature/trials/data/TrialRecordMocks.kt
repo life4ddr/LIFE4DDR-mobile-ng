@@ -1,0 +1,48 @@
+package com.perrigogames.life4ddr.nextgen.feature.trials.data
+
+import com.perrigogames.life4ddr.nextgen.db.TrialSession
+import com.perrigogames.life4ddr.nextgen.db.TrialSong
+import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+
+@OptIn(ExperimentalTime::class)
+object TrialRecordMocks {
+    fun createTrialSession(
+        id: Long = 1L,
+        trialId: String = "mock_trial",
+        date: String = Clock.System.now().toString(),
+        goalRank: TrialRank,
+        goalObtained: Boolean = true,
+    ) = TrialSession(
+        id = id,
+        trialId = trialId,
+        date = date,
+        goalRank = goalRank,
+        goalObtained = goalObtained,
+    )
+
+    fun createTrialSong(
+        id: Long = 1L,
+        sessionId: Long = 1L,
+        position: Long = 1L,
+        score: Long = 0,
+        exScore: Long = 0,
+        misses: Long? = null,
+        goods: Long? = null,
+        greats: Long? = null,
+        perfects: Long? = null,
+        passed: Boolean = true,
+    ) = TrialSong(
+        id = id,
+        sessionId = sessionId,
+        position = position,
+        score = score,
+        exScore = exScore,
+        misses = misses,
+        goods = goods,
+        greats = greats,
+        perfects = perfects,
+        passed = passed,
+    )
+}
