@@ -1,13 +1,15 @@
 package com.perrigogames.life4ddr.nextgen.enums
 
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.data.StableId
+import dev.icerock.moko.resources.desc.Resource
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-// FIXME MokoResources
 /**
  * Enum to describe a style of play, distinguishing between charts that use one pad
  * versus charts that use both.
@@ -15,10 +17,10 @@ import kotlinx.serialization.encoding.Encoder
 enum class PlayStyle(
     override val stableId: Long,
     val aggregateSuffix: String,
-//    val uiName: StringDesc
+    val uiName: StringDesc
 ): StableId {
-    SINGLE(1, "SP", /*StringDesc.Resource(MR.strings.play_style_single)*/),
-    DOUBLE(2, "DP", /*StringDesc.Resource(MR.strings.play_style_double)*/);
+    SINGLE(1, "SP", StringDesc.Resource(MR.strings.play_style_single)),
+    DOUBLE(2, "DP", StringDesc.Resource(MR.strings.play_style_double));
 
     fun aggregateString(difficultyClass: DifficultyClass) = "${difficultyClass.aggregatePrefix}$aggregateSuffix"
 

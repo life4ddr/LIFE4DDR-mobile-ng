@@ -1,0 +1,39 @@
+package com.perrigogames.life4ddr.nextgen.feature.ladder.view
+
+import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
+import com.perrigogames.life4ddr.nextgen.enums.colorRes
+import com.perrigogames.life4ddr.nextgen.longNumberString
+import dev.icerock.moko.resources.desc.Raw
+import dev.icerock.moko.resources.desc.StringDesc
+import kotlin.random.Random
+
+object UILadderMocks {
+
+    fun createUILadderGoal(
+        id: Long = 0,
+        goalText: String = "Perform this generic action",
+        completed: Boolean = false,
+        hidden: Boolean = false,
+        canHide: Boolean = true,
+        progress: UILadderProgress? = null,
+        detailItems: List<UILadderDetailItem> = emptyList(),
+    ) = UILadderGoal(
+        id = id,
+        goalText = StringDesc.Raw(goalText),
+        completed = completed,
+        hidden = hidden,
+        canHide = canHide,
+        progress = progress,
+        detailItems = detailItems,
+    )
+
+    fun createSongDetailItem(
+        songName: String,
+        difficultyClass: DifficultyClass? = null,
+        score: Int = 1_000_000 - Random.nextInt(100, 50000)
+    ) = UILadderDetailItem.Entry(
+        leftText = songName,
+        leftColor = difficultyClass?.colorRes,
+        rightText = score.longNumberString()
+    )
+}

@@ -1,5 +1,6 @@
-package com.perrigogames.life4ddr.nextgen.data
+package com.perrigogames.life4ddr.nextgen.feature.motd.data
 
+import com.perrigogames.life4ddr.nextgen.data.Versioned
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

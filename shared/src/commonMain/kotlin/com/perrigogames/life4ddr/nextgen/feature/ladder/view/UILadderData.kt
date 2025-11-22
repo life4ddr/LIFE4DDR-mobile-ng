@@ -1,0 +1,163 @@
+package com.perrigogames.life4ddr.nextgen.feature.ladder.view
+
+import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
+import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
+import com.perrigogames.life4ddr.nextgen.util.toStringWithoutDecimal
+import dev.icerock.moko.resources.ColorResource
+import dev.icerock.moko.resources.desc.StringDesc
+
+typealias CategorizedUILadderGoals = List<Pair<UILadderGoals.CategorizedList.Category, List<UILadderGoal>>>
+
+data class UILadderData(
+    val targetRankClass: LadderRankClass,
+    val goals: UILadderGoals,
+    val substitutions: UILadderGoals? = null
+) {
+
+    val hasSubstitutions get() = substitutions?.rawGoals?.isNotEmpty() == true
+}
+
+sealed class UILadderGoals {
+
+    abstract val rawGoals: List<UILadderGoal>
+    abstract fun replaceGoal(id: Long, block: (UILadderGoal) -> UILadderGoal): UILadderGoals
+
+    data class SingleList(val items: List<UILadderGoal>) : UILadderGoals() {
+
+        override val rawGoals get() = items
+
+        override fun replaceGoal(id: Long, block: (UILadderGoal) -> UILadderGoal) = copy(
+            items = items.map { currGoal ->
+                if (currGoal.id == id) {
+                    block(currGoal)
+                } else {
+                    currGoal
+                }
+            }
+        )
+    }
+
+    data class CategorizedList(val categories: CategorizedUILadderGoals) : UILadderGoals() {
+
+        override val rawGoals get() = categories.flatMap { it.second }
+
+        override fun replaceGoal(id: Long, block: (UILadderGoal) -> UILadderGoal) = copy(
+            categories = categories.map { category ->
+                if (category.second.any { it.id == id}) {
+                    category.copy(
+                        second = category.second.map { currGoal ->
+                            if (currGoal.id == id) {
+                                block(currGoal)
+                            } else {
+                                currGoal
+                            }
+                        }
+                    )
+                } else {
+                    category
+                }
+            }
+        )
+
+        data class Category(
+            val title: StringDesc? = null,
+            val goalText: StringDesc? = null
+        )
+    }
+}
+
+data class UILadderGoal(
+    val id: Long,
+    val goalText: StringDesc,
+    val completed: Boolean = false,
+    val completeAction: GoalListInput? = null,
+    val showCheckbox: Boolean = true,
+    val hidden: Boolean = false,
+    val hideAction: GoalListInput? = null,
+    val progress: UILadderProgress? = null,
+    val expandAction: GoalListInput? = null,
+    val detailItems: List<UILadderDetailItem> = emptyList(),
+    val debugText: String? = null,
+) {
+    constructor(
+        id: Long,
+        goalText: StringDesc,
+        completed: Boolean = false,
+        canComplete: Boolean = true,
+        showCheckbox: Boolean = true,
+        hidden: Boolean = false,
+        canHide: Boolean = true,
+        progress: UILadderProgress? = null,
+        expandAction: GoalListInput? = null,
+        detailItems: List<UILadderDetailItem> = emptyList(),
+        debugText: String? = null,
+    ) : this (
+        id = id,
+        goalText = goalText,
+        completed = completed,
+        completeAction = when (canComplete) {
+            true -> GoalListInput.OnGoal.ToggleComplete(id)
+            false -> null
+        },
+        showCheckbox = showCheckbox,
+        hidden = hidden,
+        hideAction = when (canHide) {
+            true -> GoalListInput.OnGoal.ToggleHidden(id)
+            false -> null
+        },
+        progress = progress,
+        expandAction = expandAction,
+        detailItems = detailItems,
+        debugText = debugText,
+    )
+}
+
+data class UILadderProgress(
+    val progressPercent: Float,
+    val progressText: String,
+    val showProgressBar: Boolean = true,
+) {
+    constructor(
+        count: Int,
+        max: Int,
+        showMax: Boolean = true,
+        showProgressBar: Boolean = true,
+    ) : this(
+        progressPercent = count.toFloat() / max.toFloat(),
+        progressText = if (showMax) {
+            "$count / $max"
+        } else {
+            "$count"
+        },
+        showProgressBar = showProgressBar,
+    )
+
+    constructor(
+        count: Double,
+        max: Double,
+        showMax: Boolean = true,
+        showProgressBar: Boolean = true,
+    ) : this(
+        progressPercent = (count / max).toFloat(),
+        progressText = if (showMax) {
+            "${count.toStringWithoutDecimal()} / ${max.toStringWithoutDecimal()}"
+        } else {
+            count.toStringWithoutDecimal()
+        },
+        showProgressBar = showProgressBar
+    )
+}
+
+sealed class UILadderDetailItem {
+
+    data class Entry(
+        val leftText: String,
+        val leftColor: ColorResource? = null,
+        val leftWeight: Float = 0.8f,
+        val rightText: String? = null,
+        val rightColor: ColorResource? = null,
+        val rightWeight: Float = 0.2f,
+    ) : UILadderDetailItem()
+
+    data object Spacer : UILadderDetailItem()
+}

@@ -1,17 +1,17 @@
 package com.perrigogames.life4ddr.nextgen.api
 
-import com.perrigogames.life4ddr.nextgen.data.MessageOfTheDay
+import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderRankData
+import com.perrigogames.life4ddr.nextgen.feature.motd.data.MessageOfTheDay
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialData
 
-// FIXME LadderRanks
-// FIXME Trials
 /**
  * API interface for obtaining core application files from Github
  */
 interface GithubDataAPI {
 
-//    suspend fun getLadderRanks(): LadderRankData
+    suspend fun getLadderRanks(): LadderRankData
     suspend fun getSongList(): String
-//    suspend fun getTrials(): TrialData
+    suspend fun getTrials(): TrialData
     suspend fun getMotd(): MessageOfTheDay
 
     companion object {
