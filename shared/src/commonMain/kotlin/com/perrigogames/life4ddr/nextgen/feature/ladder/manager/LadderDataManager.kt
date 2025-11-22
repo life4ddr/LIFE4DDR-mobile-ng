@@ -16,8 +16,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 
-// TODO Settings
-
 /**
  * Manager class that deals with determining the correct ladder data to serve based on
  * the selected game version.
@@ -25,7 +23,7 @@ import org.koin.core.component.inject
 class LadderDataManager: BaseModel() {
 
     private val ladderDialogs: LadderDialogs by inject()
-//    private val ladderSettings: LadderSettings by inject()
+    private val ladderSettings: LadderSettings by inject()
 
     //
     // Ladder Data
@@ -41,8 +39,7 @@ class LadderDataManager: BaseModel() {
     private val _ladderDataForGameVersion: Flow<LadderVersion?> =
         combine(
             _ladderData.filterNotNull(),
-            flowOf(GameVersion.defaultVersion) // TODO Settings
-//            ladderSettings.selectedGameVersion
+            ladderSettings.selectedGameVersion
         ) { ladderData, selectedVersion ->
             ladderData.gameVersions[selectedVersion]
         }

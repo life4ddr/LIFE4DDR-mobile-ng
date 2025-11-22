@@ -1,54 +1,11 @@
-package com.perrigogames.life4ddr.nextgen.api
+package com.perrigogames.life4ddr.nextgen.feature.sanbai.data
 
-import com.perrigogames.life4ddr.nextgen.data.Versioned
 import com.perrigogames.life4ddr.nextgen.db.ChartResult
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
-
-interface SanbaiAPI {
-    suspend fun getSongData(): SongListResponse
-
-    fun getAuthorizeUrl(): String
-    suspend fun getSessionToken(code: String): SanbaiAuthTokenResponse
-    suspend fun getScores(): List<SanbaiScoreResult>?
-    suspend fun getPlayerId(): String
-
-    companion object {
-        const val SANBAI_CLIENT_ID = "SECRET"
-        const val SANBAI_CLIENT_SECRET = "SECRET"
-    }
-}
-
-@OptIn(ExperimentalTime::class)
-@Serializable
-data class SongListResponse(
-    val lastUpdated: Instant,
-    val songs: List<SongListResponseItem>
-) : Versioned {
-
-    override val version: Long
-        get() = lastUpdated.epochSeconds
-}
-
-@Serializable
-data class SongListResponseItem(
-    @SerialName("song_id") val songId: String,
-    @SerialName("song_name") val songName: String,
-    @SerialName("alternate_name") val alternateName: String? = null,
-    @SerialName("searchable_name") val searchableName: String? = null,
-    @SerialName("romanized_name") val romanizedName: String? = null,
-    val alphabet: String,
-    val deleted: Int? = null,
-    @SerialName("version_num") val versionNum: Int,
-    val ratings: List<Int>,
-    val tiers: List<Double>,
-    @SerialName("lock_types") val lockTypes: List<Int>? = null
-)
 
 @Serializable
 data class SanbaiScoreResult(

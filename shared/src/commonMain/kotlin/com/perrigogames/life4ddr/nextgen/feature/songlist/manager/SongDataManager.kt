@@ -1,9 +1,8 @@
 package com.perrigogames.life4ddr.nextgen.feature.songlist.manager
 
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.api.SanbaiAPI
-import com.perrigogames.life4ddr.nextgen.api.SongListResponse
-import com.perrigogames.life4ddr.nextgen.api.SongListResponseItem
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponseItem
 import com.perrigogames.life4ddr.nextgen.api.base.FetchListener
 import com.perrigogames.life4ddr.nextgen.api.base.unwrapLoaded
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
@@ -12,6 +11,7 @@ import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
 import com.perrigogames.life4ddr.nextgen.feature.banners.IBannerManager
 import com.perrigogames.life4ddr.nextgen.feature.banners.UIBannerTemplates
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponse
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Song
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.SongListRemoteData
