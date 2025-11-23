@@ -1,7 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.manager
 
 import com.perrigogames.life4ddr.nextgen.api.base.unwrapLoaded
-import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderRankData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderRemoteData
@@ -11,7 +10,6 @@ import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -23,7 +21,7 @@ import org.koin.core.component.inject
 class LadderDataManager: BaseModel() {
 
     private val ladderDialogs: LadderDialogs by inject()
-    private val ladderSettings: LadderSettings by inject()
+    private val ladderSettings: DefaultLadderSettings by inject()
 
     //
     // Ladder Data

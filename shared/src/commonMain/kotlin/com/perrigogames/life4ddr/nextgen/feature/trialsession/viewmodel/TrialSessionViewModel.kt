@@ -4,7 +4,7 @@ import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.enums.nameRes
-import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankManager
+import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialGoalStrings
@@ -37,7 +37,7 @@ import org.koin.core.component.inject
 
 class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
 
-    private val userRankManager: UserRankManager by inject()
+    private val userRankSettings: UserRankSettings by inject()
     private val trialDataManager: TrialDataManager by inject()
     private val trialRecordsManager: TrialRecordsManager by inject()
     private val logger by injectLogger("TrialSessionViewModel")
@@ -162,7 +162,7 @@ class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
                 .firstOrNull { it.trialId == trialId }
             val allowedRanks = trial.goals?.map { it.rank } ?: emptyList()
             val rank = getStartingRank(
-                playerRank = userRankManager.rank.value,
+                playerRank = userRankSettings.rank.value,
                 bestRank = bestSession?.goalRank,
                 allowedRanks = allowedRanks
             )

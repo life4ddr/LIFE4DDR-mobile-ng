@@ -8,7 +8,7 @@ import com.perrigogames.life4ddr.nextgen.enums.clearResShort
 import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
-import com.perrigogames.life4ddr.nextgen.feature.banners.IBannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
 import com.perrigogames.life4ddr.nextgen.feature.banners.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
@@ -39,7 +39,7 @@ class ScoreListViewModel: ViewModel(), KoinComponent {
     private val resultOrganizer: ChartResultOrganizer by inject()
     private val sanbaiAPI: SanbaiAPI by inject()
     private val sanbaiManager: SanbaiManager by inject()
-    private val bannerManager: IBannerManager by inject()
+    private val bannerManager: BannerManager by inject()
     private val songResultSettings: SongResultSettings by inject()
 
     private val filterViewModel = FilterPanelViewModel()

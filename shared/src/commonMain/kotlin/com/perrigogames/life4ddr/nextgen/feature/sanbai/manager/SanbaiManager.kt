@@ -3,11 +3,10 @@ package com.perrigogames.life4ddr.nextgen.feature.sanbai.manager
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
-import com.perrigogames.life4ddr.nextgen.feature.banners.IBannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
 import com.perrigogames.life4ddr.nextgen.feature.banners.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.banners.UIBannerTemplates
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPISettings
-import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.toChartResult
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import dev.icerock.moko.resources.desc.desc
 import org.koin.core.component.inject
@@ -30,7 +29,7 @@ class DefaultSanbaiManager : BaseModel(), SanbaiManager {
     private val sanbaiAPI: SanbaiAPI by inject()
     private val sanbaiAPISettings: SanbaiAPISettings by inject()
 //    private val songResultsManager: SongResultsManager by inject()
-    private val bannersManager: IBannerManager by inject()
+    private val bannersManager: BannerManager by inject()
 
     override fun requiresAuthorization(): Boolean {
         return sanbaiAPISettings.refreshExpires < Clock.System.now()

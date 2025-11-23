@@ -16,7 +16,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Interface for managing and retrieving banners based on their display location.
  */
-interface IBannerManager {
+interface BannerManager {
 
     /**
      * Retrieves a StateFlow containing the banner currently displayed at a specified location.
@@ -42,7 +42,7 @@ interface IBannerManager {
     )
 }
 
-class BannerManager : IBannerManager, BaseModel() {
+class DefaultBannerManager : BannerManager, BaseModel() {
 
     private val _banners = mutableMapOf<BannerLocation, MutableStateFlow<UIBanner?>>()
 

@@ -18,7 +18,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoals
-import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankManager
+import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import dev.icerock.moko.mvvm.flow.CStateFlow
@@ -41,13 +41,13 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
     private val goalStateManager: GoalStateManager by inject()
     private val ladderGoalProgressManager: LadderGoalProgressManager by inject()
     private val ladderGoalMapper: LadderGoalMapper by inject()
-    private val userRankManager: UserRankManager by inject()
+    private val userRankSettings: UserRankSettings by inject()
     private val maSettings: MASettings by inject()
     private val logger by injectLogger("GoalListViewModel")
 
     private val targetRankFlow: Flow<LadderRank?> = config.targetRank
         ?.let { flowOf(it) }
-        ?: userRankManager.targetRank
+        ?: userRankSettings.targetRank
 
     private val requirementsStateFlow: StateFlow<RankEntry?> = targetRankFlow
         .flatMapLatest { targetRank ->

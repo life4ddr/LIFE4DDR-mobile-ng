@@ -2,13 +2,13 @@ package com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel
 
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
-import com.perrigogames.life4ddr.nextgen.feature.banners.IBannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
 import com.perrigogames.life4ddr.nextgen.feature.banners.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.GoalListConfig
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
-import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankManager
+import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import dev.icerock.moko.mvvm.flow.CStateFlow
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
@@ -21,9 +21,9 @@ import org.koin.core.component.inject
 
 class PlayerProfileViewModel : ViewModel(), KoinComponent {
 
-    private val userRankManager: UserRankManager by inject()
+    private val userRankSettings: UserRankSettings by inject()
     private val infoSettings: UserInfoSettings by inject()
-    private val bannerManager: IBannerManager by inject()
+    private val bannerManager: BannerManager by inject()
 
     private val _playerInfoViewState = MutableStateFlow(PlayerInfoViewState()).cMutableStateFlow()
     val playerInfoViewState: CStateFlow<PlayerInfoViewState> = _playerInfoViewState.cStateFlow()
@@ -36,7 +36,7 @@ class PlayerProfileViewModel : ViewModel(), KoinComponent {
                 infoSettings.userName,
                 infoSettings.rivalCodeDisplay,
                 infoSettings.socialNetworks,
-                userRankManager.rank,
+                userRankSettings.rank,
                 bannerManager.getBannerFlow(BannerLocation.PROFILE)
             ) { userName, rivalCode, socialNetworks, rank, banner ->
                 PlayerInfoViewState(userName, rivalCode, socialNetworks, rank, banner)

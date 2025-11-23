@@ -38,7 +38,7 @@ interface GithubDataAPI {
     }
 }
 
-class DefaultGithubData: GithubDataAPI, KoinComponent {
+class DefaultGithubDataAPI: GithubDataAPI, KoinComponent {
 
     private val appInfo: AppInfo by inject()
     private val logger by injectLogger("GithubData")

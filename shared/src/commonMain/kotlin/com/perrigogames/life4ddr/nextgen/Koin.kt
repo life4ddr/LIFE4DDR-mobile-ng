@@ -3,20 +3,66 @@ package com.perrigogames.life4ddr.nextgen
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
+import com.perrigogames.life4ddr.nextgen.api.DefaultGithubDataAPI
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI
+import com.perrigogames.life4ddr.nextgen.api.base.LocalDataReader
+import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
+import com.perrigogames.life4ddr.nextgen.feature.banners.DefaultBannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
+import com.perrigogames.life4ddr.nextgen.feature.deeplink.DefaultDeeplinkManager
+import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.DefaultFirstRunSettings
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.FirstRunSettings
+import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderGoalMapper
+import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.db.GoalDatabaseHelper
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.GoalStateManager
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDataManager
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderGoalProgressManager
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.DefaultLadderSettings
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
+import com.perrigogames.life4ddr.nextgen.feature.motd.data.MotdLocalRemoteData
+import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdManager
+import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdSettings
+import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdManager
+import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdSettings
+import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
+import com.perrigogames.life4ddr.nextgen.feature.profile.manager.DefaultUserInfoSettings
+import com.perrigogames.life4ddr.nextgen.feature.profile.manager.DefaultUserRankSettings
+import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
+import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.DefaultSanbaiAPI
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.DefaultSanbaiAPISettings
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPISettings
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.DefaultSanbaiManager
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
+import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsPageProvider
+import com.perrigogames.life4ddr.nextgen.feature.songlist.data.SongListRemoteData
+import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.DefaultSongDataManager
+import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultSongResultSettings
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialRecordsManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
+import com.perrigogames.life4ddr.nextgen.model.MajorUpdateManager
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
-
-// TODO Ktor
 
 typealias NativeInjectionFactory<T> = Scope.() -> T
 
@@ -40,34 +86,33 @@ val coreModule = module {
     single { ResultDatabaseHelper(get()) }
     single { TrialDatabaseHelper(get()) }
 
-//    single<GithubDataAPI> { GithubDataImpl() }
-//    single<SanbaiAPI> { SanbaiAPIImpl() }
+    single<GithubDataAPI> { DefaultGithubDataAPI() }
+    single<SanbaiAPI> { DefaultSanbaiAPI() }
     single { Json { classDiscriminator = "t" } }
 
-//    single { PlacementManager() }
-//    single { MajorUpdateManager() }
-//    single<MotdManager> { DefaultMotdManager() }
-//    single { LadderDataManager() }
-//    single { SongResultsManager() }
-//    single { LadderGoalProgressManager() }
-//    single<TrialDataManager> { DefaultTrialDataManager() }
-//    single<TrialRecordsManager> { DefaultTrialRecordsManager() }
-//    single<SongDataManager> { DefaultSongDataManager() }
-//    single { ChartResultOrganizer() }
-//    single { UserInfoSettings() }
-//    single { FirstRunSettingsManager() }
-//    single { SongResultSettings() }
-//    single { UserRankSettings() }
-//    single { LadderSettings() }
-//    single { SettingsPageProvider() }
-//    single<UserRankManager> { DefaultUserRankManager() }
-//    single { GoalStateManager() }
-//    single { LadderGoalMapper() }
-//    single<IDeeplinkManager> { DeeplinkManager() }
-//    single<ISanbaiAPISettings> { SanbaiAPISettings() }
-//    single<ISanbaiManager> { SanbaiManager() }
-//    single<MotdSettings> { DefaultMotdSettings() }
-//    single<IBannerManager> { BannerManager() }
+    single { PlacementManager() }
+    single { MajorUpdateManager() }
+    single<MotdManager> { DefaultMotdManager() }
+    single { LadderDataManager() }
+    single { SongResultsManager() }
+    single { LadderGoalProgressManager() }
+    single<TrialDataManager> { DefaultTrialDataManager() }
+    single<TrialRecordsManager> { DefaultTrialRecordsManager() }
+    single<SongDataManager> { DefaultSongDataManager() }
+    single { ChartResultOrganizer() }
+    single<UserInfoSettings> { DefaultUserInfoSettings() }
+    single<FirstRunSettings> { DefaultFirstRunSettings() }
+    single<SongResultSettings> { DefaultSongResultSettings() }
+    single<UserRankSettings> { DefaultUserRankSettings() }
+    single<LadderSettings> { DefaultLadderSettings() }
+    single { SettingsPageProvider() }
+    single { GoalStateManager() }
+    single { LadderGoalMapper() }
+    single<DeeplinkManager> { DefaultDeeplinkManager() }
+    single<SanbaiAPISettings> { DefaultSanbaiAPISettings() }
+    single<SanbaiManager> { DefaultSanbaiManager() }
+    single<MotdSettings> { DefaultMotdSettings() }
+    single<BannerManager> { DefaultBannerManager() }
 
     // platformLogWriter() is a relatively simple config option, useful for local debugging. For production
     // uses you *may* want to have a more robust configuration from the native platform. In KaMP Kit,
@@ -82,28 +127,26 @@ fun KoinComponent.injectLogger(tag: String): Lazy<Logger> = inject { parametersO
 
 expect val platformModule: Module
 
-//fun makeNativeModule(
-//    appInfo: AppInfo,
-//    motdReader: LocalDataReader,
-//    partialDifficultyReader: LocalDataReader,
-//    placementsReader: LocalUncachedDataReader,
-//    ranksReader: LocalDataReader,
-//    songsReader: LocalDataReader,
-//    trialsReader: LocalDataReader,
-//    additionalItems: Module.() -> Unit = {},
-//): Module {
-//    return module {
-//        single { appInfo }
-//        single(named(GithubDataAPI.MOTD_FILE_NAME)) { motdReader }
-//        single(named(GithubDataAPI.PARTIAL_DIFFICULTY_FILE_NAME)) { partialDifficultyReader }
-//        single(named(GithubDataAPI.PLACEMENTS_FILE_NAME)) { placementsReader }
-//        single(named(GithubDataAPI.RANKS_FILE_NAME)) { ranksReader }
-//        single(named(GithubDataAPI.SONGS_FILE_NAME)) { songsReader }
-//        single(named(GithubDataAPI.TRIALS_FILE_NAME)) { trialsReader }
-//        single { LadderRemoteData() }
-//        single { MotdLocalRemoteData() }
-//        single { SongListRemoteData() }
-//        single { TrialRemoteData() }
-//        additionalItems()
-//    }
-//}
+fun makeNativeModule(
+    appInfo: AppInfo,
+    motdReader: LocalDataReader,
+    placementsReader: LocalUncachedDataReader,
+    ranksReader: LocalDataReader,
+    songsReader: LocalDataReader,
+    trialsReader: LocalDataReader,
+    additionalItems: Module.() -> Unit = {},
+): Module {
+    return module {
+        single { appInfo }
+        single(named(GithubDataAPI.MOTD_FILE_NAME)) { motdReader }
+        single(named(GithubDataAPI.PLACEMENTS_FILE_NAME)) { placementsReader }
+        single(named(GithubDataAPI.RANKS_FILE_NAME)) { ranksReader }
+        single(named(GithubDataAPI.SONGS_FILE_NAME)) { songsReader }
+        single(named(GithubDataAPI.TRIALS_FILE_NAME)) { trialsReader }
+        single { LadderRemoteData() }
+        single { MotdLocalRemoteData() }
+        single { SongListRemoteData() }
+        single { TrialRemoteData() }
+        additionalItems()
+    }
+}

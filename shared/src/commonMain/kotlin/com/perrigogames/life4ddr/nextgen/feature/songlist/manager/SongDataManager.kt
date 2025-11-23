@@ -9,7 +9,7 @@ import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
-import com.perrigogames.life4ddr.nextgen.feature.banners.IBannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
 import com.perrigogames.life4ddr.nextgen.feature.banners.UIBannerTemplates
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponse
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
@@ -42,7 +42,7 @@ interface SongDataManager {
 class DefaultSongDataManager: BaseModel(), SongDataManager {
 
     private val data: SongListRemoteData by inject()
-    private val bannerManager: IBannerManager by inject()
+    private val bannerManager: BannerManager by inject()
     private val sanbaiAPI: SanbaiAPI by inject()
     private val logger by injectLogger("SongDataManager")
 

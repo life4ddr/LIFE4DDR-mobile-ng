@@ -2,7 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.sanbai.api
 
 import com.perrigogames.life4ddr.nextgen.api.SanbaiAuthTokenRequest
 import com.perrigogames.life4ddr.nextgen.api.SanbaiAuthTokenResponse
-import com.perrigogames.life4ddr.nextgen.feature.deeplink.IDeeplinkManager.Companion.SANBAI_AUTH_RETURN_PATH_FULL
+import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager.Companion.SANBAI_AUTH_RETURN_PATH_FULL
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI.Companion.SANBAI_CLIENT_ID
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI.Companion.SANBAI_CLIENT_SECRET
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SanbaiScoreResult

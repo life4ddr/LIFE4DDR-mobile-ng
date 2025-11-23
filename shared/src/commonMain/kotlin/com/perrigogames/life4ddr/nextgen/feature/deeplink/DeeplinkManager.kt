@@ -1,14 +1,14 @@
 package com.perrigogames.life4ddr.nextgen.feature.deeplink
 
-import com.perrigogames.life4ddr.nextgen.feature.deeplink.IDeeplinkManager.Companion.DEEPLINK_PREFIX
-import com.perrigogames.life4ddr.nextgen.feature.deeplink.IDeeplinkManager.Companion.SANBAI_AUTH_RETURN_PATH
+import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager.Companion.DEEPLINK_PREFIX
+import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager.Companion.SANBAI_AUTH_RETURN_PATH
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 
-interface IDeeplinkManager {
+interface DeeplinkManager {
     fun processDeeplink(deeplink: String)
 
     companion object {
@@ -18,7 +18,7 @@ interface IDeeplinkManager {
     }
 }
 
-class DeeplinkManager : BaseModel(), IDeeplinkManager {
+class DefaultDeeplinkManager : BaseModel(), DeeplinkManager {
 
     private val sanbaiManager: SanbaiManager by inject()
     private val logger by injectLogger("DeeplinkManager")
