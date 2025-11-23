@@ -21,11 +21,8 @@ import org.koin.core.qualifier.named
 import kotlin.math.max
 import kotlin.math.min
 
-// TODO Logger
-
 class PlacementManager: BaseModel() {
 
-//    private val logger: Logger by injectLogger("PlacementManager")
     private val songDataManager: SongDataManager by inject()
     private val json: Json by inject()
     private val dataReader: LocalUncachedDataReader by inject(named(PLACEMENTS_FILE_NAME))

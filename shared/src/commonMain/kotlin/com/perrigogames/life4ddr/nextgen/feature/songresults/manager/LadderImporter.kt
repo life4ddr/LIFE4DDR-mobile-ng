@@ -8,14 +8,13 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDialogs
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.SASongEntry
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.inject
-
-// TODO Logger
 
 /**
  * Model class to facilitate importing ladder data from an external source. Data is provided as a List<String> with each
@@ -33,8 +32,7 @@ class LadderImporter(
 ): BaseModel() {
 
     private val appInfo: AppInfo by inject()
-//    private val saLogger: Logger by injectLogger("SAImport")
-//    private val legacyLogger: Logger by injectLogger("Import")
+    private val saLogger by injectLogger("SAImport")
     private val songDataManager: SongDataManager by inject()
     private val resultDbHelper: ResultDatabaseHelper by inject()
     private val songResultsManager: SongResultsManager by inject()
@@ -116,9 +114,9 @@ class LadderImporter(
                 }
             entries.forEach { it.skillId = skillId }
 
-//            if (appInfo.isDebug) {
-//                saLogger.v("${song.title} ($skillId) - ${entries.size} found, ${entries.joinToString { it.score.toString() }}")
-//            }
+            if (appInfo.isDebug) {
+                saLogger.v("${song.title} ($skillId) - ${entries.size} found, ${entries.joinToString { it.score.toString() }}")
+            }
             resultDbHelper.insertSAResults(entries)
             success++
             signalUpdate()

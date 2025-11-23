@@ -16,6 +16,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.data.IgnoreFilterTy
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.groupByDifficultyNumber
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.safeScore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -24,15 +25,12 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.math.roundToLong
-import kotlin.plus
-
-// TODO Logger
 
 class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, KoinComponent {
 
     private val ladderDataManager: LadderDataManager by inject()
     private val chartResultOrganizer: ChartResultOrganizer by inject()
-//    private val logger: Logger by injectLogger("SongsClearGoalProgressConverter")
+    private val logger by injectLogger("SongsClearGoalProgressConverter")
 
     override fun getGoalProgress(
         goal: SongsClearGoal,
@@ -73,7 +71,7 @@ class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, K
                                 }
                             }
                         } else {
-//                            logger.v("Goal ${goal.id}: ${goal.diffNum}, ${goal.score}, ${goal.clearType}")
+                            logger.v("Goal ${goal.id}: ${goal.diffNum}, ${goal.score}, ${goal.clearType}")
                             LadderGoalProgress(
                                 progress = 0,
                                 max = 0,

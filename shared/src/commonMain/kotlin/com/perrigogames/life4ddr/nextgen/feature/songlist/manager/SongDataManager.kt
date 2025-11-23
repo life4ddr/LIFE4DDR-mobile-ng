@@ -15,6 +15,7 @@ import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponse
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Song
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.SongListRemoteData
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import dev.icerock.moko.mvvm.flow.CStateFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
@@ -25,8 +26,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
-
-// TODO Logger
 
 /**
  * A Manager class that keeps track of the available songs
@@ -45,7 +44,7 @@ class DefaultSongDataManager: BaseModel(), SongDataManager {
     private val data: SongListRemoteData by inject()
     private val bannerManager: IBannerManager by inject()
     private val sanbaiAPI: SanbaiAPI by inject()
-//    private val logger: Logger by injectLogger("SongDataManager")
+    private val logger by injectLogger("SongDataManager")
 
     override val dataVersionString: Flow<String> =
         data.versionState.map { it.versionString }
@@ -96,13 +95,13 @@ class DefaultSongDataManager: BaseModel(), SongDataManager {
     ): Chart? {
         val song = getSong(skillId)
         if (song == null) {
-//            logger.e("Song not found: $skillId")
+            logger.e("Song not found: $skillId")
             return null
         }
         val chart = libraryFlow.value.songs[song]!!
             .firstOrNull { it.playStyle == playStyle && it.difficultyClass == difficultyClass }
         if (chart == null) {
-//            logger.e("Chart not found: $skillId / ${playStyle.name} / ${difficultyClass.name}")
+            logger.e("Chart not found: $skillId / ${playStyle.name} / ${difficultyClass.name}")
         }
         return chart
     }
@@ -157,7 +156,7 @@ class DefaultSongDataManager: BaseModel(), SongDataManager {
             )
         )
     } catch (e: Exception) {
-//        logger.e(e.stackTraceToString())
+        logger.e(e.stackTraceToString())
     }
 }
 

@@ -3,6 +3,7 @@ package com.perrigogames.life4ddr.nextgen.feature.deeplink
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.IDeeplinkManager.Companion.DEEPLINK_PREFIX
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.IDeeplinkManager.Companion.SANBAI_AUTH_RETURN_PATH
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -17,12 +18,10 @@ interface IDeeplinkManager {
     }
 }
 
-// TODO Logger
-
 class DeeplinkManager : BaseModel(), IDeeplinkManager {
 
     private val sanbaiManager: SanbaiManager by inject()
-//    private val logger: Logger by injectLogger("DeeplinkManager")
+    private val logger by injectLogger("DeeplinkManager")
 
     override fun processDeeplink(deeplink: String) {
         val sections = deeplink
@@ -46,7 +45,7 @@ class DeeplinkManager : BaseModel(), IDeeplinkManager {
                 }
             }
             else -> {
-//                logger.w("Unknown deeplink: ${sections[0]}")
+                logger.w("Unknown deeplink: ${sections[0]}")
             }
         }
     }

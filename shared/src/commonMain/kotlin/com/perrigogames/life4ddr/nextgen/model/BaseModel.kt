@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.model
 
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -7,7 +8,6 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.core.component.KoinComponent
 import kotlin.coroutines.CoroutineContext
 
-// TODO Logger
 @Deprecated("This should have a replacement by now")
 open class BaseModel : KoinComponent {
     val mainScope = MainScope(Dispatchers.Main)
@@ -20,15 +20,15 @@ open class BaseModel : KoinComponent {
 }
 
 @Deprecated("This should have a replacement by now")
-class MainScope(private val mainContext: CoroutineContext) : CoroutineScope/*, KoinComponent*/ {
+class MainScope(private val mainContext: CoroutineContext) : CoroutineScope, KoinComponent {
 
-//    private val logger: Logger by injectLogger("MainScope")
+    private val logger by injectLogger("MainScope")
 
     override val coroutineContext: CoroutineContext
         get() = mainContext + job + exceptionHandler
 
     internal val job = SupervisorJob()
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-//        logger.e(throwable) { "Coroutine exception encountered" }
+        logger.e(throwable) { "Coroutine exception encountered" }
     }
 }

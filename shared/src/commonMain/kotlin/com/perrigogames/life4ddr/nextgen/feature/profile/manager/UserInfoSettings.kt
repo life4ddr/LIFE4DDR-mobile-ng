@@ -7,14 +7,9 @@ import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlin.toString
-
-// TODO Logger
 
 @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
 class UserInfoSettings : SettingsManager() {
-
-//    private val logger: Logger by injectLogger("UserInfoSettings")
 
     val userName: StateFlow<String> = settings.getStringFlow(KEY_INFO_NAME, "")
         .stateIn(mainScope, SharingStarted.Eagerly, "")

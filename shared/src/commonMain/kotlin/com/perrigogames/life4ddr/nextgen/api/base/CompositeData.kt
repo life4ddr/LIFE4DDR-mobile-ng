@@ -2,12 +2,12 @@ package com.perrigogames.life4ddr.nextgen.api.base
 
 import com.perrigogames.life4ddr.nextgen.data.MajorVersioned
 import com.perrigogames.life4ddr.nextgen.data.Versioned
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.flow.*
 
 typealias VersionChange = Pair<Long, Long>
 
-// TODO Logger
 /**
  * A structure to unify the processes of reading raw data files, reading volatile cache files, and retrieving
  * remote files.
@@ -18,7 +18,7 @@ abstract class CompositeData<T: Versioned>: BaseModel() {
     protected open val cacheData: CachedData<T>? = null
     protected open val remoteData: RemoteData<T>? = null
 
-//    protected open val logger: Logger by injectLogger(this::class.simpleName ?: "CompositeData")
+    protected open val logger by injectLogger(this::class.simpleName ?: "CompositeData")
 
     private val ready = MutableStateFlow(false)
     private val majorVersionBlocked = MutableStateFlow(false)
@@ -103,7 +103,7 @@ abstract class CompositeData<T: Versioned>: BaseModel() {
             }
 
             override suspend fun onFetchFailed(e: Throwable) {
-//                logger.e { e.message ?: "Undefined error" }
+                logger.e { e.message ?: "Undefined error" }
                 extraListener?.onFetchFailed(e)
             }
         })

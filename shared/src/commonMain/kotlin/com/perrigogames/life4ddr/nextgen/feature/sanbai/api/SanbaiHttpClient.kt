@@ -17,11 +17,9 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
-// TODO Logger
-
 fun sanbaiHttpClient(
-//    log: co.touchlab.kermit.Logger,
-    sanbaiSettings: SanbaiAPISettings
+    sanbaiSettings: SanbaiAPISettings,
+    log: co.touchlab.kermit.Logger
 ) = HttpClient {
     install(ContentNegotiation) {
         json()
@@ -29,7 +27,7 @@ fun sanbaiHttpClient(
     install(Logging) {
         logger = object : Logger {
             override fun log(message: String) {
-//                log.v { message }
+                log.v { message }
             }
         }
 

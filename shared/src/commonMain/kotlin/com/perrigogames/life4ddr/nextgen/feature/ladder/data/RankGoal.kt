@@ -22,14 +22,13 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.enum.RankGoalUserType
 import com.perrigogames.life4ddr.nextgen.feature.ladder.enum.RankGoalUserTypeSerializer
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRankSerializer
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.toListString
 import com.perrigogames.life4ddr.nextgen.util.toStringDescs
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.serialization.*
 import org.koin.core.component.KoinComponent
-
-// TODO Logger
 
 /**
  * The base rank goal class, describing a single goal of a rank on the LIFE4 ladder.
@@ -234,7 +233,7 @@ data class SongsClearGoal(
     @SerialName("exception_score") val exceptionScore: Int? = null,
 ): BaseRankGoal(), KoinComponent {
 
-//    private val logger: Logger by injectLogger("RankGoal")
+    private val logger by injectLogger("RankGoal")
 
     @Transient
     val folderType: FolderType? = folder.let {
@@ -302,7 +301,7 @@ data class SongsClearGoal(
         }
         songCount != null -> RankStrings.songCountString(songCount)
         else -> {
-//            logger.e { "Goal $id has no song group string" }
+            logger.e { "Goal $id has no song group string" }
             StringDesc.Raw("???????")
         }
     }

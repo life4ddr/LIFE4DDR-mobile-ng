@@ -5,6 +5,7 @@ import com.perrigogames.life4ddr.nextgen.api.base.CompositeData
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.russhwolf.settings.Settings
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
@@ -26,14 +27,12 @@ interface TrialDataManager {
     fun findTrial(id: String): Trial?
 }
 
-// TODO Logger
-
 class DefaultTrialDataManager: BaseModel(), TrialDataManager {
 
     private val appInfo: AppInfo by inject()
     private val settings: Settings by inject()
     private val songDataManager: SongDataManager by inject()
-//    private val logger: Logger by injectLogger("TrialManager")
+    private val logger by injectLogger("TrialManager")
 
     private var data = TrialRemoteData()
 
@@ -73,11 +72,11 @@ class DefaultTrialDataManager: BaseModel(), TrialDataManager {
     private fun validateTrials() = trials.forEach { trial ->
         var sum = 0
         trial.songs.forEach { sum += it.ex }
-//        if (sum != trial.totalEx) {
-//            if (!appInfo.isDebug) {
-//                logger.e { "Trial ${trial.name} has improper EX values: total_ex=${trial.totalEx}, sum=$sum" }
-//            }
-//        }
+        if (sum != trial.totalEx) {
+            if (!appInfo.isDebug) {
+                logger.e { "Trial ${trial.name} has improper EX values: total_ex=${trial.totalEx}, sum=$sum" }
+            }
+        }
     }
 
     override fun findTrial(id: String) = trials.firstOrNull { it.id == id }

@@ -13,8 +13,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-// TODO Logger
-
 class LadderRemoteData: CompositeData<LadderRankData>(), KoinComponent {
 
     private val json: Json by inject()
@@ -26,7 +24,7 @@ class LadderRemoteData: CompositeData<LadderRankData>(), KoinComponent {
     override val rawData = LocalData(reader, converter)
     override val cacheData = CachedData(reader, converter, converter)
     override val remoteData = object: RemoteData<LadderRankData>() {
-//        override val logger: Logger = this@LadderRemoteData.logger
+        override val logger = this@LadderRemoteData.logger
         override suspend fun getRemoteResponse() = githubKtor.getLadderRanks()
     }
 

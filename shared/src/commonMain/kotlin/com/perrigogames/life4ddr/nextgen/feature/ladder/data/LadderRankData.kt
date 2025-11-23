@@ -11,13 +11,12 @@ import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankSerializer
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyleSerializer
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
 import org.koin.core.component.KoinComponent
-
-// TODO Logger
 
 /**
  * Data class for deserializing the ranks_v2_v2.json file. Describes all of the ranks_v2 that can
@@ -31,7 +30,7 @@ data class LadderRankData(
     @SerialName("game_versions") val gameVersions: Map<GameVersion, LadderVersion>,
 ): MajorVersioned, KoinComponent {
 
-//    private val logger: Logger by injectLogger("LadderRankData")
+    private val logger by injectLogger("LadderRankData")
 
     private val wrappedGoals: List<BaseRankGoal> by lazy {
         goals.filterIsInstance<StackedRankGoal>()
@@ -48,7 +47,7 @@ data class LadderRankData(
                     entry.mandatoryGoals = mapIdsToGoals(entry.mandatoryGoalIds)
                     entry.substitutionGoals = mapIdsToGoals(entry.substitutions)
                 } catch (e: IllegalStateException) {
-//                    logger.e(e) { "Error processing ladder rank data" }
+                    logger.e(e) { "Error processing ladder rank data" }
                 }
             }
     }
@@ -56,9 +55,7 @@ data class LadderRankData(
     private fun validate() {
         goals.forEach { goal ->
             (goal as? SongsClearGoal)?.validate()?.let { error ->
-                if (error != null) {
-//                    logger.e { "Goal ${goal.id} is invalid: $error" }
-                }
+                logger.e { "Goal ${goal.id} is invalid: $error" }
             }
         }
     }

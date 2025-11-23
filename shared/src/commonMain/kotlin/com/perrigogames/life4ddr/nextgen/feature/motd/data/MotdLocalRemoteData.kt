@@ -12,8 +12,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-// TODO Logger
-
 class MotdLocalRemoteData: CompositeData<MessageOfTheDay>(), KoinComponent {
 
     private val json: Json by inject()
@@ -25,7 +23,7 @@ class MotdLocalRemoteData: CompositeData<MessageOfTheDay>(), KoinComponent {
     override val rawData = LocalData(reader, converter)
     override val cacheData = CachedData(reader, converter, converter)
     override val remoteData = object: RemoteData<MessageOfTheDay>() {
-//        override val logger: Logger = this@MotdLocalRemoteData.logger
+        override val logger = this@MotdLocalRemoteData.logger
         override suspend fun getRemoteResponse() = githubKtor.getMotd()
     }
 

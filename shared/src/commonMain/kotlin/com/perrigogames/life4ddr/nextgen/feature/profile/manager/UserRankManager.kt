@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.profile.manager
 
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.nullableNext
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.flow.*
 import org.koin.core.component.inject
@@ -19,19 +20,17 @@ interface UserRankManager {
     fun setUserTargetRank(rank: LadderRank?)
 }
 
-// TODO Logger
-
 class DefaultUserRankManager : BaseModel(), UserRankManager {
 
     private val ladderSettings: UserRankSettings by inject()
-//    private val logger: Logger by injectLogger("UserRankManager")
+    private val logger by injectLogger("UserRankManager")
 
     override val rank: StateFlow<LadderRank?> = ladderSettings.rank
-//        .onEach { logger.v { "RANK: $it" } }
+        .onEach { logger.v { "RANK: $it" } }
         .stateIn(mainScope, started = SharingStarted.Lazily, initialValue = null)
 
     override val targetRank: StateFlow<LadderRank?> = ladderSettings.targetRank
-//        .onEach { logger.v { "TARGET RANK: $it" } }
+        .onEach { logger.v { "TARGET RANK: $it" } }
         .stateIn(mainScope, started = SharingStarted.Lazily, initialValue = null)
 
     override fun setUserRank(rank: LadderRank?) {

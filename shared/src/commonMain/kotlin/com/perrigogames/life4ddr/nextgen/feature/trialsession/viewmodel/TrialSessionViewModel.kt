@@ -18,6 +18,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.view.toInProgress
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialContentProvider
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import com.perrigogames.life4ddr.nextgen.util.toViewState
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
@@ -34,14 +35,12 @@ import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-// TODO Logger
-
-class TrialSessionViewModel(trialId: String) : KoinComponent, ViewModel() {
+class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
 
     private val userRankManager: UserRankManager by inject()
     private val trialDataManager: TrialDataManager by inject()
     private val trialRecordsManager: TrialRecordsManager by inject()
-//    private val logger: Logger by injectLogger("TrialSessionViewModel")
+    private val logger by injectLogger("TrialSessionViewModel")
 
     private val trial = trialDataManager.trialsFlow.value.firstOrNull { it.id == trialId }
         ?: throw IllegalStateException("Can't find trial with id $trialId")
@@ -119,7 +118,7 @@ class TrialSessionViewModel(trialId: String) : KoinComponent, ViewModel() {
                 inProgressSessionFlow.filterNotNull(),
                 stage.filterNotNull(),
             ) { session, stage ->
-//                logger.d { "Creating stage $stage" }
+                logger.d { "Creating stage $stage" }
                 val complete = stage >= 4
                 val current = (_state.value as? ViewState.Success)?.data ?: return@combine
                 val currentEx = session.results.sumOf { it?.exScore ?: 0 }
@@ -200,7 +199,7 @@ class TrialSessionViewModel(trialId: String) : KoinComponent, ViewModel() {
     }
 
     fun handleAction(action: TrialSessionInput) {
-//        logger.d { "Handling action $action" }
+        logger.d { "Handling action $action" }
         when (action) {
             is TrialSessionInput.ChangeTargetRank -> {
                 targetRank.value = action.target
@@ -308,7 +307,7 @@ class TrialSessionViewModel(trialId: String) : KoinComponent, ViewModel() {
         isEdit: Boolean,
         onDismissAction: TrialSessionInput = TrialSessionInput.HideBottomSheet,
     ) {
-//        logger.d { "Showing song entry for index $index" }
+        logger.d { "Showing song entry for index $index" }
         songEntryViewModel.value = SongEntryViewModel(
             session = inProgressSession,
             targetRank = targetRank.value,
@@ -327,7 +326,7 @@ class TrialSessionViewModel(trialId: String) : KoinComponent, ViewModel() {
             _events.emit(TrialSessionEvent.HideBottomSheet)
             delay(500)
             _bottomSheetState.value = null
-//            logger.d { "Song entry hidden" }
+            logger.d { "Song entry hidden" }
         }
     }
 
@@ -342,7 +341,7 @@ class TrialSessionViewModel(trialId: String) : KoinComponent, ViewModel() {
         while (inProgressSession.isRankSatisfied(currRank()) == false) {
             currIdx--
         }
-//        logger.d { "Rank changing from ${targetRank.value} to ${currRank()}" }
+        logger.d { "Rank changing from ${targetRank.value} to ${currRank()}" }
         targetRank.value = currRank()
     }
 }

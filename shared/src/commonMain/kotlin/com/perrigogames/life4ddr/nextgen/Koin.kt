@@ -1,17 +1,22 @@
 package com.perrigogames.life4ddr.nextgen
 
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.StaticConfig
+import co.touchlab.kermit.platformLogWriter
 import com.perrigogames.life4ddr.nextgen.feature.ladder.db.GoalDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import kotlinx.serialization.json.Json
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.parameter.parametersOf
 import org.koin.core.scope.Scope
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 // TODO Ktor
-// TODO Logger
 
 typealias NativeInjectionFactory<T> = Scope.() -> T
 
@@ -24,11 +29,10 @@ fun initKoin(
     modules(listOfNotNull(appModule, extraAppModule, platformModule, coreModule))
 }.apply {
     // doOnStartup is a lambda which is implemented in Swift on iOS side
-//    koin.get<() -> Unit>().invoke()
-    // AppInfo is a Kotlin interface with separate Android and iOS implementations
-//    koin.get<Logger> { parametersOf(null) }.also { kermit ->
-//        kermit.v { "App Id ${koin.get<AppInfo>().appId}" }
-//    }
+    koin.get<() -> Unit>().invoke()
+    koin.get<Logger> { parametersOf(null) }.also { kermit ->
+        kermit.v { "App Id ${koin.get<AppInfo>().appId}" }
+    }
 }
 
 val coreModule = module {
@@ -69,12 +73,12 @@ val coreModule = module {
     // uses you *may* want to have a more robust configuration from the native platform. In KaMP Kit,
     // that would likely go into platformModule expect/actual.
     // See https://github.com/touchlab/Kermit
-//    val baseLogger = Logger(config = StaticConfig(logWriterList = listOf(platformLogWriter())), "LIFE4")
-//    factory { (tag: String?) -> if (tag != null) baseLogger.withTag(tag) else baseLogger }
+    val baseLogger = Logger(config = StaticConfig(logWriterList = listOf(platformLogWriter())), "LIFE4")
+    factory { (tag: String?) -> if (tag != null) baseLogger.withTag(tag) else baseLogger }
 }
 
 // Simple function to clean up the syntax a bit
-//fun KoinComponent.injectLogger(tag: String): Lazy<Logger> = inject { parametersOf(tag) }
+fun KoinComponent.injectLogger(tag: String): Lazy<Logger> = inject { parametersOf(tag) }
 
 expect val platformModule: Module
 

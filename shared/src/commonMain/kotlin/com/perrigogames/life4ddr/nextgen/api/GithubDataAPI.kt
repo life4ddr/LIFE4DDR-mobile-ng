@@ -5,6 +5,7 @@ import com.perrigogames.life4ddr.nextgen.api.base.baseHttpClient
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderRankData
 import com.perrigogames.life4ddr.nextgen.feature.motd.data.MessageOfTheDay
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialData
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.accept
@@ -37,14 +38,12 @@ interface GithubDataAPI {
     }
 }
 
-// TODO Logger
-
 class DefaultGithubData: GithubDataAPI, KoinComponent {
 
     private val appInfo: AppInfo by inject()
-//    private val log: Logger by injectLogger("GithubData")
+    private val logger by injectLogger("GithubData")
     private val json: Json by inject()
-    private val client = baseHttpClient(json)
+    private val client = baseHttpClient(json, logger)
 
     init {
 //        ensureNeverFrozen() // FIXME EnsureNeverFrozen

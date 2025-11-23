@@ -9,6 +9,7 @@ import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.PathStep.*
 import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import dev.icerock.moko.mvvm.flow.CFlow
 import dev.icerock.moko.mvvm.flow.cFlow
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
@@ -23,16 +24,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlin.plus
 import kotlin.reflect.KClass
-
-// TODO Logger
 
 class FirstRunInfoViewModel : ViewModel(), KoinComponent {
 
     private val infoSettings: UserInfoSettings by inject()
     private val firstRunSettings: FirstRunSettings by inject()
-//    private val logger by injectLogger(this::class.simpleName ?: "FirstRunInfoViewModel")
+    private val logger by injectLogger(this::class.simpleName ?: "FirstRunInfoViewModel")
 
     val username = MutableStateFlow("").cMutableStateFlow()
     val password = MutableStateFlow("").cMutableStateFlow()
@@ -126,7 +124,7 @@ class FirstRunInfoViewModel : ViewModel(), KoinComponent {
         }
         clearError()
         appendState(createStateClass(clazz = nextStep))
-//        logger.d { "${_stateStack.value.size} / ${_stateStack.value.last()}" }
+        logger.d { "${_stateStack.value.size} / ${_stateStack.value.last()}" }
     }
 
     private fun appendState(step: FirstRunStep) {

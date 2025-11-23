@@ -11,11 +11,9 @@ import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-// TODO Logger
-
 fun baseHttpClient(
     json: Json,
-//    log: co.touchlab.kermit.Logger
+    log: co.touchlab.kermit.Logger
 ) = HttpClient {
     install(ContentNegotiation) {
         json(json)
@@ -24,7 +22,7 @@ fun baseHttpClient(
     install(Logging) {
         logger = object : Logger {
             override fun log(message: String) {
-//                log.v { message }
+                log.v { message }
             }
         }
 

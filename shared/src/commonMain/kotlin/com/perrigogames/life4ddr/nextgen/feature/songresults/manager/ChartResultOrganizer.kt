@@ -12,6 +12,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPai
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.IgnoreFilterType
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.split
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
@@ -22,18 +23,19 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.getValue
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 typealias OrganizerBase = Map<PlayStyle, DifficultyClassMap>
 typealias DifficultyClassMap = Map<DifficultyClass, DifficultyNumberMap>
 typealias DifficultyNumberMap = Map<Int, List<ChartResultPair>>
 
-// TODO Logger
-
+@OptIn(ExperimentalTime::class)
 class ChartResultOrganizer: BaseModel(), KoinComponent {
 
     private val songResultsManager: SongResultsManager by inject()
     private val songResultSettings: SongResultSettings by inject()
-//    private val logger: Logger by injectLogger("ChartResultOrganizer")
+    private val logger by injectLogger("ChartResultOrganizer")
 
     private val basicOrganizer = MutableStateFlow<OrganizerBase>(emptyMap()).cMutableStateFlow()
 
@@ -90,9 +92,9 @@ class ChartResultOrganizer: BaseModel(), KoinComponent {
         return chartsForConfig(config.chartFilter)
             .map { ChartFilterer(it) }
             .map { filterer ->
-//                val start = Clock.System.now()
+                val start = Clock.System.now()
                 var results = filterer.filtered(config.resultFilter)
-//                val filterEnd = Clock.System.now()
+                val filterEnd = Clock.System.now()
 
                 (base as? SongsClearGoal)?.let { songClearGoal ->
                     results = processExceptions(songClearGoal, results)
@@ -101,14 +103,13 @@ class ChartResultOrganizer: BaseModel(), KoinComponent {
                     resultsDone = results.resultsDone.specialSorted(base, enableDifficultyTiers),
                     resultsPartlyDone = results.resultsPartlyDone.specialSorted(base, enableDifficultyTiers),
                     resultsNotDone = results.resultsNotDone.specialSorted(base, enableDifficultyTiers)
-                )
-//                ).also {
-//                    val sortEnd = Clock.System.now()
-//                    val filterMillis = start.until(filterEnd, DateTimeUnit.MILLISECOND)
-//                    val sortMillis = filterEnd.until(sortEnd, DateTimeUnit.MILLISECOND)
-//                    val totalMillis = filterMillis + sortMillis
-//                    logger.d { "Filter time: ${filterMillis}ms, Sort time: ${sortMillis}ms, Total time: ${totalMillis}ms" }
-//                }
+                ).also {
+                    val sortEnd = Clock.System.now()
+                    val filterMillis = (filterEnd - start).inWholeMilliseconds
+                    val sortMillis = (sortEnd - filterEnd).inWholeMilliseconds
+                    val totalMillis = filterMillis + sortMillis
+                    logger.d { "Filter time: ${filterMillis}ms, Sort time: ${sortMillis}ms, Total time: ${totalMillis}ms" }
+                }
             }
     }
 

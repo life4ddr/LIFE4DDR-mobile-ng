@@ -14,8 +14,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-// TODO Logger
-
 class SongListRemoteData: CompositeData<SongListResponse>(), KoinComponent {
 
     private val json: Json by inject()
@@ -27,7 +25,7 @@ class SongListRemoteData: CompositeData<SongListResponse>(), KoinComponent {
     override val rawData = LocalData(reader, converter)
     override val cacheData = CachedData(reader, converter, converter)
     override val remoteData = object: RemoteData<SongListResponse>() {
-//        override val logger: Logger = this@SongListRemoteData.logger
+        override val logger = this@SongListRemoteData.logger
         override suspend fun getRemoteResponse() = sanbaiApi.getSongData()
     }
 

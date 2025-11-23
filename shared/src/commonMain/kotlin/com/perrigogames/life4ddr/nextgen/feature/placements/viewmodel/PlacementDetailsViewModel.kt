@@ -5,6 +5,7 @@ import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementMan
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.toUITrialSong
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import dev.icerock.moko.mvvm.flow.CStateFlow
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
@@ -17,13 +18,11 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-// TODO Logger
-
 class PlacementDetailsViewModel(
     placementId: String
 ) : ViewModel(), KoinComponent {
 
-//    private val logger: Logger by injectLogger("PlacementDetailsViewModel")
+    private val logger by injectLogger("PlacementDetailsViewModel")
     private val placementManager: PlacementManager by inject()
     private val songDataManager: SongDataManager by inject()
 
@@ -38,7 +37,7 @@ class PlacementDetailsViewModel(
             placementManager.findPlacement(placementId)
                 .collect { placement ->
                     if (placement == null) {
-//                        logger.e("Placement ID $placementId not found")
+                        logger.e("Placement ID $placementId not found")
                     } else {
                         _state.value = _state.value.copy(
                             rankIcon = placement.placementRank!!.toLadderRank(),

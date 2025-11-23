@@ -16,6 +16,7 @@ kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
 koin-bom = "4.1.0"
+kermit = "2.0.4"
 ksoup = "0.6.0"
 ktor = "3.3.2"
 mokoMvvm = "0.16.1"
@@ -39,6 +40,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-core = { module = "io.insert-koin:koin-core" }
 ksoup-entities = { module = "com.mohamedrejeb.ksoup:ksoup-entities", version.ref = "ksoup" }

@@ -8,6 +8,7 @@ import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI.Companion.
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SanbaiScoreResult
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponse
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponseItem
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -39,15 +40,13 @@ interface SanbaiAPI {
     }
 }
 
-// TODO Logger
-
 @OptIn(ExperimentalTime::class)
 class DefaultSanbaiAPI : SanbaiAPI, KoinComponent {
 
     private val json: Json by inject()
-    //    private val logger: Logger by injectLogger("SanbaiAPI")
+    private val logger by injectLogger("SanbaiAPI")
     private val sanbaiSettings: SanbaiAPISettings by inject()
-    private val client: HttpClient = sanbaiHttpClient(sanbaiSettings)
+    private val client: HttpClient = sanbaiHttpClient(sanbaiSettings, logger)
 
     override suspend fun getSongData(): SongListResponse {
         val response = client.get("https://3icecream.com/js/songdata.js") {
@@ -105,7 +104,7 @@ class DefaultSanbaiAPI : SanbaiAPI, KoinComponent {
         return try {
             response.body<List<SanbaiScoreResult>>()
         } catch (e: Exception) {
-//            logger.e("Failed to parse scores: serialization error", e)
+            logger.e("Failed to parse scores: serialization error", e)
             throw e
         }
     }

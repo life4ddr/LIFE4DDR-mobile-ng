@@ -19,6 +19,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoals
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankManager
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import dev.icerock.moko.mvvm.flow.CStateFlow
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
@@ -33,8 +34,6 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-// TODO Logger
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinComponent {
 
@@ -44,7 +43,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
     private val ladderGoalMapper: LadderGoalMapper by inject()
     private val userRankManager: UserRankManager by inject()
     private val maSettings: MASettings by inject()
-//    private val logger: Logger by injectLogger("GoalListViewModel")
+    private val logger by injectLogger("GoalListViewModel")
 
     private val targetRankFlow: Flow<LadderRank?> = config.targetRank
         ?.let { flowOf(it) }
@@ -54,7 +53,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
         .flatMapLatest { targetRank ->
             ladderDataManager.requirementsForRank(targetRank)
         }
-//        .onEach { logger.v { "requirementsFlow -> $it" } }
+        .onEach { logger.v { "requirementsFlow -> $it" } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val _state = MutableStateFlow<ViewState<UILadderData, String>>(ViewState.Loading).cMutableStateFlow()

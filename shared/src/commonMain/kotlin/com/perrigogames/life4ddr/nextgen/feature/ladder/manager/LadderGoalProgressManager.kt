@@ -15,6 +15,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter.MAPointSt
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter.SongsClearGoalProgressConverter
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter.TrialGoalProgressConverter
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter.TrialStackGoalProgressConverter
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -23,11 +24,9 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.component.KoinComponent
 import kotlin.reflect.KClass
 
-// TODO Logger
-
 class LadderGoalProgressManager : BaseModel(), KoinComponent {
 
-//    private val logger: Logger by injectLogger("LadderGoalProgressManager")
+    private val logger by injectLogger("LadderGoalProgressManager")
 
     private val converters: Map<KClass<out BaseRankGoal>, GoalProgressConverter<out BaseRankGoal>> = mapOf(
         MAPointsGoal::class to MAPointGoalProgressConverter(),
@@ -53,7 +52,7 @@ class LadderGoalProgressManager : BaseModel(), KoinComponent {
                 else -> flowOf(null)
             }
             else -> {
-//                logger.w { "Failed to resolve progress for ${goal::class.simpleName} with ID ${goal.id}" }
+                logger.w { "Failed to resolve progress for ${goal::class.simpleName} with ID ${goal.id}" }
                 flowOf(null)
             }
         }

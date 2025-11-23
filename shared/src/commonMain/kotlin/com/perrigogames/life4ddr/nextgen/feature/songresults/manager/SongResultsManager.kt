@@ -8,6 +8,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongLibrary
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.matches
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import dev.icerock.moko.mvvm.flow.CStateFlow
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
@@ -20,12 +21,10 @@ import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-// TODO Logger
-
 @OptIn(ExperimentalTime::class)
 class SongResultsManager: BaseModel() {
 
-//    private val logger: Logger by injectLogger("SongResultsManager")
+    private val logger by injectLogger("SongResultsManager")
     private val songDataManager: SongDataManager by inject()
     private val resultDbHelper: ResultDatabaseHelper by inject()
 
@@ -39,7 +38,7 @@ class SongResultsManager: BaseModel() {
                 songDataManager.libraryFlow,
                 results
             ) { songData, results ->
-//                logger.d { "Updating with ${songData.charts.size} charts and ${results.size} results" }
+                logger.d { "Updating with ${songData.charts.size} charts and ${results.size} results" }
                 matchCharts(songData, results)
             }
                 .collect(_library)
@@ -48,7 +47,7 @@ class SongResultsManager: BaseModel() {
     }
 
     fun refresh() {
-//        logger.d("Refreshing song results")
+        logger.d("Refreshing song results")
         mainScope.launch {
             results.emit(resultDbHelper.selectAll())
         }
@@ -62,7 +61,7 @@ class SongResultsManager: BaseModel() {
     }
 
     fun createDebugScores() {
-//        logger.d("Adding debug scores")
+        logger.d("Adding debug scores")
         mainScope.launch {
             val random = Random(Clock.System.now().toEpochMilliseconds())
             val charts = songDataManager.libraryFlow.value.charts
@@ -87,7 +86,7 @@ class SongResultsManager: BaseModel() {
     }
 
     internal fun clearAllResults() {
-//        logger.w("Clearing all saved song results")
+        logger.w("Clearing all saved song results")
         mainScope.launch {
             resultDbHelper.deleteAll()
             results.emit(emptyList())
