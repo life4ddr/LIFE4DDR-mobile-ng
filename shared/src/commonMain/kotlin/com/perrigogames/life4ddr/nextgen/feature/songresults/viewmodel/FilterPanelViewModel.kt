@@ -1,0 +1,78 @@
+package com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel
+
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartFilterState
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
+import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterAction
+import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterView
+import com.perrigogames.life4ddr.nextgen.feature.songresults.view.toUIFilterView
+import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
+class FilterPanelViewModel : ViewModel(), KoinComponent {
+
+    private val songResultSettings: SongResultSettings by inject()
+
+    private val _state = MutableStateFlow(FilterState())
+    val dataState: StateFlow<FilterState> = _state.asStateFlow()
+    val uiState: StateFlow<UIFilterView> = _state
+        .map { it.toUIFilterView(showPlayStyleSelector = false) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, UIFilterView())
+
+    init {
+        viewModelScope.launch {
+            songResultSettings.songListFilterState.collect(_state)
+        }
+    }
+
+    fun handleAction(action: UIFilterAction) {
+        when(action) {
+            is UIFilterAction.SelectPlayStyle -> {
+                mutateChartFilter { it.copy(selectedPlayStyle = action.playStyle) }
+            }
+            is UIFilterAction.SetClearTypeRange -> {
+                mutateResultFilter { it.copy(clearTypeRange = action.range) }
+            }
+            is UIFilterAction.SetDifficultyNumberRange -> {
+                mutateChartFilter { it.copy(difficultyNumberRange = action.range) }
+            }
+            is UIFilterAction.SetScoreRange -> {
+                mutateResultFilter {
+                    val first = action.first ?: it.scoreRange.first
+                    val last = action.last ?: it.scoreRange.last
+                    it.copy(scoreRange = (first .. last))
+                }
+            }
+            is UIFilterAction.ToggleDifficultyClass -> {
+                mutateChartFilter {
+                    val selection = it.difficultyClassSelection.toMutableSet()
+                    if (action.selected) {
+                        selection.add(action.difficultyClass)
+                    } else {
+                        selection.remove(action.difficultyClass)
+                    }
+                    it.copy(difficultyClassSelection = selection.toList())
+                }
+            }
+        }
+    }
+
+    private fun mutate(block: (FilterState) -> FilterState) {
+        viewModelScope.launch {
+            val newValue = block(_state.value)
+            songResultSettings.setSongListFilterState(newValue)
+        }
+    }
+
+    private fun mutateChartFilter(block: (ChartFilterState) -> ChartFilterState) {
+        mutate { it.copy(chartFilter = block(it.chartFilter)) }
+    }
+
+    private fun mutateResultFilter(block: (ResultFilterState) -> ResultFilterState) {
+        mutate { it.copy(resultFilter = block(it.resultFilter)) }
+    }
+}

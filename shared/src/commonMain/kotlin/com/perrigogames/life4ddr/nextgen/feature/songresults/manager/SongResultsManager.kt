@@ -9,9 +9,10 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPai
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.matches
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
+import dev.icerock.moko.mvvm.flow.CStateFlow
+import dev.icerock.moko.mvvm.flow.cMutableStateFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -20,7 +21,6 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 // TODO Logger
-// TODO MokoMvvm
 
 @OptIn(ExperimentalTime::class)
 class SongResultsManager: BaseModel() {
@@ -29,12 +29,9 @@ class SongResultsManager: BaseModel() {
     private val songDataManager: SongDataManager by inject()
     private val resultDbHelper: ResultDatabaseHelper by inject()
 
-    private val results = MutableStateFlow<List<ChartResult>>(emptyList())
-//    private val results = MutableStateFlow<List<ChartResult>>(emptyList()).cMutableStateFlow() // TODO MokoMvvm
-    private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList())
-//    private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList()).cMutableStateFlow() // TODO MokoMvvm
-    val library: StateFlow<List<ChartResultPair>> = _library.asStateFlow()
-//    val library: CStateFlow<List<ChartResultPair>> = _library.cStateFlow() // TODO MokoMvvm
+    private val results = MutableStateFlow<List<ChartResult>>(emptyList()).cMutableStateFlow()
+    private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList()).cMutableStateFlow()
+    val library: CStateFlow<List<ChartResultPair>> = _library.cStateFlow()
 
     init {
         mainScope.launch {

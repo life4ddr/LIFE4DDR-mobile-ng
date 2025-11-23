@@ -25,8 +25,8 @@ class LadderGoalMapper : KoinComponent {
         isExpanded: Boolean,
         allowCompleting: Boolean,
         allowHiding: Boolean,
-        combineMFCs: Boolean,
-        combineSDPs: Boolean,
+//        combineMFCs: Boolean,
+//        combineSDPs: Boolean,
     ): UILadderGoal {
         val isComplete = goalStatus == GoalStatus.COMPLETE || progress?.isComplete == true
         val isMFC = base is MAPointsGoal ||

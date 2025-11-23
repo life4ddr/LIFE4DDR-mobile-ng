@@ -38,6 +38,10 @@ kotlin {
             implementation(libs.russhwolf.settingsDatastore)
             implementation(libs.russhwolf.settingsSerialization)
             implementation(libs.sqldelight.coroutines)
+            api(libs.moko.mvvmCore)
+            api(libs.moko.mvvmFlow)
+            api(libs.moko.mvvmCompose)
+            api(libs.moko.mvvmFlowCompose)
             api(libs.moko.resources.core)
             api(libs.moko.resources.compose)
         }

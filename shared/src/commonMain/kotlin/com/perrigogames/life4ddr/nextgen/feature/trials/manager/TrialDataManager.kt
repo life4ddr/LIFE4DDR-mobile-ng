@@ -7,6 +7,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.russhwolf.settings.Settings
+import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -26,7 +27,6 @@ interface TrialDataManager {
 }
 
 // TODO Logger
-// TODO MokoMvvm
 
 class DefaultTrialDataManager: BaseModel(), TrialDataManager {
 
@@ -43,8 +43,7 @@ class DefaultTrialDataManager: BaseModel(), TrialDataManager {
     override val trials get() = trialsFlow.value
     override val hasEventTrial get() = trials.count { it.isActiveEvent } > 0
 
-    private val _trialsFlow = MutableStateFlow<List<Trial>>(emptyList())
-//    private val _trialsFlow = MutableStateFlow<List<Trial>>(emptyList()).cMutableStateFlow()
+    private val _trialsFlow = MutableStateFlow<List<Trial>>(emptyList()).cMutableStateFlow()
     override val trialsFlow: StateFlow<List<Trial>> = _trialsFlow
 
     init {

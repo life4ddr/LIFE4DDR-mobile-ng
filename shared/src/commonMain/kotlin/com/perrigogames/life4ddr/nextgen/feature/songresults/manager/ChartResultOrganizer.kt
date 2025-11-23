@@ -14,13 +14,13 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.data.IgnoreFilterTy
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.split
+import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.module.plus
 import kotlin.getValue
 
 typealias OrganizerBase = Map<PlayStyle, DifficultyClassMap>
@@ -28,7 +28,6 @@ typealias DifficultyClassMap = Map<DifficultyClass, DifficultyNumberMap>
 typealias DifficultyNumberMap = Map<Int, List<ChartResultPair>>
 
 // TODO Logger
-// TODO MokoMvvm
 
 class ChartResultOrganizer: BaseModel(), KoinComponent {
 
@@ -36,8 +35,7 @@ class ChartResultOrganizer: BaseModel(), KoinComponent {
     private val songResultSettings: SongResultSettings by inject()
 //    private val logger: Logger by injectLogger("ChartResultOrganizer")
 
-    private val basicOrganizer = MutableStateFlow<OrganizerBase>(emptyMap())
-//    private val basicOrganizer = MutableStateFlow<OrganizerBase>(emptyMap()).cMutableStateFlow() // TODO MokoMvvm
+    private val basicOrganizer = MutableStateFlow<OrganizerBase>(emptyMap()).cMutableStateFlow()
 
     private val chartListCache = mutableMapOf<ChartFilterState, Flow<List<ChartResultPair>>>()
 

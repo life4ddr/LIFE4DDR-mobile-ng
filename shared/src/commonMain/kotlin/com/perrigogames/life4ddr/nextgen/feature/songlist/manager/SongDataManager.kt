@@ -16,11 +16,11 @@ import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Song
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.SongListRemoteData
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
+import dev.icerock.moko.mvvm.flow.CStateFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ import org.koin.core.component.inject
  */
 interface SongDataManager {
     val dataVersionString: Flow<String>
-    val libraryFlow: StateFlow<SongLibrary> // TODO MokoMvvm
+    val libraryFlow: CStateFlow<SongLibrary>
 
     fun getSong(skillId: String): Song?
     fun getChart(skillId: String, playStyle: PlayStyle, difficultyClass: DifficultyClass): Chart?
@@ -51,7 +51,7 @@ class DefaultSongDataManager: BaseModel(), SongDataManager {
         data.versionState.map { it.versionString }
 
     private val _libraryFlow = MutableStateFlow(SongLibrary())
-    override val libraryFlow: StateFlow<SongLibrary> = _libraryFlow.asStateFlow() // TODO MokoMvvm
+    override val libraryFlow: CStateFlow<SongLibrary> = _libraryFlow.cStateFlow()
 
     init {
         mainScope.launch {
