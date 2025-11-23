@@ -1,0 +1,60 @@
+package com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter
+
+import com.perrigogames.life4ddr.nextgen.enums.LadderRank
+import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderGoalProgress
+import com.perrigogames.life4ddr.nextgen.feature.ladder.data.TrialGoal
+import com.perrigogames.life4ddr.nextgen.feature.ladder.data.TrialStackedGoal
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
+class TrialGoalProgressConverter : GoalProgressConverter<TrialGoal>, KoinComponent {
+
+    private val trialRecordsManager: TrialRecordsManager by inject()
+
+    override fun getGoalProgress(
+        goal: TrialGoal,
+        ladderRank: LadderRank?,
+    ): Flow<LadderGoalProgress?> {
+        return trialRecordsManager.bestSessions.map { sessions -> // FIXME playstyle
+            val count = sessions.count {
+                if (goal.restrictDifficulty) {
+                    it.goalRank.stableId == goal.rank.stableId
+                } else {
+                    it.goalRank.stableId >= goal.rank.stableId
+                }
+            }
+            LadderGoalProgress(
+                progress = count,
+                max = goal.count,
+            )
+        }
+    }
+}
+
+class TrialStackGoalProgressConverter : StackedGoalProgressConverter<TrialStackedGoal>, KoinComponent {
+
+    private val trialRecordsManager: TrialRecordsManager by inject()
+
+    override fun getGoalProgress(
+        goal: TrialStackedGoal,
+        stackIndex: Int,
+        ladderRank: LadderRank?,
+    ): Flow<LadderGoalProgress?> {
+        return trialRecordsManager.bestSessions.map { sessions -> // FIXME playstyle
+            val count = sessions.count {
+                if (goal.restrictDifficulty) {
+                    it.goalRank.stableId == goal.rank.stableId
+                } else {
+                    it.goalRank.stableId >= goal.rank.stableId
+                }
+            }
+            LadderGoalProgress(
+                progress = count,
+                max = goal.getIntValue(stackIndex, TrialStackedGoal.KEY_TRIALS_COUNT)!!
+            )
+        }
+    }
+}

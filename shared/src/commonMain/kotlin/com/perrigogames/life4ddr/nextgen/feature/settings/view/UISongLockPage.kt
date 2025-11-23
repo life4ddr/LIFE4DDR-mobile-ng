@@ -1,4 +1,4 @@
-package com.perrigogames.life4ddr.nextgen.feature.settings.pages.songlock
+package com.perrigogames.life4ddr.nextgen.feature.settings.view
 
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc

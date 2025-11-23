@@ -1,0 +1,117 @@
+package com.perrigogames.life4ddr.nextgen.feature.songresults.manager
+
+import com.perrigogames.life4ddr.nextgen.db.ChartResult
+import com.perrigogames.life4ddr.nextgen.enums.ClearType
+import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
+import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
+import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongLibrary
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.matches
+import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
+import com.perrigogames.life4ddr.nextgen.model.BaseModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
+import org.koin.core.component.inject
+import kotlin.random.Random
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+
+// TODO Logger
+// TODO MokoMvvm
+
+@OptIn(ExperimentalTime::class)
+class SongResultsManager: BaseModel() {
+
+//    private val logger: Logger by injectLogger("SongResultsManager")
+    private val songDataManager: SongDataManager by inject()
+    private val resultDbHelper: ResultDatabaseHelper by inject()
+
+    private val results = MutableStateFlow<List<ChartResult>>(emptyList())
+//    private val results = MutableStateFlow<List<ChartResult>>(emptyList()).cMutableStateFlow() // TODO MokoMvvm
+    private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList())
+//    private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList()).cMutableStateFlow() // TODO MokoMvvm
+    val library: StateFlow<List<ChartResultPair>> = _library.asStateFlow()
+//    val library: CStateFlow<List<ChartResultPair>> = _library.cStateFlow() // TODO MokoMvvm
+
+    init {
+        mainScope.launch {
+            combine(
+                songDataManager.libraryFlow,
+                results
+            ) { songData, results ->
+//                logger.d { "Updating with ${songData.charts.size} charts and ${results.size} results" }
+                matchCharts(songData, results)
+            }
+                .collect(_library)
+        }
+        refresh()
+    }
+
+    fun refresh() {
+//        logger.d("Refreshing song results")
+        mainScope.launch {
+            results.emit(resultDbHelper.selectAll())
+        }
+    }
+
+    fun addScores(scores: List<ChartResult>) {
+        mainScope.launch {
+            resultDbHelper.insertResults(scores)
+            results.emit(resultDbHelper.selectAll())
+        }
+    }
+
+    fun createDebugScores() {
+//        logger.d("Adding debug scores")
+        mainScope.launch {
+            val random = Random(Clock.System.now().toEpochMilliseconds())
+            val charts = songDataManager.libraryFlow.value.charts
+            results.emit(
+                List(50) { random.nextInt(0, charts.size) }
+                    .toSet()
+                    .map { index -> charts[index] }
+                    .map { chart ->
+                        ChartResult(
+                            skillId = chart.song.skillId,
+                            difficultyClass = chart.difficultyClass,
+                            playStyle = chart.playStyle,
+                            clearType = ClearType.CLEAR,
+                            score = 1_000_000L - (1_000 * random.nextInt(0, 100)),
+                            exScore = 1_000L - random.nextInt(0, 100),
+                            flare = random.nextLong(0, 10).takeIf { it >= 1 },
+                            flareSkill = random.nextLong(100, 500)
+                        )
+                    }
+            )
+        }
+    }
+
+    internal fun clearAllResults() {
+//        logger.w("Clearing all saved song results")
+        mainScope.launch {
+            resultDbHelper.deleteAll()
+            results.emit(emptyList())
+        }
+    }
+
+    private fun matchCharts(
+        library: SongLibrary,
+        results: List<ChartResult>
+    ): List<ChartResultPair> {
+        val matches = mutableMapOf<Chart, ChartResult>()
+        results.forEach { result ->
+            library.charts
+                .firstOrNull { chart -> chart.matches(result) }
+                ?.let { chart -> matches[chart] = result }
+        }
+        return library.charts.map { chart ->
+            ChartResultPair(
+                chart = chart,
+                result = matches[chart]
+            )
+        }
+    }
+}
