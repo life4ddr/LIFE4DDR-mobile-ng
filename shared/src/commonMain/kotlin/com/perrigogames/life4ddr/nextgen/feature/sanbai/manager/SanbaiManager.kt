@@ -1,11 +1,11 @@
 package com.perrigogames.life4ddr.nextgen.feature.sanbai.manager
 
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
-import com.perrigogames.life4ddr.nextgen.feature.banners.UIBanner
-import com.perrigogames.life4ddr.nextgen.feature.banners.UIBannerTemplates
+import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
+import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBannerTemplates
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPISettings
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import dev.icerock.moko.resources.desc.desc

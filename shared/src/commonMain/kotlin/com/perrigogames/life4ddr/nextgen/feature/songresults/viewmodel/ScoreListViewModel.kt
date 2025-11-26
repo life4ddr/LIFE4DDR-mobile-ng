@@ -7,9 +7,9 @@ import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.clearResShort
 import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.enums.nameRes
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
-import com.perrigogames.life4ddr.nextgen.feature.banners.UIBanner
+import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
+import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair

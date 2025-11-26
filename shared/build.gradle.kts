@@ -51,6 +51,7 @@ kotlin {
             api(libs.moko.resources.test)
         }
         androidMain.dependencies {
+            implementation(libs.androidx.splashscreen)
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.sqldelight.android)
         }

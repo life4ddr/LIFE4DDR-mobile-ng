@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.androidNavigationSafeArgs)
 }
 
 kotlin {
@@ -32,6 +33,22 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.material.icons)
+            implementation(libs.androidx.camera.core)
+            implementation(libs.androidx.camera.lifecycle)
+            implementation(libs.androidx.camera.view)
+//            implementation(libs.androidx.compose.material3)
+//            implementation(libs.androidx.compose.material3window)
+//            implementation(libs.androidx.compose.material3navigation)
+            implementation(libs.androidx.exifinterface)
+            implementation(libs.androidx.navigation.compose)
+//            implementation(libs.androidx.navigation.safeargs)
+            implementation(libs.androidx.splashscreen)
+            implementation(libs.accompanist.permissions)
+            implementation(libs.composeWebview)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.android)
+            implementation(libs.coil.clientAndroid)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -42,14 +59,22 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.ktor3)
+            implementation(libs.composeSettings.ui)
+            implementation(libs.composeSettings.ui.extended)
             implementation(projects.shared)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+        appleMain.dependencies {
+            implementation(libs.coil.clientDarwin)
+        }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.coil.clientJvm)
         }
     }
 }
@@ -71,8 +96,15 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            addManifestPlaceholders(mapOf(Pair("providerName", "com.perrigogames.life4ddr.nextgen.fileprovider.debug")))
+        }
         getByName("release") {
             isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            addManifestPlaceholders(mapOf(Pair("providerName", "com.perrigogames.life4ddr.nextgen.fileprovider")))
+            signingConfig = signingConfigs.findByName("release")
         }
     }
     compileOptions {

@@ -1,9 +1,9 @@
 package com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel
 
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
-import com.perrigogames.life4ddr.nextgen.feature.banners.UIBanner
+import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
+import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.GoalListConfig
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork

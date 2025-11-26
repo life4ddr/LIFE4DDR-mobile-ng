@@ -8,9 +8,9 @@ import com.perrigogames.life4ddr.nextgen.api.base.unwrapLoaded
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerLocation
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
-import com.perrigogames.life4ddr.nextgen.feature.banners.UIBannerTemplates
+import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
+import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBannerTemplates
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponse
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Song

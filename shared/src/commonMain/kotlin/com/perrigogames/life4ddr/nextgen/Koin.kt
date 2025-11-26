@@ -7,8 +7,8 @@ import com.perrigogames.life4ddr.nextgen.api.DefaultGithubDataAPI
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI
 import com.perrigogames.life4ddr.nextgen.api.base.LocalDataReader
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
-import com.perrigogames.life4ddr.nextgen.feature.banners.DefaultBannerManager
-import com.perrigogames.life4ddr.nextgen.feature.banners.BannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.manager.DefaultBannerManager
+import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.DefaultDeeplinkManager
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.DefaultFirstRunSettings
@@ -75,7 +75,7 @@ fun initKoin(
     modules(listOfNotNull(appModule, extraAppModule, platformModule, coreModule))
 }.apply {
     // doOnStartup is a lambda which is implemented in Swift on iOS side
-    koin.get<() -> Unit>().invoke()
+//    koin.get<() -> Unit>().invoke()
     koin.get<Logger> { parametersOf(null) }.also { kermit ->
         kermit.v { "App Id ${koin.get<AppInfo>().appId}" }
     }

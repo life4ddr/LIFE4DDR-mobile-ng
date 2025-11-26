@@ -1,0 +1,201 @@
+package com.perrigogames.life4ddr.nextgen.feature.profile
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
+import com.perrigogames.life4ddr.nextgen.compose.Typography
+import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
+import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoals
+import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.compose.RankImage
+import com.perrigogames.life4ddr.nextgen.enums.colorRes
+import com.perrigogames.life4ddr.nextgen.enums.nameRes
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerInfoViewState
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileAction
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileViewModel
+import com.perrigogames.life4ddr.nextgen.util.ViewState
+import dev.icerock.moko.mvvm.createViewModelFactory
+import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PlayerProfileScreen(
+    profileViewModel: PlayerProfileViewModel = viewModel(
+        factory = createViewModelFactory { PlayerProfileViewModel() }
+    ),
+    onBackPressed: () -> Unit = {},
+    onAction: (PlayerProfileAction) -> Unit = {},
+) {
+    val scope = rememberCoroutineScope()
+
+    val playerInfoViewState by profileViewModel.playerInfoViewState.collectAsState()
+    val goalListViewState by profileViewModel.goalListViewModel.state.collectAsState()
+    val density = LocalDensity.current
+    val bottomSheetState = remember {
+        SheetState(
+            initialValue = SheetValue.Hidden,
+            skipPartiallyExpanded = false,
+            positionalThreshold = { with(density) { 56.dp.toPx() }},
+            velocityThreshold = { with(density) { 125.dp.toPx() }},
+        )
+    }
+    val goalData by remember { derivedStateOf { (goalListViewState as? ViewState.Success)?.data } }
+    val goalError by remember { derivedStateOf { (goalListViewState as? ViewState.Error)?.error } }
+
+    BackHandler {
+        if (bottomSheetState.isVisible) {
+            scope.launch { bottomSheetState.hide() }
+        } else {
+            onBackPressed()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        profileViewModel.goalListViewModel.showBottomSheet.collect {
+            bottomSheetState.expand()
+        }
+    }
+
+    BottomSheetScaffold(
+        scaffoldState = rememberBottomSheetScaffoldState(
+            bottomSheetState = bottomSheetState
+        ),
+        sheetContent = {
+            if (goalData?.hasSubstitutions == true) {
+                LadderGoals(
+                    goals = goalData!!.substitutions!!,
+                    rankClass = goalData!!.targetRankClass,
+                    onInput = { profileViewModel.goalListViewModel.handleAction(it) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .weight(1f)
+                )
+            }
+        },
+        sheetPeekHeight = 0.dp,
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier.padding(paddingValues),
+        ) {
+            PlayerProfileInfo(
+                state = playerInfoViewState,
+                modifier = Modifier.fillMaxWidth(),
+                onRankClicked = { onAction(PlayerProfileAction.ChangeRank) }
+            )
+            BannerContainer(playerInfoViewState.banner)
+
+            if (goalData != null) {
+                LadderGoals(
+                    goals = goalData!!.goals,
+                    rankClass = goalData!!.targetRankClass,
+                    onInput = { profileViewModel.goalListViewModel.handleAction(it) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                )
+            }
+            if (goalError != null) {
+                Text(
+                    text = goalError!!,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .weight(1f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PlayerProfileInfo(
+    state: PlayerInfoViewState,
+    modifier: Modifier = Modifier,
+    onRankClicked: () -> Unit = {},
+) {
+    val context = LocalContext.current
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(16.dp)
+            .then(modifier)
+    ) {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = state.username,
+                style = Typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            SizedSpacer(8.dp)
+            state.rivalCode?.let {  rivalCode ->
+                Text(
+                    text = rivalCode,
+                    style = Typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            RankImage(
+                rank = state.rank,
+                size = 64.dp,
+                onClick = onRankClicked
+            )
+            Text(
+                text = state.rank.nameRes.getString(context),
+                style = MaterialTheme.typography.labelMedium,
+                color = state.rank?.colorRes?.getColor(context)?.let { Color(it) } ?: Color.Unspecified
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun PlayerProfilePreview() {
+    LIFE4Theme {
+        PlayerProfileScreen {}
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun PlayerProfileInfoPreview() {
+    LIFE4Theme {
+        Column {
+            PlayerProfileInfo(
+                PlayerInfoViewState(
+                    username = "KONNOR"
+                )
+            )
+            SizedSpacer(16.dp)
+            PlayerProfileInfo(
+                PlayerInfoViewState(
+                    username = "KONNOR",
+                    rivalCode = "1234-5678"
+                )
+            )
+        }
+    }
+}
