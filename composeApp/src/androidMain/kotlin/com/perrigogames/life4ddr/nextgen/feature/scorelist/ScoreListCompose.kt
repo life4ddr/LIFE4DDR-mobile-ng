@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.R
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
@@ -21,6 +22,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.UIScore
 import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -199,16 +201,16 @@ fun ScoreEntry(data: UIScore) {
     }
 }
 
-fun flareImageResource(level: Int): Int? = when(level) {
-    1 -> R.drawable.flare_1
-    2 -> R.drawable.flare_2
-    3 -> R.drawable.flare_3
-    4 -> R.drawable.flare_4
-    5 -> R.drawable.flare_5
-    6 -> R.drawable.flare_6
-    7 -> R.drawable.flare_7
-    8 -> R.drawable.flare_8
-    9 -> R.drawable.flare_9
-    10 -> R.drawable.flare_ex
+fun flareImageResource(level: Int) = when(level) {
+    1 -> MR.images.flare_1
+    2 -> MR.images.flare_2
+    3 -> MR.images.flare_3
+    4 -> MR.images.flare_4
+    5 -> MR.images.flare_5
+    6 -> MR.images.flare_6
+    7 -> MR.images.flare_7
+    8 -> MR.images.flare_8
+    9 -> MR.images.flare_9
+    10 -> MR.images.flare_ex
     else -> null
 }

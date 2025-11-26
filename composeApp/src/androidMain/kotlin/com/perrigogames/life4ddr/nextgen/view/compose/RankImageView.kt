@@ -14,13 +14,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.R
 import com.perrigogames.life4ddr.nextgen.drawableRes
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
+import dev.icerock.moko.resources.compose.painterResource
 
 @Composable
 fun RankImage(
@@ -30,7 +31,7 @@ fun RankImage(
     onClick: (() -> Unit)? = null,
 ) {
     val painter = painterResource(
-        rank?.drawableRes ?: R.drawable.copper_1
+        rank?.drawableRes ?: MR.images.copper_1
     )
     val colorMatrix = ColorMatrix().apply { setToSaturation(0f) }
     val colorFilter = if (rank != null) null else ColorFilter.colorMatrix(colorMatrix)
