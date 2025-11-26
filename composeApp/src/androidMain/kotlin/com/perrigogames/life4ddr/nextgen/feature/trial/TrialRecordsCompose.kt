@@ -24,7 +24,7 @@ import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.drawableRes
 import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.compose.Life4Divider
+import com.perrigogames.life4ddr.nextgen.view.Life4Divider
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialRecordsViewModel
@@ -134,7 +134,7 @@ fun TrialRecordItem(
         LinearProgressIndicator(
             color = colorResource(MR.colors.colorAccent),
             trackColor = MaterialTheme.colorScheme.surface,
-            progress = record.exProgressPercent,
+            progress = { record.exProgressPercent },
             modifier = Modifier
                 .height(4.dp)
                 .fillMaxWidth(),

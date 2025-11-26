@@ -1,22 +1,21 @@
-package com.perrigogames.life4ddr.nextgen.view.compose
+package com.perrigogames.life4ddr.nextgen.view
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.R
-import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
+import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialEXProgress
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun RunningEXScore(
@@ -43,11 +42,11 @@ fun RunningEXScore(
 
         Text(text = missingText, maxLines = 1)
         LinearProgressIndicator(
-            progress = progress.currentExPercent,
+            progress = { progress.currentExPercent },
             modifier = Modifier
                 .height(8.dp)
                 .align(Alignment.CenterVertically)
-                .padding(horizontal = dimensionResource(R.dimen.content_padding_med))
+                .padding(horizontal = Paddings.MEDIUM)
                 .weight(1F),
             color = colorResource(MR.colors.difficultyExpert),
             //FIXME background, background color, second progress
@@ -59,7 +58,7 @@ fun RunningEXScore(
 @Preview
 @Composable
 fun RunningEXScorePreview() {
-    LIFE4Theme {
+    MaterialTheme {
         RunningEXScore(
             progress = TrialEXProgress(
                 currentExScore = 350,

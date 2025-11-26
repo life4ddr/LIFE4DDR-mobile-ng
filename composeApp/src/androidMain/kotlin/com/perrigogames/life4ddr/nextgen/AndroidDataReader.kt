@@ -18,7 +18,7 @@ import java.io.StringWriter
  * Android implementations of [LocalUncachedDataReader] and [LocalDataReader]
  */
 
-open class AndroidUncachedDataReader(@RawRes protected val rawResId: Int):
+open class AndroidUncachedDataReader(@param:RawRes protected val rawResId: Int):
     LocalUncachedDataReader, KoinComponent {
 
     protected val context: Context by inject()

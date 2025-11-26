@@ -16,7 +16,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.compose.AutoResizedText
+import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
 import dev.icerock.moko.resources.compose.colorResource
 

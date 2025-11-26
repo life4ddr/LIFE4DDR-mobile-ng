@@ -1,6 +1,6 @@
 @file:Suppress("EXPERIMENTAL_API_USAGE")
 
-package com.perrigogames.life4ddr.nextgen.view.compose
+package com.perrigogames.life4ddr.nextgen.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -13,21 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.R
 import com.perrigogames.life4ddr.nextgen.drawableRes
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import dev.icerock.moko.resources.compose.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun RankImage(
     rank: LadderRank?,
     modifier: Modifier = Modifier,
-    size: Dp = dimensionResource(R.dimen.profile_found_rank_size),
+    size: Dp = 96.dp,
     onClick: (() -> Unit)? = null,
 ) {
     val painter = painterResource(

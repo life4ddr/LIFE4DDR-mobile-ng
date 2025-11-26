@@ -47,7 +47,7 @@ import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.*
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.PathStep.*
 import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork
-import com.perrigogames.life4ddr.nextgen.view.compose.ErrorText
+import com.perrigogames.life4ddr.nextgen.view.ErrorText
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.resources.compose.stringResource
 

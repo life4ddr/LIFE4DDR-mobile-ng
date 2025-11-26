@@ -32,7 +32,7 @@ import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
 import com.perrigogames.life4ddr.nextgen.stringResource
 import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.compose.Life4Divider
+import com.perrigogames.life4ddr.nextgen.view.Life4Divider
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
@@ -361,7 +361,7 @@ private fun LadderGoalDetailShade(
                         }
                     }
                 }
-                UILadderDetailItem.Spacer -> Divider(modifier = Modifier.padding(vertical = 2.dp))
+                UILadderDetailItem.Spacer -> HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
             }
         }
     }

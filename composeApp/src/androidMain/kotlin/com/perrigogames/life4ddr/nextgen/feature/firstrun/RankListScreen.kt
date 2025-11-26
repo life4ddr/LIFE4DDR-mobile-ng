@@ -22,7 +22,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewMo
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelInput
 import com.perrigogames.life4ddr.nextgen.stringResource
 import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.compose.AutoResizedText
+import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
 import dev.icerock.moko.mvvm.createViewModelFactory
 
 @Composable

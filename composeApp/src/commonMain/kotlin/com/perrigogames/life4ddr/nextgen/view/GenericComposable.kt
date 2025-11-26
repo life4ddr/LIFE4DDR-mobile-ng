@@ -1,4 +1,4 @@
-package com.perrigogames.life4ddr.nextgen.view.compose
+package com.perrigogames.life4ddr.nextgen.view
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme

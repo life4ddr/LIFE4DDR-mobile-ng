@@ -28,7 +28,7 @@ import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementMock
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialMocks
 import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.compose.RankImage
+import com.perrigogames.life4ddr.nextgen.view.RankImage
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.stringResource

@@ -1,4 +1,4 @@
-package com.perrigogames.life4ddr.nextgen.view.compose
+package com.perrigogames.life4ddr.nextgen.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
