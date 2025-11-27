@@ -18,7 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.Typography
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
-import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoals
+import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoalsContent
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.enums.colorRes
@@ -75,7 +75,7 @@ fun PlayerProfileScreen(
         ),
         sheetContent = {
             if (goalData?.hasSubstitutions == true) {
-                LadderGoals(
+                LadderGoalsContent(
                     goals = goalData!!.substitutions!!,
                     rankClass = goalData!!.targetRankClass,
                     onInput = { profileViewModel.goalListViewModel.handleAction(it) },
@@ -99,7 +99,7 @@ fun PlayerProfileScreen(
             BannerContainer(playerInfoViewState.banner)
 
             if (goalData != null) {
-                LadderGoals(
+                LadderGoalsContent(
                     goals = goalData!!.goals,
                     rankClass = goalData!!.targetRankClass,
                     onInput = { profileViewModel.goalListViewModel.handleAction(it) },

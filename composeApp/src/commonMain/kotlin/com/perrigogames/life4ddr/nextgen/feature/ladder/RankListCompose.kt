@@ -1,28 +1,137 @@
-@file:Suppress("OPT_IN_USAGE")
-
 package com.perrigogames.life4ddr.nextgen.feature.ladder
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
-import com.perrigogames.life4ddr.nextgen.stringResource
-import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.RankImageWithTitle
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
+import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UIFooterData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UINoRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UIRankList
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelInput
+import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
+import com.perrigogames.life4ddr.nextgen.view.RankImageWithTitle
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
+import dev.icerock.moko.resources.compose.localized
+import dev.icerock.moko.resources.compose.painterResource
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RankListContent(
+    state: UIRankList,
+    onInput: (RankListViewModelInput) -> Unit = {},
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = state.titleText.localized(),
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+                },
+                navigationIcon = {
+                    if (state.showBackButton) {
+                        IconButton(
+                            onClick = { onInput(RankListViewModelInput.RankRejected) }
+                        ) {
+                            Image(
+                                painter = painterResource(MR.images.arrow_back),
+                                contentDescription = "Back"
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+        ) {
+            SizedSpacer(32.dp)
+            RankSelection(
+                data = state,
+                onInput = onInput,
+            )
+
+            val ladderData = state.ladderData
+            if (ladderData != null) {
+                LadderGoalsContent(
+                    goals = ladderData.goals,
+                    rankClass = ladderData.targetRankClass,
+                    modifier = Modifier.weight(1f),
+                    onInput = { onInput(RankListViewModelInput.GoalList(it)) },
+                )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            state.footer?.let { firstRun ->
+                FirstRunWidget(
+                    data = firstRun,
+                    onInput = onInput,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun FirstRunWidget(
+    data: UIFooterData,
+    onInput: (RankListViewModelInput) -> Unit = {},
+) {
+    data.footerText?.let { footer ->
+        AutoResizedText(
+            text = footer.localized(),
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .padding(horizontal = Paddings.HUGE)
+                .padding(top = Paddings.LARGE)
+        )
+    }
+    Button(
+        onClick = { onInput(data.buttonInput) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = Paddings.HUGE,
+                vertical = Paddings.LARGE
+            )
+    ) {
+        Text(text = data.buttonText.localized())
+    }
+}
 
 @Composable
 fun RankSelection(
@@ -48,18 +157,18 @@ fun RankSelection(
                     if (targetState.first == initialState.first) {
                         if (targetState.second) {
                             slideInVertically() + fadeIn() togetherWith
-                                slideOutVertically() + fadeOut()
+                                    slideOutVertically() + fadeOut()
                         } else {
                             slideInVertically() + fadeIn() togetherWith
-                                slideOutVertically() + fadeOut()
+                                    slideOutVertically() + fadeOut()
                         }
                     } else {
                         if (targetState.second) {
                             slideInVertically() + fadeIn() togetherWith
-                                slideOutVertically() + fadeOut()
+                                    slideOutVertically() + fadeOut()
                         } else {
                             slideInVertically() + fadeIn() togetherWith
-                                slideOutVertically() + fadeOut()
+                                    slideOutVertically() + fadeOut()
                         }
                     }
                 }
@@ -116,7 +225,7 @@ fun NoRankDetails(
         modifier = modifier,
     ) {
         Text(
-            text = stringResource(noRank.bodyText.resourceId),
+            text = noRank.bodyText.localized(),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
@@ -129,7 +238,7 @@ fun NoRankDetails(
                 .padding(vertical = Paddings.HUGE)
         ) {
             Text(
-                text = stringResource(noRank.buttonText.resourceId)
+                text = noRank.buttonText.localized()
             )
         }
     }
@@ -152,7 +261,7 @@ fun RankCategorySelector(
                     .padding(top = Paddings.MEDIUM),
                 iconSize = 64.dp,
                 selected = category.selected,
-                text = stringResource(category.text),
+                text = category.text.localized(),
                 style = MaterialTheme.typography.titleSmall,
                 onClick = { onInput(category.tapInput) }
             )
@@ -181,7 +290,7 @@ fun RankItemSelector(
                             .padding(top = Paddings.MEDIUM),
                         selected = rank.selected,
                         iconSize = 48.dp,
-                        text = stringResource(rank.text)
+                        text = rank.text.localized()
                     ) { onInput(rank.tapInput) }
                 }
             }
@@ -239,29 +348,6 @@ fun RankSelectionMini(
         }
         item {
             SizedSpacer(size = 10.dp)
-        }
-    }
-}
-
-//@Preview(widthDp = 360, heightDp = 640)
-//@Composable
-//fun RankSelectionPreview() {
-//    LIFE4Theme {
-//        Surface {
-//            RankSelection(initialRank = LadderRank.GOLD3)
-//        }
-//    }
-//}
-
-@Preview(widthDp = 360)
-@Composable
-fun RankSelectionMiniPreview() {
-    LIFE4Theme {
-        Surface {
-            RankSelectionMini(
-                selectedRank = null,
-                onRankSelected = {}
-            )
         }
     }
 }

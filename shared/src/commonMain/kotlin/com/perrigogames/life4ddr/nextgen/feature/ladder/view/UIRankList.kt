@@ -12,7 +12,7 @@ import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 
 data class UIRankList(
-    val titleText: StringResource = MR.strings.select_a_new_rank,
+    val titleText: StringDesc = MR.strings.select_a_new_rank.desc(),
     val showBackButton: Boolean = false,
     val rankClasses: List<UILadderRankClass> = emptyList(),
     val selectedRankClass: LadderRankClass? = null,
@@ -85,18 +85,18 @@ data class UIFooterData(
 }
 
 data class UINoRank(
-    val bodyText: StringResource,
-    val buttonText: StringResource,
+    val bodyText: StringDesc,
+    val buttonText: StringDesc,
     val buttonInput: RankListViewModelInput = RankListViewModelInput.RankRejected,
 ) {
     companion object {
         val DEFAULT = UINoRank(
-            bodyText = MR.strings.no_rank_goals,
-            buttonText = MR.strings.i_have_no_rank,
+            bodyText = MR.strings.no_rank_goals.desc(),
+            buttonText = MR.strings.i_have_no_rank.desc(),
         )
         val FIRST_RUN = UINoRank(
-            bodyText = MR.strings.no_rank_goals,
-            buttonText = MR.strings.start_with_no_rank,
+            bodyText = MR.strings.no_rank_goals.desc(),
+            buttonText = MR.strings.start_with_no_rank.desc(),
 
         )
     }

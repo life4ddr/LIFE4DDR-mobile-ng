@@ -18,6 +18,7 @@ import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSetting
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import dev.icerock.moko.mvvm.flow.*
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -85,8 +86,8 @@ class RankListViewModel(
                 val ladderData = (goalList as? ViewState.Success<UILadderData>)?.data
                 UIRankList(
                     titleText = when {
-                        isFirstRun -> MR.strings.select_a_starting_rank
-                        else -> MR.strings.select_a_new_rank
+                        isFirstRun -> MR.strings.select_a_starting_rank.desc()
+                        else -> MR.strings.select_a_new_rank.desc()
                     },
                     showBackButton = !isFirstRun,
                     rankClasses = listOf(UILadderRankClass.NO_RANK) + LadderRankClass.entries.map {

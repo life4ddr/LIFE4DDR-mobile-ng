@@ -7,4 +7,9 @@ object Paddings {
     val MEDIUM = 8.dp
     val LARGE = 16.dp
     val HUGE = 32.dp
+
+    object LadderGoals {
+        val HORIZONTAL_PADDING = 12.dp
+        val VERTICAL_PADDING = 12.dp
+    }
 }
