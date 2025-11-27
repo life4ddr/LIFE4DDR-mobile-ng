@@ -24,8 +24,8 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization)
-            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.kermit)
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.ksoup.entities)
             implementation(libs.ktor.clientAuth)

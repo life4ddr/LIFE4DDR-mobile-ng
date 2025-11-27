@@ -1,18 +1,16 @@
 package com.perrigogames.life4ddr.nextgen.feature.firstrun
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,14 +21,11 @@ import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.*
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
-import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacement
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementMocks
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialMocks
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.RankImage
 import dev.icerock.moko.mvvm.createViewModelFactory
-import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 
@@ -95,7 +90,7 @@ fun PlacementListScreen(
                         color = MaterialTheme.colorScheme.primaryContainer,
                         shape = MaterialTheme.shapes.large
                     ) {
-                        PlacementItem(
+                        PlacementListItem(
                             data = placement,
                             expanded = selectedPlacement == placement.id,
                             onExpand = {
@@ -177,79 +172,6 @@ fun PlacementListScreen(
 }
 
 @Composable
-fun PlacementItem(
-    data: UIPlacement,
-    expanded: Boolean = false,
-    onExpand: () -> Unit = {},
-    onPlacementSelected: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val arrowRotationDegrees by remember {
-        derivedStateOf {
-            if (expanded) 180f else 0f
-        }
-    }
-    Column(modifier = modifier.clickable { onExpand() }) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            RankImage(
-                rank = data.rankIcon,
-                modifier = Modifier.size(64.dp)
-            )
-            SizedSpacer(16.dp)
-            Text(
-                text = stringResource(data.placementName),
-                style = MaterialTheme.typography.headlineMedium,
-                color = colorResource(data.color),
-                modifier = Modifier.weight(1f)
-            )
-            Text(
-                text = data.difficultyRangeString,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .size(32.dp)
-                    .rotate(arrowRotationDegrees),
-                contentDescription = if (expanded) "expanded" else "collapsed"
-            )
-        }
-        AnimatedVisibility(expanded) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 4.dp)
-            ) {
-                data.songs.forEach { song ->
-                    PlacementSongItem(
-                        data = song,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                SizedSpacer(16.dp)
-                TextButton(
-                    onClick = onPlacementSelected,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(MR.strings.placement_start),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
 @LightDarkModeSystemPreviews
 fun Preview_PlacementScreen() {
     LIFE4Theme {
@@ -269,7 +191,7 @@ fun Preview_PlacementItem(
     @PreviewParameter(LadderRankLevel3ParameterProvider::class) rank: LadderRank,
 ) {
     ThemedRankSurface(rank) {
-        PlacementItem(
+        PlacementListItem(
             data = UIPlacementMocks.createUIPlacementData(rankIcon = rank),
             onPlacementSelected = {}
         )
@@ -282,7 +204,7 @@ fun Preview_PlacementItemExpanded(
     @PreviewParameter(LadderRankLevel3ParameterProvider::class) rank: LadderRank,
 ) {
     ThemedRankSurface(rank) {
-        PlacementItem(
+        PlacementListItem(
             data = UIPlacementMocks.createUIPlacementData(
                 rankIcon = rank
             ),

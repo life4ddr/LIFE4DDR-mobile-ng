@@ -6,9 +6,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,9 +24,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.util.InteractiveImage
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
+import dev.icerock.moko.resources.compose.painterResource
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -182,11 +182,13 @@ fun SongEntryControls(
             onClick = { onAction(submitAction) },
         ) {
             Icon(
-                imageVector = if (isEdit) {
-                    Icons.Filled.Done
-                } else {
-                    Icons.AutoMirrored.Filled.ArrowForward
-                },
+                painter = painterResource(
+                    if (isEdit) {
+                        MR.images.check
+                    } else {
+                        MR.images.arrow_forward
+                    }
+                ),
                 contentDescription = "Next"
             )
         }

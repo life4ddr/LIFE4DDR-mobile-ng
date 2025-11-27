@@ -33,13 +33,9 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.material.icons)
             implementation(libs.androidx.camera.core)
             implementation(libs.androidx.camera.lifecycle)
             implementation(libs.androidx.camera.view)
-//            implementation(libs.androidx.compose.material3)
-//            implementation(libs.androidx.compose.material3window)
-//            implementation(libs.androidx.compose.material3navigation)
             implementation(libs.androidx.exifinterface)
             implementation(libs.androidx.navigation.compose)
 //            implementation(libs.androidx.navigation.safeargs)
@@ -63,6 +59,8 @@ kotlin {
             implementation(libs.coil.ktor3)
             implementation(libs.composeSettings.ui)
             implementation(libs.composeSettings.ui.extended)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
             implementation(projects.shared)
         }
         commonTest.dependencies {

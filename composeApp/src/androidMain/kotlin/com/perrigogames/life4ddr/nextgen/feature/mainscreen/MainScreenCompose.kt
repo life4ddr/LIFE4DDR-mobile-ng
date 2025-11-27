@@ -2,10 +2,6 @@ package com.perrigogames.life4ddr.nextgen.feature.mainscreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,11 +16,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.R
 import com.perrigogames.life4ddr.nextgen.navigation.profileNavigation
 import com.perrigogames.life4ddr.nextgen.feature.profile.ProfileDestination
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.MainScreenViewModel
 import dev.icerock.moko.mvvm.createViewModelFactory
+import dev.icerock.moko.resources.compose.painterResource
 
 @Composable
 fun MainScreen(
@@ -48,10 +46,10 @@ fun MainScreen(
                     NavigationBarItem(
                         icon = {
                             when (screen) {
-                                ProfileDestination.Profile -> Icon(Icons.Filled.Home, contentDescription = null)
-                                ProfileDestination.Scores -> Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
-                                ProfileDestination.Settings -> Icon(Icons.Filled.Settings, contentDescription = null)
-                                ProfileDestination.Trials -> Icon(painterResource(R.drawable.baseline_emoji_events_24), contentDescription = null)
+                                ProfileDestination.Profile -> Icon(painterResource(MR.images.home), contentDescription = null)
+                                ProfileDestination.Scores -> Icon(painterResource(MR.images.list), contentDescription = null)
+                                ProfileDestination.Settings -> Icon(painterResource(MR.images.settings), contentDescription = null)
+                                ProfileDestination.Trials -> Icon(painterResource(MR.images.trophy), contentDescription = null)
                             }
                         },
                         label = { Text(screen.title) },

@@ -4,8 +4,6 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,11 +13,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITargetRank
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.desc.color.getColor
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -148,7 +148,10 @@ fun RankDisplay(
         }
 
         AnimatedVisibility(visible = showSelectorIcon) {
-            Icon(Icons.Filled.ArrowDropDown, contentDescription = "Select rank")
+            Icon(
+                painter = painterResource(MR.images.arrow_drop_down),
+                contentDescription = "Select rank"
+            )
         }
         SizedSpacer(4.dp)
     }

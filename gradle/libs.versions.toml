@@ -55,7 +55,6 @@ androidx-compose-material3 = { module = "androidx.compose.material3:material3", 
 androidx-compose-material3window = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "androidx-material3" }
 androidx-compose-material3navigation = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "androidx-material3" }
 androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "androidx-exifInterface" }
-androidx-material-icons = { module = "androidx.compose.material:material-icons-core", version.ref = "androidx-material-icons" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 androidx-navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation" }
 androidx-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-splashscreen" }
