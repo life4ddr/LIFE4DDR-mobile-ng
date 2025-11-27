@@ -22,7 +22,7 @@ import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementD
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trial.CameraBottomSheetContent
 import com.perrigogames.life4ddr.nextgen.feature.trial.LargeCTAButton
-import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import dev.icerock.moko.mvvm.createViewModelFactory
 import kotlinx.coroutines.launch

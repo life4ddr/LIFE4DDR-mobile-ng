@@ -39,7 +39,7 @@ import com.perrigogames.life4ddr.nextgen.compose.FontFamilies
 import com.perrigogames.life4ddr.nextgen.compose.FontSizes
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.stringResource
-import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.JacketCorner
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial

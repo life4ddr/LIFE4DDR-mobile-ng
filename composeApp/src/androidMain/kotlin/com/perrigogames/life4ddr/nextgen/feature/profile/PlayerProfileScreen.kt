@@ -19,7 +19,7 @@ import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.Typography
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoals
-import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.enums.nameRes

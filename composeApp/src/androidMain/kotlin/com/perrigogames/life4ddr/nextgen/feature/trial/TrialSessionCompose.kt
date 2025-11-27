@@ -26,7 +26,7 @@ import coil3.request.ImageRequest
 import coil3.request.fallback
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.util.MokoImage
-import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.*
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionEvent
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput

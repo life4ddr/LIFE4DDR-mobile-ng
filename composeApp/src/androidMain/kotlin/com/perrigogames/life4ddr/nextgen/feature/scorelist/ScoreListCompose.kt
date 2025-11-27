@@ -19,7 +19,7 @@ import com.perrigogames.life4ddr.nextgen.R
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.UIScore
-import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.painterResource

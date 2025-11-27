@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISongLockPage
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISongLockSection
 import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SongLockPageProvider
-import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 
 @Composable
 fun SongLockScreen(

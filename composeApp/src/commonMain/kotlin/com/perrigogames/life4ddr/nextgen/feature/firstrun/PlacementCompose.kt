@@ -7,17 +7,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.perrigogames.life4ddr.nextgen.enums.colorRes
-import com.perrigogames.life4ddr.nextgen.util.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 
 @Composable
@@ -55,7 +55,7 @@ fun PlacementSongItem(
         modifier = modifier
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
+            model = ImageRequest.Builder(LocalPlatformContext.current)
                 .data(data.jacketUrl)
                 .crossfade(true)
                 .build(),
