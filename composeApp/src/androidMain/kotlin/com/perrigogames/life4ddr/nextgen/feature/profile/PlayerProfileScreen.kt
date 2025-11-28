@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
-import com.perrigogames.life4ddr.nextgen.compose.Typography
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoalsContent
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
@@ -142,14 +141,14 @@ fun PlayerProfileInfo(
         ) {
             Text(
                 text = state.username,
-                style = Typography.headlineMedium,
+                style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
             )
             SizedSpacer(8.dp)
             state.rivalCode?.let {  rivalCode ->
                 Text(
                     text = rivalCode,
-                    style = Typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
             }

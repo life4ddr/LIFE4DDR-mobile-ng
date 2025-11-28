@@ -1,15 +1,25 @@
 package com.perrigogames.life4ddr.nextgen.compose
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
 
+@Composable
+fun LIFE4Theme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = when {
+            darkTheme -> DarkColors
+            else -> LightColors
+        },
+        typography = LIFE4Typography(),
+        content = content
+    )
+}
 
 internal val LightColors = lightColorScheme(
     primary = md_theme_light_primary,

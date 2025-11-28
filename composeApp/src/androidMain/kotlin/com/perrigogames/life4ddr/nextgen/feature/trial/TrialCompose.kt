@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.compose.FontFamilies
 import com.perrigogames.life4ddr.nextgen.compose.FontSizes
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.stringResource
@@ -184,8 +183,7 @@ fun TrialJacketList(
                 ) {
                     Text(
                         text = displayItem.text.localized(),
-                        fontSize = FontSizes.SMALL,
-                        fontFamily = FontFamilies.AVENIR_NEXT,
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 }
                 is UITrialList.Item.Trial -> item {
