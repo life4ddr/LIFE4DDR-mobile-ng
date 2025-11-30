@@ -1,4 +1,6 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM), Server.
+# LIFE4DDR Mobile App
+
+This is the repository for the LIFE4DDR mobile apps.  This app is written in Compose Multiplatform and is the result of migrating the old LIFE4DDR codebase into a more modern Kotlin stack.
 
 * [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
   It contains several subfolders:
@@ -12,11 +14,10 @@ This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM), Se
 * [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
   you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
 
-* [/server](./server/src/main/kotlin) is for the Ktor server application.
+* [/server](./server/src/main/kotlin) is for the Ktor server application.  This currently is not being used.
 
 * [/shared](./shared/src) is for the code that will be shared between all targets in the project.
-  The most important subfolder is [commonMain](./shared/src/commonMain/kotlin). If preferred, you
-  can add code to the platform-specific folders here too.
+  The most important subfolder is [commonMain](./shared/src/commonMain/kotlin).
 
 ### Build and Run Android Application
 
