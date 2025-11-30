@@ -22,6 +22,4 @@ fun List<StringDesc>.toListString(useAnd: Boolean, caps: Boolean): StringDesc = 
     )
 }
 
-fun String.toDesc() = StringDesc.Raw(this)
-
 fun List<String>.toStringDescs() = map { StringDesc.Raw(it) }

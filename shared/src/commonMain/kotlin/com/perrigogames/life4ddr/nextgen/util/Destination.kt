@@ -1,5 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.util
 
+import dev.icerock.moko.resources.desc.StringDesc
+
 /**
  * Defines a destination that can be reached through navigation.
  */
@@ -16,4 +18,9 @@ interface Destination {
      * as [baseRoute], or a templated string.
      */
     val route: String get() = baseRoute
+
+    /**
+     * The title to be displayed in the navigation bar.
+     */
+    val title: StringDesc? get() = null
 }

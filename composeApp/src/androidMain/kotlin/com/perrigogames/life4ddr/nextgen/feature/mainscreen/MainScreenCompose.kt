@@ -22,6 +22,7 @@ import com.perrigogames.life4ddr.nextgen.navigation.profileNavigation
 import com.perrigogames.life4ddr.nextgen.feature.profile.ProfileDestination
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.MainScreenViewModel
 import dev.icerock.moko.mvvm.createViewModelFactory
+import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 
 @Composable
@@ -52,7 +53,7 @@ fun MainScreen(
                                 ProfileDestination.Trials -> Icon(painterResource(MR.images.trophy), contentDescription = null)
                             }
                         },
-                        label = { Text(screen.title) },
+                        label = { Text(screen.title.localized()) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             profileNavController.navigate(screen.route) {
