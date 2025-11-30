@@ -3,10 +3,8 @@ package com.perrigogames.life4ddr.nextgen.feature.ladder.view
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
-import com.perrigogames.life4ddr.nextgen.enums.categoryNameRes
 import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelInput
-import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc

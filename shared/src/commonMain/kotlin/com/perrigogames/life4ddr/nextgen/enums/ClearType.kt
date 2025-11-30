@@ -40,6 +40,51 @@ enum class ClearType(
         passing: Boolean = true
     ): this(stableId, listOf(serialized), uiName, passing)
 
+    val lampRes get() = when(this) {
+        NO_PLAY -> MR.strings.not_played
+        FAIL -> MR.strings.fail
+        CLEAR -> MR.strings.lamp_clear
+        LIFE4_CLEAR -> MR.strings.lamp_life4
+        GOOD_FULL_COMBO -> MR.strings.lamp_fc
+        GREAT_FULL_COMBO -> MR.strings.lamp_gfc
+        PERFECT_FULL_COMBO,
+        SINGLE_DIGIT_PERFECTS -> MR.strings.lamp_pfc
+        MARVELOUS_FULL_COMBO -> MR.strings.lamp_mfc
+    }
+
+    val clearRes get() = when(this) {
+        NO_PLAY -> MR.strings.not_played
+        FAIL -> MR.strings.fail
+        CLEAR -> MR.strings.clear
+        LIFE4_CLEAR -> MR.strings.clear_life4
+        GOOD_FULL_COMBO -> MR.strings.clear_fc
+        GREAT_FULL_COMBO -> MR.strings.clear_gfc
+        PERFECT_FULL_COMBO -> MR.strings.clear_pfc
+        SINGLE_DIGIT_PERFECTS -> MR.strings.clear_sdp
+        MARVELOUS_FULL_COMBO -> MR.strings.clear_mfc
+    }
+
+    val clearResShort get() = when(this) {
+        GOOD_FULL_COMBO -> MR.strings.clear_fc_short
+        GREAT_FULL_COMBO -> MR.strings.clear_gfc_short
+        PERFECT_FULL_COMBO -> MR.strings.clear_pfc_short
+        SINGLE_DIGIT_PERFECTS -> MR.strings.clear_sdp_short
+        MARVELOUS_FULL_COMBO -> MR.strings.clear_mfc_short
+        else -> clearRes
+    }
+
+    val colorRes get() = when(this) {
+        NO_PLAY -> MR.colors.no_play
+        FAIL -> MR.colors.fail
+        CLEAR -> MR.colors.clear
+        LIFE4_CLEAR -> MR.colors.life4
+        GOOD_FULL_COMBO -> MR.colors.good
+        GREAT_FULL_COMBO -> MR.colors.great
+        PERFECT_FULL_COMBO,
+        SINGLE_DIGIT_PERFECTS -> MR.colors.perfect
+        MARVELOUS_FULL_COMBO -> MR.colors.marvelous
+    }
+
     companion object {
         fun parse(stableId: Long?) = stableId?.let { id -> entries.firstOrNull { it.stableId == id } }
 

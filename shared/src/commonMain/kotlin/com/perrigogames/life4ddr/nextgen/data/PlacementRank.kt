@@ -17,6 +17,10 @@ enum class PlacementRank(
     SILVER(30, LadderRankClass.SILVER),
     GOLD(35, LadderRankClass.GOLD);
 
+    val nameRes get() = parent.nameRes
+
+    val colorRes get() = parent.colorRes
+
     fun toLadderRank() = when(this) {
         COPPER -> LadderRank.COPPER3
         BRONZE -> LadderRank.BRONZE3

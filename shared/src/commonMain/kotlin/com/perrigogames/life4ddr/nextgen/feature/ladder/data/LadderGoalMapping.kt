@@ -3,7 +3,6 @@ package com.perrigogames.life4ddr.nextgen.feature.ladder.data
 import com.mohamedrejeb.ksoup.entities.KsoupEntities
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.GoalStatus
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.GoalStateManager
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderDetailItem
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoal

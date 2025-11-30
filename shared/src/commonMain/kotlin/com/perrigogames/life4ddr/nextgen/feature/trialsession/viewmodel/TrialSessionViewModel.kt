@@ -2,8 +2,6 @@ package com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel
 
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
-import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager

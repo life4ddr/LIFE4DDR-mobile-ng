@@ -14,8 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
-import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsAction
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsEvent

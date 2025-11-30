@@ -32,9 +32,11 @@
     <color name="diamond">#98E1FF</color>
     <color name="cobalt">#0092DB</color>
     <color name="pearl">#FDBAE9</color>
+    <color name="topaz">#968126</color>
     <color name="amethyst">#DF29FF</color>
     <color name="emerald">#18CE09</color>
     <color name="onyx">#0A0A0A</color>
+    <color name="ruby">#FF2222</color>
 
     <color name="corner_new">#FF4500</color>
     <color name="corner_event">#DDDD55</color>

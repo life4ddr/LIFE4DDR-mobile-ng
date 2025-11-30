@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.drawableRes
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import dev.icerock.moko.resources.compose.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

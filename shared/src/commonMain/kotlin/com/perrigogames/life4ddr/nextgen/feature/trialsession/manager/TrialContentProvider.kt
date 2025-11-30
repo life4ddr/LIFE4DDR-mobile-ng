@@ -4,8 +4,6 @@ import com.mohamedrejeb.ksoup.entities.KsoupEntities
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
-import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial

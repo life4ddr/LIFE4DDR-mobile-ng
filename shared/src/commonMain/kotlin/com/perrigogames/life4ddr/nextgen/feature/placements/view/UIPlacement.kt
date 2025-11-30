@@ -1,8 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.placements.view
 
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
-import com.perrigogames.life4ddr.nextgen.enums.groupNameRes
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
 import dev.icerock.moko.resources.ColorResource
 import dev.icerock.moko.resources.StringResource

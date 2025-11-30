@@ -1,7 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.view
 
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.longNumberString
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.StringDesc

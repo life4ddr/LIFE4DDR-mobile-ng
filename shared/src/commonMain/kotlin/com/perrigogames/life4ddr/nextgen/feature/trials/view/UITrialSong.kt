@@ -2,7 +2,6 @@ package com.perrigogames.life4ddr.nextgen.feature.trials.view
 
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
 import dev.icerock.moko.resources.ColorResource
 

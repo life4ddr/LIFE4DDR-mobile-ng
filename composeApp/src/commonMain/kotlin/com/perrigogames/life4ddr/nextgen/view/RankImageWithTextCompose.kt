@@ -15,8 +15,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
-import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.stringResource
 

@@ -20,7 +20,6 @@ import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoalsContent
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.RankImage
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerInfoViewState
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileAction

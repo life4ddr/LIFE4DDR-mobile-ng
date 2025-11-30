@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.enum
 
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
@@ -12,6 +13,8 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.SongsClearGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.StackedRankGoalWrapper
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.TrialGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.TrialStackedGoal
+import dev.icerock.moko.resources.desc.ResourceFormatted
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -21,25 +24,28 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable
-enum class RankGoalUserType(val serialized: String) {
-    LEVEL_12("12"),
-    LEVEL_13("13"),
-    LEVEL_14("14"),
-    LEVEL_15("15"),
-    LEVEL_16("16"),
-    LEVEL_17("17"),
-    LEVEL_18("18"),
-    LEVEL_19("19"),
-    PFC("pfc"),
-    COMBO("combo"),
-    LIFE4("life4"),
-    MFC("mfc"),
-    SINGLE_SCORE("single_score"),
-    CLEAR("clear"),
-    SINGLE_CLEAR("single_clear"),
-    SET_CLEAR("set_clear"),
-    CALORIES("calories"),
-    TRIALS("trials"),
+enum class RankGoalUserType(
+    val serialized: String,
+    val titleString: StringDesc,
+) {
+    LEVEL_12("12", StringDesc.ResourceFormatted(MR.strings.level_header, 12)),
+    LEVEL_13("13", StringDesc.ResourceFormatted(MR.strings.level_header, 13)),
+    LEVEL_14("14", StringDesc.ResourceFormatted(MR.strings.level_header, 14)),
+    LEVEL_15("15", StringDesc.ResourceFormatted(MR.strings.level_header, 15)),
+    LEVEL_16("16", StringDesc.ResourceFormatted(MR.strings.level_header, 16)),
+    LEVEL_17("17", StringDesc.ResourceFormatted(MR.strings.level_header, 17)),
+    LEVEL_18("18", StringDesc.ResourceFormatted(MR.strings.level_header, 18)),
+    LEVEL_19("19", StringDesc.ResourceFormatted(MR.strings.level_header, 19)),
+    PFC("pfc", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_pfcs)),
+    COMBO("combo", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_combo)),
+    LIFE4("life4", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_life4)),
+    MFC("mfc", StringDesc.ResourceFormatted(MR.strings.clear)),
+    SINGLE_SCORE("single_score", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_mfcs)),
+    CLEAR("clear", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_single_score)),
+    SINGLE_CLEAR("single_clear", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_single_clear)),
+    SET_CLEAR("set_clear", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_set_clear)),
+    CALORIES("calories", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_calories)),
+    TRIALS("trials", StringDesc.ResourceFormatted(MR.strings.rank_goal_category_trials)),
     ;
 
     companion object {

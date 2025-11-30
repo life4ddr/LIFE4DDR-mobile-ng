@@ -20,11 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
-import com.perrigogames.life4ddr.nextgen.drawableRes
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.Life4Divider
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
-import com.perrigogames.life4ddr.nextgen.enums.colorRes
 import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialRecordsViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialMocks
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialRecord

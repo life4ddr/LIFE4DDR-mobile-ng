@@ -3,7 +3,6 @@ package com.perrigogames.life4ddr.nextgen.feature.trials.data
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
-import com.perrigogames.life4ddr.nextgen.enums.clearRes
 import dev.icerock.moko.resources.desc.Composition
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.ResourceFormatted

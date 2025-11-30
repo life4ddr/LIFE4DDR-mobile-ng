@@ -321,7 +321,9 @@ fun LadderRankClassTheme(
     LadderRankClass.DIAMOND -> DiamondTheme(darkTheme, content)
     LadderRankClass.COBALT -> CobaltTheme(darkTheme, content)
     LadderRankClass.PEARL -> PearlTheme(darkTheme, content)
+    LadderRankClass.TOPAZ -> PearlTheme(darkTheme, content) // FIXME colors
     LadderRankClass.AMETHYST -> AmethystTheme(darkTheme, content)
     LadderRankClass.EMERALD -> EmeraldTheme(darkTheme, content)
     LadderRankClass.ONYX -> OnyxTheme(darkTheme, content)
+    LadderRankClass.RUBY -> OnyxTheme(darkTheme, content) // FIXME colors
 }
