@@ -1,4 +1,6 @@
 {
+  "major_version": 6,
+  "version": 1,
   "goals": [
     {
       "id": 7500,

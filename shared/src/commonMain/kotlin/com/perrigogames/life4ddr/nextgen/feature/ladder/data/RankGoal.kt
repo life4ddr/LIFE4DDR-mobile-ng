@@ -126,6 +126,7 @@ data class DifficultySetGoal(
     override val id: Int,
     @SerialName("diff_nums") val difficulties: IntArray,
     @SerialName("clear_type") private val mClearType: ClearType? = null,
+    @SerialName("higher_diff") val allowHigherDiff: Boolean = false,
 ): BaseRankGoal() {
 
     val clearType: ClearType
