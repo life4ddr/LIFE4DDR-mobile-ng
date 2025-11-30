@@ -21,7 +21,7 @@ import life4ddr.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
-fun App() {
+fun LIFE4App() {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(

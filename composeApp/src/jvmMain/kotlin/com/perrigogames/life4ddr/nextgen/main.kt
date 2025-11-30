@@ -8,6 +8,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "LIFE4DDR",
     ) {
-        App()
+        LIFE4App()
     }
 }
