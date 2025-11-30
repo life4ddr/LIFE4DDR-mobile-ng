@@ -57,6 +57,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.coil.compose)
             implementation(libs.coil.ktor3)
+            implementation(libs.composeNavigation)
             implementation(libs.composeSettings.ui)
             implementation(libs.composeSettings.ui.extended)
             implementation(project.dependencies.platform(libs.koin.bom))
