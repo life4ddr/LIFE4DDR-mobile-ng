@@ -67,7 +67,7 @@ class FirstRunInfoViewModel : ViewModel(), KoinComponent {
             true -> FirstRunPath.NEW_USER_LOCAL
             false -> FirstRunPath.EXISTING_USER_LOCAL
         }
-        _stateStack.value + createStateClass(path, clazz = path.steps[0])
+        _stateStack.value += createStateClass(path, clazz = path.steps[0])
     }
 
     private fun <T : FirstRunStep> createStateClass(
@@ -95,7 +95,7 @@ class FirstRunInfoViewModel : ViewModel(), KoinComponent {
             socialNetworks = socialNetworks.value,
         )
         firstRunSettings.setInitState(DONE)
-        _stateStack.value + createStateClass(rankMethod = method, clazz = nextStep)
+        _stateStack.value += createStateClass(rankMethod = method, clazz = nextStep)
     }
 
     fun navigateNext() {
@@ -128,7 +128,7 @@ class FirstRunInfoViewModel : ViewModel(), KoinComponent {
     }
 
     private fun appendState(step: FirstRunStep) {
-        _stateStack.value + step
+        _stateStack.value += step
     }
 
     private fun emitError(vararg errors: FirstRunError) {
