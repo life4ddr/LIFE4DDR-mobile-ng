@@ -20,7 +20,9 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.GoalStateManager
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDataManager
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderGoalProgressManager
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.DefaultLadderSettings
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.DefaultMASettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.motd.data.MotdLocalRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdSettings
@@ -103,6 +105,7 @@ val coreModule = module {
     single<UserInfoSettings> { DefaultUserInfoSettings() }
     single<FirstRunSettings> { DefaultFirstRunSettings() }
     single<SongResultSettings> { DefaultSongResultSettings() }
+    single<MASettings> { DefaultMASettings() }
     single<UserRankSettings> { DefaultUserRankSettings() }
     single<LadderSettings> { DefaultLadderSettings() }
     single { SettingsPageProvider() }
