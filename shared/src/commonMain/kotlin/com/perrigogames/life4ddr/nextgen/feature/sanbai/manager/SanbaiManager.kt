@@ -7,6 +7,8 @@ import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBannerTemplates
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPISettings
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.toChartResult
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import dev.icerock.moko.resources.desc.desc
 import org.koin.core.component.inject
@@ -21,14 +23,12 @@ interface SanbaiManager {
     suspend fun fetchScores(): Boolean
 }
 
-// TODO SongResultsManager
-
 @OptIn(ExperimentalTime::class)
 class DefaultSanbaiManager : BaseModel(), SanbaiManager {
 
     private val sanbaiAPI: SanbaiAPI by inject()
     private val sanbaiAPISettings: SanbaiAPISettings by inject()
-//    private val songResultsManager: SongResultsManager by inject()
+    private val songResultsManager: SongResultsManager by inject()
     private val bannersManager: BannerManager by inject()
 
     override fun requiresAuthorization(): Boolean {
@@ -53,7 +53,7 @@ class DefaultSanbaiManager : BaseModel(), SanbaiManager {
         bannersManager.setBanner(BANNER_LOADING, BannerLocation.PROFILE, BannerLocation.SCORES)
         try {
             sanbaiAPI.getScores()?.let { scores ->
-//                songResultsManager.addScores(scores.map { it.toChartResult() })
+                songResultsManager.addScores(scores.map { it.toChartResult() })
             }
         } catch (e: Exception) {
             bannersManager.setBanner(BANNER_ERROR, BannerLocation.PROFILE, BannerLocation.SCORES, durationSeconds = 3)
