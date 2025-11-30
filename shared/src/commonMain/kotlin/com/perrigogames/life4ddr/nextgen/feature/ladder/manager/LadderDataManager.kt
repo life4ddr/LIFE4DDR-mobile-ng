@@ -21,7 +21,7 @@ import org.koin.core.component.inject
 class LadderDataManager: BaseModel() {
 
     private val ladderDialogs: LadderDialogs by inject()
-    private val ladderSettings: DefaultLadderSettings by inject()
+    private val ladderSettings: LadderSettings by inject()
 
     //
     // Ladder Data
