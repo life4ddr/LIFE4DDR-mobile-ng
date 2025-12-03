@@ -4,7 +4,6 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartFilterSta
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
-import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterAction
 import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterView
 import com.perrigogames.life4ddr.nextgen.feature.songresults.view.toUIFilterView
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
@@ -29,34 +28,32 @@ class FilterPanelViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun handleAction(action: UIFilterAction) {
-        when(action) {
-            is UIFilterAction.SelectPlayStyle -> {
-                mutateChartFilter { it.copy(selectedPlayStyle = action.playStyle) }
+    fun handleInput(input: FilterPanelInput) = when(input) {
+        is FilterPanelInput.SelectPlayStyle -> {
+            mutateChartFilter { it.copy(selectedPlayStyle = input.playStyle) }
+        }
+        is FilterPanelInput.SetClearTypeRange -> {
+            mutateResultFilter { it.copy(clearTypeRange = input.range) }
+        }
+        is FilterPanelInput.SetDifficultyNumberRange -> {
+            mutateChartFilter { it.copy(difficultyNumberRange = input.range) }
+        }
+        is FilterPanelInput.SetScoreRange -> {
+            mutateResultFilter {
+                val first = input.first ?: it.scoreRange.first
+                val last = input.last ?: it.scoreRange.last
+                it.copy(scoreRange = (first .. last))
             }
-            is UIFilterAction.SetClearTypeRange -> {
-                mutateResultFilter { it.copy(clearTypeRange = action.range) }
-            }
-            is UIFilterAction.SetDifficultyNumberRange -> {
-                mutateChartFilter { it.copy(difficultyNumberRange = action.range) }
-            }
-            is UIFilterAction.SetScoreRange -> {
-                mutateResultFilter {
-                    val first = action.first ?: it.scoreRange.first
-                    val last = action.last ?: it.scoreRange.last
-                    it.copy(scoreRange = (first .. last))
+        }
+        is FilterPanelInput.ToggleDifficultyClass -> {
+            mutateChartFilter {
+                val selection = it.difficultyClassSelection.toMutableSet()
+                if (input.selected) {
+                    selection.add(input.difficultyClass)
+                } else {
+                    selection.remove(input.difficultyClass)
                 }
-            }
-            is UIFilterAction.ToggleDifficultyClass -> {
-                mutateChartFilter {
-                    val selection = it.difficultyClassSelection.toMutableSet()
-                    if (action.selected) {
-                        selection.add(action.difficultyClass)
-                    } else {
-                        selection.remove(action.difficultyClass)
-                    }
-                    it.copy(difficultyClassSelection = selection.toList())
-                }
+                it.copy(difficultyClassSelection = selection.toList())
             }
         }
     }

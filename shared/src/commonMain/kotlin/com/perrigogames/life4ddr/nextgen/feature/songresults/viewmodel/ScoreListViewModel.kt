@@ -6,25 +6,27 @@ import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
 import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
-import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileEvent
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.IgnoreFilterType
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
-import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterAction
-import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterView
+import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIScore
+import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIScoreList
 import dev.icerock.moko.mvvm.flow.CStateFlow
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
-import dev.icerock.moko.resources.ColorResource
 import dev.icerock.moko.resources.desc.Composition
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -43,6 +45,9 @@ class ScoreListViewModel: ViewModel(), KoinComponent {
 
     private val _state = MutableStateFlow(UIScoreList()).cMutableStateFlow()
     val state: CStateFlow<UIScoreList> = _state.cStateFlow()
+
+    private val _events = MutableSharedFlow<ScoreListEvent>()
+    val events: Flow<ScoreListEvent> = _events.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -76,36 +81,15 @@ class ScoreListViewModel: ViewModel(), KoinComponent {
         }
     }
 
-    fun handleFilterAction(action: UIFilterAction) {
-        filterViewModel.handleAction(action)
-    }
-
-    fun requiresAuthorization() = sanbaiManager.requiresAuthorization()
-
-    fun getSanbaiUrl() = sanbaiAPI.getAuthorizeUrl()
-
-    /**
-     * @return [true] if the scores are able to be fetched, [false] if the user needs to reauth
-     */
-    suspend fun refreshSanbaiScores(): Boolean {
-        return sanbaiManager.fetchScores()
+    fun handleInput(input: ScoreListInput) = when(input) {
+        is ScoreListInput.FilterInput -> filterViewModel.handleInput(input.input)
+        ScoreListInput.RefreshSanbaiScores -> viewModelScope.launch {
+            if (!sanbaiManager.fetchScores()) {
+                _events.emit(ScoreListEvent.ShowSanbaiLogin(sanbaiAPI.getAuthorizeUrl()))
+            }
+        }
     }
 }
-
-data class UIScoreList(
-    val scores: List<UIScore> = emptyList(),
-    val filter: UIFilterView = UIFilterView(),
-    val banner: UIBanner? = null,
-)
-
-data class UIScore(
-    val titleText: String = "",
-    val difficultyText: StringDesc,
-    val scoreText: StringDesc,
-    val difficultyColor: ColorResource,
-    val scoreColor: ColorResource,
-    val flareLevel: Int? = null,
-)
 
 fun ChartResultPair.toUIScore(enableDifficultyTiers: Boolean) = UIScore(
     titleText = KsoupEntities.decodeHtml(chart.song.title),

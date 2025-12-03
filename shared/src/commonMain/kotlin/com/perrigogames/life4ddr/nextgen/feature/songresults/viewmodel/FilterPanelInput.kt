@@ -1,0 +1,16 @@
+package com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel
+
+import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
+import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
+
+sealed class FilterPanelInput {
+    data class SelectPlayStyle(val playStyle: PlayStyle): FilterPanelInput()
+    data class ToggleDifficultyClass(val difficultyClass: DifficultyClass, val selected: Boolean): FilterPanelInput()
+    data class SetDifficultyNumberRange(val range: IntRange): FilterPanelInput() {
+        constructor(min: Int, max: Int) : this(min..max)
+    }
+    data class SetClearTypeRange(val range: IntRange): FilterPanelInput() {
+        constructor(min: Int, max: Int) : this(min..max)
+    }
+    data class SetScoreRange(val first: Int? = null, val last: Int? = null): FilterPanelInput()
+}

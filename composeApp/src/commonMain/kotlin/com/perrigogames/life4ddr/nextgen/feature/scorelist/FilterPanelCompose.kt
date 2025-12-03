@@ -10,17 +10,17 @@ import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
-import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterAction
 import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterView
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.FilterPanelInput
 import dev.icerock.moko.resources.compose.localized
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterPane(
+fun FilterPanel(
     data: UIFilterView,
     modifier: Modifier = Modifier,
-    onAction: (UIFilterAction) -> Unit = {}
+    onAction: (FilterPanelInput) -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +66,7 @@ fun FilterPane(
             steps = data.difficultyNumberRange.outerRange.count() - 2,
             onValueChange = { range ->
                 onAction(
-                    UIFilterAction.SetDifficultyNumberRange(range.start.roundToInt(), range.endInclusive.roundToInt())
+                    FilterPanelInput.SetDifficultyNumberRange(range.start.roundToInt(), range.endInclusive.roundToInt())
                 )
             }
         )
@@ -99,7 +99,7 @@ fun FilterPane(
             steps = data.clearTypeRange.outerRange.count() - 2,
             onValueChange = { range ->
                 onAction(
-                    UIFilterAction.SetClearTypeRange(range.start.roundToInt(), range.endInclusive.roundToInt())
+                    FilterPanelInput.SetClearTypeRange(range.start.roundToInt(), range.endInclusive.roundToInt())
                 )
             }
         )
@@ -126,13 +126,13 @@ fun FilterPane(
         ) {
             TextField(
                 value = data.scoreRangeBottomValue?.toString().orEmpty(),
-                onValueChange = { onAction(UIFilterAction.SetScoreRange(first = it.trim().toInt())) },
+                onValueChange = { onAction(FilterPanelInput.SetScoreRange(first = it.trim().toInt())) },
                 placeholder = { Text(text = data.scoreRangeBottomHint.localized()) },
                 modifier = Modifier.weight(1f)
             )
             TextField(
                 value = data.scoreRangeTopValue?.toString().orEmpty(),
-                onValueChange = { onAction(UIFilterAction.SetScoreRange(last = it.toInt())) },
+                onValueChange = { onAction(FilterPanelInput.SetScoreRange(last = it.toInt())) },
                 placeholder = { Text(text = data.scoreRangeTopHint.localized()) },
                 modifier = Modifier.weight(1f)
             )

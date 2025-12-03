@@ -6,6 +6,7 @@ import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.FilterPanelInput
 import com.perrigogames.life4ddr.nextgen.util.CompoundIntRange
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.Resource
@@ -38,7 +39,7 @@ data class UIFilterView(
                 UIPlayStyleSelection(
                     text = it.uiName,
                     selected = it == selectedPlayStyle,
-                    action = UIFilterAction.SelectPlayStyle(it)
+                    action = FilterPanelInput.SelectPlayStyle(it)
                 )
             }
         } else {
@@ -51,7 +52,7 @@ data class UIFilterView(
             UIDifficultyClassSelection(
                 text = StringDesc.Raw(selectedPlayStyle.aggregateString(diff)),
                 selected = selectedDifficultyClasses.contains(diff),
-                action = UIFilterAction.ToggleDifficultyClass(diff, !selectedDifficultyClasses.contains(diff))
+                action = FilterPanelInput.ToggleDifficultyClass(diff, !selectedDifficultyClasses.contains(diff))
             )
         },
         difficultyNumberRange = CompoundIntRange(
@@ -70,26 +71,14 @@ data class UIFilterView(
 data class UIPlayStyleSelection(
     val text: StringDesc,
     val selected: Boolean,
-    val action: UIFilterAction
+    val action: FilterPanelInput
 )
 
 data class UIDifficultyClassSelection(
     val text: StringDesc,
     val selected: Boolean,
-    val action: UIFilterAction
+    val action: FilterPanelInput
 )
-
-sealed class UIFilterAction {
-    data class SelectPlayStyle(val playStyle: PlayStyle): UIFilterAction()
-    data class ToggleDifficultyClass(val difficultyClass: DifficultyClass, val selected: Boolean): UIFilterAction()
-    data class SetDifficultyNumberRange(val range: IntRange): UIFilterAction() {
-        constructor(min: Int, max: Int) : this(min..max)
-    }
-    data class SetClearTypeRange(val range: IntRange): UIFilterAction() {
-        constructor(min: Int, max: Int) : this(min..max)
-    }
-    data class SetScoreRange(val first: Int? = null, val last: Int? = null): UIFilterAction()
-}
 
 fun FilterState.toUIFilterView(showPlayStyleSelector: Boolean) = UIFilterView(
     showPlayStyleSelector = showPlayStyleSelector,

@@ -1,6 +1,5 @@
 package com.perrigogames.life4ddr.nextgen.feature.scorelist
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -9,69 +8,47 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.R
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
-import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
-import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.UIScore
+import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIScore
+import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIScoreList
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListInput
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
-import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun ScoreListScreen(
+fun ScoreListContent(
+    scope: CoroutineScope,
+    state: UIScoreList,
+    scaffoldState: BottomSheetScaffoldState,
     modifier: Modifier = Modifier,
-    viewModel: ScoreListViewModel = viewModel(
-        factory = createViewModelFactory { ScoreListViewModel() }
-    ),
-    onBackPressed: () -> Unit,
+    onInput: (ScoreListInput) -> Unit = {},
     showSanbaiLogin: (String) -> Unit = {},
 ) {
-    val scope = rememberCoroutineScope()
-    val state = viewModel.state.collectAsState()
-
-    BackHandler { 
-        onBackPressed()
-    }
-
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.Hidden,
-            skipHiddenState = false,
-        )
-    )
-
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
         sheetContent = {
-            if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
-                BackHandler {
-                    scope.launch {
-                        scaffoldState.bottomSheetState.hide()
-                    }
-                }
-            }
-            FilterPane(
-                data = state.value.filter,
+            FilterPanel(
+                data = state.filter,
                 modifier = Modifier
                     .padding(horizontal = 32.dp)
                     .padding(bottom = 32.dp),
-                onAction = { viewModel.handleFilterAction(it) }
+                onAction = { onInput(ScoreListInput.FilterInput(it)) }
             )
         },
         modifier = modifier,
-    ) { outterPadding ->
+    ) { outerPadding ->
         Scaffold(
-            modifier = Modifier.padding(outterPadding),
+            modifier = Modifier.padding(outerPadding),
             floatingActionButton = {
                 SongListFloatingActionButtons(
                     onFilterPressed = {
@@ -79,19 +56,12 @@ fun ScoreListScreen(
                             scaffoldState.bottomSheetState.expand()
                         }
                     },
-                    onSyncScoresPressed = {
-                        scope.launch {
-                            if (!viewModel.refreshSanbaiScores()) {
-                                val authUrl = viewModel.getSanbaiUrl()
-                                showSanbaiLogin(authUrl)
-                            }
-                        }
-                    }
+                    onSyncScoresPressed = { onInput(ScoreListInput.RefreshSanbaiScores) }
                 )
             },
             topBar = {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    BannerContainer(state.value.banner)
+                    BannerContainer(state.banner)
                 }
             }
         ) { paddingValues ->
@@ -101,7 +71,7 @@ fun ScoreListScreen(
                     .padding(paddingValues)
             ) {
                 LazyColumn(modifier = Modifier.weight(1f)) {
-                    items(state.value.scores) {
+                    items(state.scores) {
                         ScoreEntry(it)
                     }
                 }
@@ -129,7 +99,7 @@ private fun SongListFloatingActionButtons(
                     },
                 ) {
                     Icon(
-                        painterResource(R.drawable.filter_list_24px),
+                        painterResource(MR.images.filter_list),
                         contentDescription = "Change Filters"
                     )
                 }
@@ -141,7 +111,7 @@ private fun SongListFloatingActionButtons(
                     },
                 ) {
                     Icon(
-                        painterResource(R.drawable.sync_24px),
+                        painterResource(MR.images.sync),
                         contentDescription = "Sync Sanbai Scores"
                     )
                 }
@@ -153,7 +123,7 @@ private fun SongListFloatingActionButtons(
             onClick = { isFabExpanded = !isFabExpanded },
         ) {
             Icon(
-                painterResource(if (isFabExpanded) R.drawable.close_24px else R.drawable.more_vert_24px),
+                painterResource(if (isFabExpanded) MR.images.close else MR.images.more_vert),
                 contentDescription = if (isFabExpanded) "Close" else "Expand"
             )
         }
@@ -162,7 +132,6 @@ private fun SongListFloatingActionButtons(
 
 @Composable
 fun ScoreEntry(data: UIScore) {
-    val context = LocalContext.current
     Row(
         modifier = Modifier.padding(4.dp)
     ) {
@@ -175,13 +144,13 @@ fun ScoreEntry(data: UIScore) {
             )
             Row {
                 Text(
-                    text = data.difficultyText.toString(context),
+                    text = data.difficultyText.localized(),
                     color = colorResource(data.difficultyColor),
                     modifier = Modifier.weight(1f),
                 )
                 SizedSpacer(4.dp)
                 Text(
-                    text = data.scoreText.toString(context),
+                    text = data.scoreText.localized(),
                     color = colorResource(data.scoreColor),
                 )
             }
