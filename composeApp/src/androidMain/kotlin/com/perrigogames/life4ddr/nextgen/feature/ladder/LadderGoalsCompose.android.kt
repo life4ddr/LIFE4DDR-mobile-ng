@@ -13,13 +13,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
-import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
-import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.GoalListConfig
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoal
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoals
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderMocks
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderProgress
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
