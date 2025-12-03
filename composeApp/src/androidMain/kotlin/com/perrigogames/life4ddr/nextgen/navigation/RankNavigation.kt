@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.RankListScreen
+import com.perrigogames.life4ddr.nextgen.feature.ladder.RankListScreen
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoalsScreen
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderDestination

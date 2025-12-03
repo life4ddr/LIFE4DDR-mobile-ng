@@ -1,11 +1,10 @@
-package com.perrigogames.life4ddr.nextgen.feature.firstrun
+package com.perrigogames.life4ddr.nextgen.feature.ladder
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.perrigogames.life4ddr.nextgen.feature.ladder.RankListContent
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelEvent
 import dev.icerock.moko.mvvm.createViewModelFactory

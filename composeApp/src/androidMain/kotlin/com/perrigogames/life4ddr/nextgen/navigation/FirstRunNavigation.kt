@@ -16,7 +16,7 @@ import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunScreen
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.PlacementDetailsScreen
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.PlacementListScreen
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.RankListScreen
+import com.perrigogames.life4ddr.nextgen.feature.ladder.RankListScreen
 import com.perrigogames.life4ddr.nextgen.feature.mainscreen.MainScreen
 import com.perrigogames.life4ddr.nextgen.popAndNavigate
 import com.perrigogames.life4ddr.nextgen.util.openWebUrl

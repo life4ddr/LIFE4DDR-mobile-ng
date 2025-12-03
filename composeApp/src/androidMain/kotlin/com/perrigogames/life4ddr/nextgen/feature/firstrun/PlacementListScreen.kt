@@ -55,7 +55,6 @@ fun PlacementListScreen(
             }
         }
     }
-
     
     val data by viewModel.screenData.collectAsState()
     Column(
