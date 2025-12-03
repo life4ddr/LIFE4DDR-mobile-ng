@@ -7,12 +7,12 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialGoalStrings
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UIEXScoreBar
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITargetRank
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialBottomSheet
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSession
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.toAchieved
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.toInProgress
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UIEXScoreBar
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITargetRank
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSession
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.toAchieved
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.toInProgress
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialContentProvider
@@ -24,7 +24,6 @@ import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
-import dev.icerock.moko.resources.desc.color.asColorDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.desc.image.asImageDesc
 import kotlinx.coroutines.flow.*
@@ -68,7 +67,7 @@ class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
     val events: SharedFlow<TrialSessionEvent> = _events.asSharedFlow()
 
     private val stage = MutableStateFlow<Int?>(null)
-    private val inProgressSessionFlow = MutableStateFlow<InProgressTrialSession>(InProgressTrialSession(trial))
+    private val inProgressSessionFlow = MutableStateFlow(InProgressTrialSession(trial))
     private val inProgressSession get() = inProgressSessionFlow.value
 
     private val songEntryViewModel = MutableStateFlow<SongEntryViewModel?>(null)
@@ -86,7 +85,7 @@ class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
                             targetRank = curr.copy(
                                 rank = target,
                                 title = target.nameRes.desc(),
-                                titleColor = target.colorRes.asColorDesc(),
+                                titleColor = target.colorRes,
                                 availableRanks = curr.availableRanks,
                                 rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(target)!!, trial)
                             )
@@ -95,7 +94,7 @@ class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
                             targetRank = curr.copy(
                                 rank = target,
                                 title = target.nameRes.desc(),
-                                titleColor = target.colorRes.asColorDesc(),
+                                titleColor = target.colorRes,
                                 rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(target)!!, trial)
                             )
                         )
@@ -103,7 +102,7 @@ class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
                             targetRank = curr.copy(
                                 rank = target,
                                 title = target.nameRes.desc(),
-                                titleColor = target.colorRes.asColorDesc(),
+                                titleColor = target.colorRes,
                             )
                         )
                     }.toViewState()
@@ -183,7 +182,7 @@ class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
                     targetRank = UITargetRank.Selection(
                         rank = rank,
                         title = rank.nameRes.desc(),
-                        titleColor = rank.colorRes.asColorDesc(),
+                        titleColor = rank.colorRes,
                         availableRanks = allowedRanks,
                         rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(rank)!!, trial),
                     ),

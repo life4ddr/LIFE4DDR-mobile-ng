@@ -1,12 +1,16 @@
 package com.perrigogames.life4ddr.nextgen.feature.trial
 
-import android.graphics.BitmapFactory
-import android.net.Uri
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,84 +21,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.util.InteractiveImage
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialBottomSheet
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
+import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
-import org.jetbrains.compose.resources.painterResource
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SongEntryBottomSheet(
-    viewData: UITrialBottomSheet.Details,
-    bottomSheetState: SheetState,
-    onAction: (TrialSessionInput) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    ModalBottomSheet(
-        sheetState = bottomSheetState,
-        onDismissRequest = { onDismiss() }
-    ) {
-        SongEntryBottomSheetContent(viewData, onAction)
-    }
-
-    LaunchedEffect(Unit) {
-        bottomSheetState.expand()
-    }
-}
-
-@Composable
-fun SongEntryBottomSheetContent(
-    viewData: UITrialBottomSheet.Details,
-    onAction: (TrialSessionInput) -> Unit,
-) {
-    BackHandler {
-        onAction(TrialSessionInput.HideBottomSheet)
-    }
-
-    val context = LocalContext.current
-    val decodedBitmap = remember(viewData.imagePath) {
-        if (viewData.imagePath.isEmpty()) return@remember null
-        try {
-            Uri.parse(viewData.imagePath)
-                ?.let { uri ->
-                    println(uri.toString())
-                    context.contentResolver.openInputStream(uri)
-                }
-                ?.use { BitmapFactory.decodeStream(it) }
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        decodedBitmap?.let {
-            InteractiveImage(
-                bitmap = decodedBitmap.asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        SongEntryControls(
-            fields = viewData.fields,
-            shortcuts = viewData.shortcuts,
-            isEdit = viewData.isEdit,
-            submitAction = viewData.onDismissAction,
-            onAction = onAction,
-        )
-    }
-}
 
 @Composable
 fun SongEntryControls(
@@ -105,11 +41,10 @@ fun SongEntryControls(
     modifier: Modifier = Modifier,
     onAction: (TrialSessionInput) -> Unit,
 ) {
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val flatFields = remember(fields) { fields.flatten() }
     val focusRequesters = remember(flatFields.size) { List(flatFields.size) { FocusRequester() } }
-    
+
     Row(
         modifier = modifier.padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -137,12 +72,10 @@ fun SongEntryControls(
                             value = value,
                             onValueChange = { newText: TextFieldValue ->
                                 value = newText
-                                onAction(TrialSessionInput.ChangeText(field.id, newText.text.toString()))
+                                onAction(TrialSessionInput.ChangeText(field.id, newText.text))
                             },
                             enabled = field.enabled,
-                            label = {
-                                Text(field.label.toString(context))
-                            },
+                            label = { Text(field.label.localized()) },
                             maxLines = 1,
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Number,
@@ -194,3 +127,4 @@ fun SongEntryControls(
         }
     }
 }
+

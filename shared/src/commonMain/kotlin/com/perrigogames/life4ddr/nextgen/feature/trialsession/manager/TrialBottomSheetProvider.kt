@@ -1,7 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.trialsession.manager
 
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialBottomSheet
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import dev.icerock.moko.resources.desc.desc

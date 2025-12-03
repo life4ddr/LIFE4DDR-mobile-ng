@@ -5,7 +5,7 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsManage
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialGoalSet.GoalType.*
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialBottomSheet
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import dev.icerock.moko.mvvm.flow.CMutableStateFlow

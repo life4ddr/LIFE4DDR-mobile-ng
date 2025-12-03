@@ -8,19 +8,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.view.RankImage
-import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITargetRank
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITargetRank
+import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
-import dev.icerock.moko.resources.desc.color.getColor
+import dev.icerock.moko.resources.compose.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -28,8 +27,6 @@ fun RankSelector(
     viewData: UITargetRank,
     rankSelected: (TrialRank) -> Unit = {},
 ) {
-    val context = LocalContext.current
-
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -42,7 +39,7 @@ fun RankSelector(
             Column {
                 items.forEach { goal ->
                     Text(
-                        text = goal.toString(context)
+                        text = goal.localized()
                     )
                 }
             }
@@ -55,7 +52,6 @@ fun RankDropdown(
     viewData: UITargetRank,
     rankSelected: (TrialRank) -> Unit = {},
 ) {
-    val context = LocalContext.current
     var dropdownExpanded: Boolean by remember { mutableStateOf(false) }
 
     Box {
@@ -73,7 +69,7 @@ fun RankDropdown(
             ) {
                 viewData.availableRanks.forEach { rank ->
                     DropdownMenuItem(
-                        text = { Text(rank.nameRes.getString(context)) },
+                        text = { Text(stringResource(rank.nameRes)) },
                         leadingIcon = {
                             RankImage(
                                 rank = rank.parent,
@@ -119,7 +115,6 @@ fun RankDisplay(
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -140,8 +135,8 @@ fun RankDisplay(
                     size = rankImageSize,
                 )
                 Text(
-                    text = viewData.title.toString(context),
-                    color = Color(viewData.titleColor.getColor(context)),
+                    text = viewData.title.localized(),
+                    color = colorResource(viewData.titleColor),
                     style = textStyle,
                 )
             }

@@ -1,7 +1,8 @@
-package com.perrigogames.life4ddr.nextgen.feature.trials.view
+package com.perrigogames.life4ddr.nextgen.feature.trialsession.view
 
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
+import dev.icerock.moko.resources.ColorResource
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.color.ColorDesc
 import dev.icerock.moko.resources.desc.image.ImageDesc
@@ -41,7 +42,7 @@ sealed class UITargetRank {
     abstract val rank: TrialRank
 //    abstract val rankIcon: ImageDesc
     abstract val title: StringDesc
-    abstract val titleColor: ColorDesc
+    abstract val titleColor: ColorResource
     abstract val rankGoalItems: List<StringDesc>
 
     /**
@@ -51,7 +52,7 @@ sealed class UITargetRank {
     data class Selection(
         override val rank: TrialRank,
         override val title: StringDesc,
-        override val titleColor: ColorDesc,
+        override val titleColor: ColorResource,
         override val rankGoalItems: List<StringDesc>,
         val availableRanks: List<TrialRank>,
     ) : UITargetRank()
@@ -63,7 +64,7 @@ sealed class UITargetRank {
     data class InProgress(
         override val rank: TrialRank,
         override val title: StringDesc,
-        override val titleColor: ColorDesc,
+        override val titleColor: ColorResource,
         override val rankGoalItems: List<StringDesc>
     ) : UITargetRank()
 
@@ -74,7 +75,7 @@ sealed class UITargetRank {
     data class Achieved(
         override val rank: TrialRank,
         override val title: StringDesc,
-        override val titleColor: ColorDesc,
+        override val titleColor: ColorResource,
     ) : UITargetRank() {
         override val rankGoalItems: List<StringDesc> = emptyList()
     }

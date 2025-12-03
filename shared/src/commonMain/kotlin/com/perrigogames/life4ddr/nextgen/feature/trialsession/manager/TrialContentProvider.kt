@@ -9,7 +9,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManage
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSessionContent
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSessionContent
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import com.perrigogames.life4ddr.nextgen.longNumberString
@@ -19,7 +19,6 @@ import dev.icerock.moko.resources.desc.color.asColorDesc
 import dev.icerock.moko.resources.desc.desc
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlin.toString
 
 class TrialContentProvider(private val trial: Trial) : KoinComponent {
 

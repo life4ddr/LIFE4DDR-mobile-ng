@@ -1,4 +1,4 @@
-package com.perrigogames.life4ddr.nextgen.feature.trials.view
+package com.perrigogames.life4ddr.nextgen.feature.trialsession.view
 
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
@@ -23,7 +23,7 @@ object UITrialSessionMocks {
         targetRank = UITargetRank.InProgress(
             rank = TrialRank.COBALT,
             title = "COBALT".desc(),
-            titleColor = ColorDescResource(MR.colors.cobalt),
+            titleColor = MR.colors.cobalt,
             rankGoalItems = listOf(
                 "20 or fewer Greats, Goods, or Misses".desc(),
                 "230 missing EX or less (6532 EX)".desc(),

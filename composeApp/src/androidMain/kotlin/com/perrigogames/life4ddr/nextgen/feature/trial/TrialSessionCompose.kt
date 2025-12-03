@@ -27,7 +27,11 @@ import coil3.request.fallback
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.util.MokoImage
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.*
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UIEXScoreBar
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITargetRank
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSession
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSessionContent
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionEvent
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionViewModel

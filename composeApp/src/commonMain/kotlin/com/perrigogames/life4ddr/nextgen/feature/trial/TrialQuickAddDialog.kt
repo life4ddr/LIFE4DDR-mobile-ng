@@ -20,8 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
-import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITargetRank
-import dev.icerock.moko.resources.desc.color.asColorDesc
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITargetRank
 import dev.icerock.moko.resources.desc.desc
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +36,7 @@ fun TrialQuickAddDialog(
             UITargetRank.Selection(
                 rank = trialRank,
                 title = trialRank.nameRes.desc(),
-                titleColor = trialRank.colorRes.asColorDesc(),
+                titleColor = trialRank.colorRes,
                 rankGoalItems = emptyList(),
                 availableRanks = availableRanks
             )
