@@ -1,71 +1,39 @@
 package com.perrigogames.life4ddr.nextgen.feature.profile
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
+import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoalsContent
-import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.RankImage
-import com.perrigogames.life4ddr.nextgen.enums.nameRes
+import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerInfoViewState
-import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileAction
-import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileViewModel
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileInput
 import com.perrigogames.life4ddr.nextgen.util.ViewState
-import dev.icerock.moko.mvvm.createViewModelFactory
-import kotlinx.coroutines.launch
+import com.perrigogames.life4ddr.nextgen.view.RankImage
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
+import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlayerProfileScreen(
-    profileViewModel: PlayerProfileViewModel = viewModel(
-        factory = createViewModelFactory { PlayerProfileViewModel() }
-    ),
-    onBackPressed: () -> Unit = {},
-    onAction: (PlayerProfileAction) -> Unit = {},
+fun PlayerProfileContent(
+    playerInfoViewState: PlayerInfoViewState,
+    goalListViewState: ViewState<UILadderData, String>,
+    bottomSheetState: SheetState,
+    onInput: (PlayerProfileInput) -> Unit = {},
 ) {
-    val scope = rememberCoroutineScope()
-
-    val playerInfoViewState by profileViewModel.playerInfoViewState.collectAsState()
-    val goalListViewState by profileViewModel.goalListViewModel.state.collectAsState()
-    val density = LocalDensity.current
-    val bottomSheetState = remember {
-        SheetState(
-            initialValue = SheetValue.Hidden,
-            skipPartiallyExpanded = false,
-            positionalThreshold = { with(density) { 56.dp.toPx() }},
-            velocityThreshold = { with(density) { 125.dp.toPx() }},
-        )
-    }
-    val goalData by remember { derivedStateOf { (goalListViewState as? ViewState.Success)?.data } }
-    val goalError by remember { derivedStateOf { (goalListViewState as? ViewState.Error)?.error } }
-
-    BackHandler {
-        if (bottomSheetState.isVisible) {
-            scope.launch { bottomSheetState.hide() }
-        } else {
-            onBackPressed()
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        profileViewModel.goalListViewModel.showBottomSheet.collect {
-            bottomSheetState.expand()
-        }
-    }
+    val goalData = (goalListViewState as? ViewState.Success)?.data
+    val goalError = (goalListViewState as? ViewState.Error)?.error
 
     BottomSheetScaffold(
         scaffoldState = rememberBottomSheetScaffoldState(
@@ -74,9 +42,9 @@ fun PlayerProfileScreen(
         sheetContent = {
             if (goalData?.hasSubstitutions == true) {
                 LadderGoalsContent(
-                    goals = goalData!!.substitutions!!,
-                    rankClass = goalData!!.targetRankClass,
-                    onInput = { profileViewModel.goalListViewModel.handleAction(it) },
+                    goals = goalData.substitutions!!,
+                    rankClass = goalData.targetRankClass,
+                    onInput = { onInput(PlayerProfileInput.GoalList(it)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
@@ -92,15 +60,15 @@ fun PlayerProfileScreen(
             PlayerProfileInfo(
                 state = playerInfoViewState,
                 modifier = Modifier.fillMaxWidth(),
-                onRankClicked = { onAction(PlayerProfileAction.ChangeRank) }
+                onRankClicked = { onInput(PlayerProfileInput.ChangeRankClicked) }
             )
             BannerContainer(playerInfoViewState.banner)
 
             if (goalData != null) {
                 LadderGoalsContent(
-                    goals = goalData!!.goals,
-                    rankClass = goalData!!.targetRankClass,
-                    onInput = { profileViewModel.goalListViewModel.handleAction(it) },
+                    goals = goalData.goals,
+                    rankClass = goalData.targetRankClass,
+                    onInput = { onInput(PlayerProfileInput.GoalList(it)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -108,7 +76,7 @@ fun PlayerProfileScreen(
             }
             if (goalError != null) {
                 Text(
-                    text = goalError!!,
+                    text = goalError,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
@@ -127,8 +95,6 @@ fun PlayerProfileInfo(
     modifier: Modifier = Modifier,
     onRankClicked: () -> Unit = {},
 ) {
-    val context = LocalContext.current
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -161,19 +127,11 @@ fun PlayerProfileInfo(
                 onClick = onRankClicked
             )
             Text(
-                text = state.rank.nameRes.getString(context),
+                text = stringResource(state.rank.nameRes),
                 style = MaterialTheme.typography.labelMedium,
-                color = state.rank?.colorRes?.getColor(context)?.let { Color(it) } ?: Color.Unspecified
+                color = state.rank?.colorRes?.let { colorResource(it) } ?: Color.Unspecified
             )
         }
-    }
-}
-
-@Composable
-@Preview(widthDp = 480)
-fun PlayerProfilePreview() {
-    LIFE4Theme {
-        PlayerProfileScreen {}
     }
 }
 

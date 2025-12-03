@@ -9,18 +9,18 @@ object UIBannerTemplates {
 
     fun success(text: StringDesc) = UIBanner(
         text = text,
-        backgroundColor = MR.colors.perfect_transparent.asColorDesc(), // FIXME
-        textColor = MR.colors.white.asColorDesc() // FIXME
+        backgroundColor = MR.colors.perfect_transparent, // FIXME
+        textColor = MR.colors.white // FIXME
     )
 
     fun error(text: StringDesc) = UIBanner(
         text = text,
-        backgroundColor = MR.colors.life4.asColorDesc(), // FIXME
+        backgroundColor = MR.colors.life4, // FIXME
     )
 
     val dummy = UIBanner(
         text = StringDesc.Raw("Testing..."),
-        backgroundColor = MR.colors.colorAccent.asColorDesc(),
-        textColor = MR.colors.white.asColorDesc()
+        backgroundColor = MR.colors.colorAccent,
+        textColor = MR.colors.white
     )
 }

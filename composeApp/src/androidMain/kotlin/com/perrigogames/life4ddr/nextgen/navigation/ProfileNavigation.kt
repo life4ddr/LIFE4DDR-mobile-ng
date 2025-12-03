@@ -14,7 +14,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trial.TrialListScreen
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderDestination
 import com.perrigogames.life4ddr.nextgen.feature.profile.ProfileDestination
-import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileAction
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileEvent
 import com.perrigogames.life4ddr.nextgen.feature.trials.TrialDestination
 
 fun NavGraphBuilder.profileNavigation(
@@ -27,7 +27,7 @@ fun NavGraphBuilder.profileNavigation(
             onBackPressed = { mainNavController.popBackStack() },
             onAction = { action ->
                 when (action) {
-                    PlayerProfileAction.ChangeRank -> {
+                    PlayerProfileEvent.NavigateToChangeRank -> {
                         mainNavController.navigate(LadderDestination.RankList.route)
                     }
                 }

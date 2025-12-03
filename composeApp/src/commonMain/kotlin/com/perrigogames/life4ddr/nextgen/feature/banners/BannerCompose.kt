@@ -8,12 +8,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBannerTemplates
-import dev.icerock.moko.resources.desc.color.getColor
+import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.localized
 
 @Composable
 fun BannerContainer(
@@ -25,10 +24,12 @@ fun BannerContainer(
         lastBanner = data
     }
 
-    val context = LocalContext.current
-    val text = lastBanner.text.toString(context)
-    val backgroundColor = lastBanner.backgroundColor?.getColor(context)?.let { Color(it) }
-    val textColor = lastBanner.textColor?.getColor(context)?.let { Color(it) }
+    val text = lastBanner.text.localized()
+    lastBanner.backgroundColor
+    val backgroundColor = lastBanner.backgroundColor?.let { colorResource(it) }
+        ?: MaterialTheme.colorScheme.secondaryContainer
+    val textColor = lastBanner.textColor?.let { colorResource(it) }
+        ?: MaterialTheme.colorScheme.onSecondaryContainer
 
     AnimatedVisibility(
         visible = data != null,
@@ -37,9 +38,9 @@ fun BannerContainer(
     ) {
         Text(
             text = text,
-            color = textColor ?: MaterialTheme.colorScheme.onSecondaryContainer,
+            color = textColor,
             modifier = Modifier
-                .background(backgroundColor ?: MaterialTheme.colorScheme.secondaryContainer)
+                .background(backgroundColor)
                 .fillMaxWidth()
                 .padding(
                     vertical = 8.dp,

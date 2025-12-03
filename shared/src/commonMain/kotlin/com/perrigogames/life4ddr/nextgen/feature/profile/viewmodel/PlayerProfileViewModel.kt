@@ -5,6 +5,7 @@ import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
 import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.GoalListConfig
+import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
@@ -13,7 +14,10 @@ import dev.icerock.moko.mvvm.flow.CStateFlow
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -30,6 +34,9 @@ class PlayerProfileViewModel : ViewModel(), KoinComponent {
 
     val goalListViewModel = GoalListViewModel(GoalListConfig())
 
+    private val _events = MutableSharedFlow<PlayerProfileEvent>()
+    val events: Flow<PlayerProfileEvent> = _events.asSharedFlow()
+
     init {
         viewModelScope.launch {
             combine(
@@ -43,6 +50,13 @@ class PlayerProfileViewModel : ViewModel(), KoinComponent {
             }.collect { _playerInfoViewState.value = it }
         }
     }
+
+    fun handleInput(input: PlayerProfileInput) = when(input) {
+        is PlayerProfileInput.GoalList -> goalListViewModel.handleAction(input.input)
+        PlayerProfileInput.ChangeRankClicked -> viewModelScope.launch {
+            _events.emit(PlayerProfileEvent.NavigateToChangeRank)
+        }
+    }
 }
 
 data class PlayerInfoViewState(
@@ -53,6 +67,11 @@ data class PlayerInfoViewState(
     val banner: UIBanner? = null
 )
 
-sealed class PlayerProfileAction {
-    data object ChangeRank: PlayerProfileAction()
+sealed class PlayerProfileInput {
+    data object ChangeRankClicked: PlayerProfileInput()
+    data class GoalList(val input: GoalListInput): PlayerProfileInput()
+}
+
+sealed class PlayerProfileEvent {
+    data object NavigateToChangeRank: PlayerProfileEvent()
 }
