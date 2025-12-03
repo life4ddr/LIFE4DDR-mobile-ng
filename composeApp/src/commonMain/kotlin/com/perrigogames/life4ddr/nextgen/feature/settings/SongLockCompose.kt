@@ -15,12 +15,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISongLockPage
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISongLockSection
 import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SongLockPageProvider
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
+import dev.icerock.moko.resources.compose.localized
 
 @Composable
 fun SongLockScreen(
@@ -34,12 +34,11 @@ fun SongLockScreen(
 private fun SongLockScreenContent(
     data: UISongLockPage
 ) {
-    val context = LocalContext.current
     Column(
         modifier = Modifier.padding(8.dp)
     ) {
         Text(
-            text = data.title.toString(context),
+            text = data.title.localized(),
             style = MaterialTheme.typography.titleLarge
         )
         SizedSpacer(8.dp)
@@ -56,11 +55,10 @@ private fun SongLockScreenContent(
 private fun UISongLockSection(
     data: UISongLockSection
 ) {
-    val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     Column {
         Text(
-            text = data.title.toString(context),
+            text = data.title.localized(),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .clickable { expanded = !expanded }
@@ -74,7 +72,7 @@ private fun UISongLockSection(
             ) {
                 data.charts.forEach { chart ->
                     Text(
-                        text = chart.toString(context)
+                        text = chart.localized()
                     )
                 }
             }

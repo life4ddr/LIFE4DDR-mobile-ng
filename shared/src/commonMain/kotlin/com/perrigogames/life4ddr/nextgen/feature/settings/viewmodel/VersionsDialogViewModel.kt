@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel
 
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDataManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdManager
+import com.perrigogames.life4ddr.nextgen.feature.settings.view.UIVersionsDialog
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
@@ -19,8 +20,8 @@ class VersionsDialogViewModel : ViewModel(), KoinComponent {
     private val songDataManager: SongDataManager by inject()
     private val trialDataManager: TrialDataManager by inject()
 
-    private val _state = MutableStateFlow(VersionsDialogState()).cMutableStateFlow()
-    val state: StateFlow<VersionsDialogState> = _state
+    private val _state = MutableStateFlow(UIVersionsDialog()).cMutableStateFlow()
+    val state: StateFlow<UIVersionsDialog> = _state
 
     init {
         viewModelScope.launch {
@@ -30,21 +31,13 @@ class VersionsDialogViewModel : ViewModel(), KoinComponent {
                 songDataManager.dataVersionString,
                 trialDataManager.dataVersionString,
             ) { ladderVersion, motdVersion, songDataVersion, trialVersion ->
-                _state.value = VersionsDialogState(
+                UIVersionsDialog(
                     ladderDataVersion = ladderVersion,
                     motdVersion = motdVersion,
                     songListVersion = songDataVersion,
                     trialDataVersion = trialVersion
                 )
-            } // TODO use this
+            }.collect(_state)
         }
     }
 }
-
-data class VersionsDialogState(
-    val appVersion: String = "",
-    val ladderDataVersion: String = "",
-    val motdVersion: String = "",
-    val songListVersion: String = "",
-    val trialDataVersion: String = ""
-)
