@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.composeNavigation)
             implementation(libs.composeSettings.ui)
             implementation(libs.composeSettings.ui.extended)
+            implementation(libs.koin.compose)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(projects.shared)
