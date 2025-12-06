@@ -22,7 +22,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "LIFE4DDR"
+            baseName = "ComposeApp"
             isStatic = true
         }
     }
