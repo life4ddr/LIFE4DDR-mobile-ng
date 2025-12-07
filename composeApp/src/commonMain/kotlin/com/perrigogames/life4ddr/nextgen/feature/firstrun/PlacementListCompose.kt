@@ -10,20 +10,28 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
+import com.perrigogames.life4ddr.nextgen.compose.LadderRankLevel3ParameterProvider
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
+import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacement
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementListScreen
+import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementMocks
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementSkipConfirmation
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListInput
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialMocks
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -213,6 +221,79 @@ fun PlacementListItem(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun Preview_PlacementContent() {
+    LIFE4Theme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            PlacementListContent(
+                data = UIPlacementMocks.createUIPlacementScreen()
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun Preview_PlacementItem(
+    @PreviewParameter(LadderRankLevel3ParameterProvider::class) rank: LadderRank,
+) {
+    ThemedRankSurface(rank) {
+        PlacementListItem(
+            data = UIPlacementMocks.createUIPlacementData(rankIcon = rank),
+            onInput = {}
+        )
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun Preview_PlacementItemExpanded(
+    @PreviewParameter(LadderRankLevel3ParameterProvider::class) rank: LadderRank,
+) {
+    ThemedRankSurface(rank) {
+        PlacementListItem(
+            data = UIPlacementMocks.createUIPlacementData(
+                rankIcon = rank
+            ),
+            expanded = true,
+            onInput = {}
+        )
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun Preview_PlacementSongItem() {
+    LIFE4Theme {
+        Surface(color = MaterialTheme.colorScheme.primaryContainer) {
+            PlacementSongItem(
+                data = UITrialMocks.createUITrialSong()
+            )
+        }
+    }
+}
+
+@Composable
+private fun ThemedRankSurface(
+    rank: LadderRank,
+    modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.large,
+    content: @Composable () -> Unit,
+) {
+    LIFE4Theme {
+        LadderRankClassTheme(ladderRankClass = rank.group) {
+            Surface(
+                color = MaterialTheme.colorScheme.primaryContainer,
+                shape = shape,
+                modifier = modifier,
+            ) {
+                content()
             }
         }
     }
