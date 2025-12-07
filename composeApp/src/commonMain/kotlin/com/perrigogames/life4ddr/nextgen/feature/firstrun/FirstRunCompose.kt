@@ -1,61 +1,198 @@
 package com.perrigogames.life4ddr.nextgen.feature.firstrun
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.primaryButtonColors
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunError.PasswordError
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunError.RivalCodeError
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunError.UsernameError
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunInfoViewModel
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.PathStep.InitialRankSelection
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.PathStep.Username
-import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunInput
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunPath
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.Landing
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.PathStep.*
 import com.perrigogames.life4ddr.nextgen.view.ErrorText
 import dev.icerock.moko.resources.compose.localized
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+
+@Composable
+fun FirstRunContent(
+    step: FirstRunStep,
+    modifier: Modifier = Modifier,
+    onInput: (FirstRunInput) -> Unit = {},
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth(0.75f)
+                .fillMaxHeight()
+        ) {
+            FirstRunHeader(
+                showWelcome = step == Landing,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            val contentModifier = Modifier.fillMaxWidth()
+
+            AnimatedContent(
+                targetState = step,
+                label = "First run content transitions",
+            ) { step ->
+                when (step) {
+                    Landing -> {
+                        FirstRunNewUser(
+                            onInput = onInput,
+                        )
+                    }
+                    is Username -> {
+                        FirstRunUsername(
+                            step = step,
+                            onInput = onInput,
+                        )
+                    }
+                    is UsernamePassword -> {
+                        FirstRunUsernamePassword(
+                            step = step,
+                            onInput = onInput,
+                        )
+                    }
+                    is RivalCode -> {
+                        FirstRunRivalCode(
+                            step = step,
+                            onInput = onInput,
+                        )
+                    }
+                    is SocialHandles -> {
+                        FirstRunSocials(
+                            onInput = onInput,
+                        )
+                    }
+                    is InitialRankSelection -> {
+                        FirstRunRankMethod(
+                            step = step,
+                            onInput = onInput,
+                        )
+                    }
+                    is Completed -> {
+//                        if (!completeHandled) {
+//                            onComplete(step.rankSelection)
+//                            completeHandled = true
+//                        }
+                    }
+                    else -> error("Unsupported step $step")
+                }
+            }
+        }
+
+        if (step.showNextButton) {
+            Button(
+                onClick = { onInput(FirstRunInput.NavigateNext) },
+                content = { Text("Next") },
+                colors = primaryButtonColors(),
+                modifier = Modifier.align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun FirstRunHeader(
+    showWelcome: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        AnimatedVisibility(
+            visible = showWelcome,
+            modifier = Modifier
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(bottom = 8.dp),
+        ) {
+            Text(
+                text = stringResource(MR.strings.first_run_landing_header),
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.headlineMedium,
+            )
+        }
+        Image(
+            painter = painterResource(MR.images.life4_logo_invert),
+            colorFilter = ColorFilter.tint(
+                color = MaterialTheme.colorScheme.onSurface,
+            ),
+            contentScale = ContentScale.Fit,
+            contentDescription = null,
+        )
+    }
+}
+
+@Composable
+fun FirstRunNewUser(
+    modifier: Modifier = Modifier,
+    onInput: (FirstRunInput) -> Unit = {},
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(MR.strings.first_run_landing_description),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+        ) {
+            Button(
+                onClick = { onInput(FirstRunInput.NewUserSelected(isNewUser = true)) },
+                colors = primaryButtonColors(),
+                content = { Text(
+                    text = stringResource(MR.strings.yes),
+                ) },
+                modifier = Modifier.weight(1f, false)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Button(
+                onClick = { onInput(FirstRunInput.NewUserSelected(isNewUser = false)) },
+                colors = primaryButtonColors(),
+                content = { Text(
+                    text = stringResource(MR.strings.no),
+                ) },
+                modifier = Modifier.weight(1f, false)
+            )
+        }
+    }
+}
 
 @Composable
 fun FirstRunUsername(
     step: Username,
-    viewModel: FirstRunInfoViewModel,
     modifier: Modifier = Modifier,
+    onInput: (FirstRunInput) -> Unit = {},
 ) {
-    val username: String by viewModel.username.collectAsState()
-    val error: UsernameError? by viewModel.errorOfType<UsernameError>().collectAsState(null)
     val focusManager = LocalFocusManager.current
 
     Column(modifier = modifier) {
@@ -78,7 +215,7 @@ fun FirstRunUsername(
             )
         }
         OutlinedTextField(
-            value = username,
+            value = step.username,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -94,11 +231,11 @@ fun FirstRunUsername(
                 onDone = { focusManager.clearFocus() },
             ),
             supportingText = {
-                AnimatedVisibility(visible = error != null) {
-                    ErrorText { error?.errorText?.localized() }
+                AnimatedVisibility(visible = step.usernameError != null) {
+                    ErrorText { step.usernameError?.errorText?.localized() }
                 }
             },
-            onValueChange = { text: String -> viewModel.username.value = text },
+            onValueChange = { onInput(FirstRunInput.UsernameUpdated(it)) },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -106,77 +243,76 @@ fun FirstRunUsername(
 
 @Composable
 fun FirstRunUsernamePassword(
-    viewModel: FirstRunInfoViewModel,
+    step: UsernamePassword,
     modifier: Modifier = Modifier,
+    onInput: (FirstRunInput) -> Unit = {},
 ) {
-    val username: String by viewModel.username.collectAsState()
-    val password: String by viewModel.password.collectAsState()
-    val usernameError: UsernameError? by viewModel.errorOfType<UsernameError>().collectAsState(null)
-    val passwordError: PasswordError? by viewModel.errorOfType<PasswordError>().collectAsState(null)
-    val focusManager = LocalFocusManager.current
-
-    Column(modifier = modifier) {
-        OutlinedTextField(
-            value = username,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-            ),
-            label = { Text(
-                text = stringResource(MR.strings.username),
-            ) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) },
-                onDone = { focusManager.clearFocus() },
-            ),
-            supportingText = {
-                AnimatedVisibility(visible = usernameError != null) {
-                    ErrorText { usernameError?.errorText?.localized() }
-                }
-            },
-            onValueChange = { text: String -> viewModel.username.value = text },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = password,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-            ),
-            label = { Text(
-                text = stringResource(MR.strings.password),
-            ) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done
-            ),
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardActions = KeyboardActions(
-                onDone = { focusManager.clearFocus() },
-            ),
-            supportingText = {
-                AnimatedVisibility(visible = passwordError != null) {
-                    ErrorText { passwordError?.errorText?.localized() }
-                }
-            },
-            onValueChange = { text: String -> viewModel.username.value = text },
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
+//    val username: String by viewModel.username.collectAsState()
+//    val password: String by viewModel.password.collectAsState()
+//    val usernameError: UsernameError? by viewModel.errorOfType<UsernameError>().collectAsState(null)
+//    val passwordError: PasswordError? by viewModel.errorOfType<PasswordError>().collectAsState(null)
+//    val focusManager = LocalFocusManager.current
+//
+//    Column(modifier = modifier) {
+//        OutlinedTextField(
+//            value = username,
+//            colors = OutlinedTextFieldDefaults.colors(
+//                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+//                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+//            ),
+//            label = { Text(
+//                text = stringResource(MR.strings.username),
+//            ) },
+//            singleLine = true,
+//            keyboardOptions = KeyboardOptions(
+//                imeAction = ImeAction.Next
+//            ),
+//            keyboardActions = KeyboardActions(
+//                onNext = { focusManager.moveFocus(FocusDirection.Down) },
+//                onDone = { focusManager.clearFocus() },
+//            ),
+//            supportingText = {
+//                AnimatedVisibility(visible = usernameError != null) {
+//                    ErrorText { usernameError?.errorText?.localized() }
+//                }
+//            },
+//            onValueChange = { text: String -> viewModel.username.value = text },
+//            modifier = Modifier.fillMaxWidth()
+//        )
+//        OutlinedTextField(
+//            value = password,
+//            colors = OutlinedTextFieldDefaults.colors(
+//                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+//                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+//            ),
+//            label = { Text(
+//                text = stringResource(MR.strings.password),
+//            ) },
+//            singleLine = true,
+//            keyboardOptions = KeyboardOptions(
+//                imeAction = ImeAction.Done
+//            ),
+//            visualTransformation = PasswordVisualTransformation(),
+//            keyboardActions = KeyboardActions(
+//                onDone = { focusManager.clearFocus() },
+//            ),
+//            supportingText = {
+//                AnimatedVisibility(visible = passwordError != null) {
+//                    ErrorText { passwordError?.errorText?.localized() }
+//                }
+//            },
+//            onValueChange = { text: String -> viewModel.username.value = text },
+//            modifier = Modifier.fillMaxWidth()
+//        )
+//    }
 }
 
 @Composable
 fun FirstRunRivalCode(
-    viewModel: FirstRunInfoViewModel,
+    step: RivalCode,
     modifier: Modifier = Modifier,
+    onInput: (FirstRunInput) -> Unit = {},
 ) {
-    val rivalCode: String by viewModel.rivalCode.collectAsState()
-    val error: RivalCodeError? by viewModel.errorOfType<RivalCodeError>().collectAsState(null)
-
     Column(modifier = modifier) {
         Text(
             text = stringResource(MR.strings.first_run_rival_code_header),
@@ -196,13 +332,14 @@ fun FirstRunRivalCode(
             style = MaterialTheme.typography.bodyMedium,
         )
         RivalCodeEntry(
-            rivalCode = rivalCode,
+            rivalCode = step.rivalCode,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 32.dp, bottom = 8.dp),
-        ) { viewModel.rivalCode.value = it }
-        AnimatedVisibility(visible = error != null) {
-            ErrorText { error?.errorText?.localized() }
+            onInput = onInput,
+        )
+        AnimatedVisibility(visible = step.rivalCodeError != null) {
+            ErrorText { step.rivalCodeError?.errorText?.localized() }
         }
     }
 }
@@ -211,7 +348,7 @@ fun FirstRunRivalCode(
 fun RivalCodeEntry(
     rivalCode: String,
     modifier: Modifier = Modifier,
-    onTextChanged: (String) -> Unit = {},
+    onInput: (FirstRunInput) -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -219,7 +356,7 @@ fun RivalCodeEntry(
         value = rivalCode,
         onValueChange = {
             if (it.length <= 8) {
-                onTextChanged(it)
+                onInput(FirstRunInput.RivalCodeUpdated(it))
                 if (it.length == 8) {
                     focusManager.clearFocus()
                 }
@@ -282,59 +419,59 @@ fun RivalCodeEntry(
 @Composable
 fun FirstRunSocials(
     modifier: Modifier = Modifier,
-    viewModel: FirstRunInfoViewModel,
+    onInput: (FirstRunInput) -> Unit = {},
 ) {
-    val socials: Map<SocialNetwork, String> by viewModel.socialNetworks.collectAsState()
-
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(MR.strings.first_run_social_header),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.headlineMedium,
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(
-            text = stringResource(MR.strings.first_run_social_description),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-        LazyColumn(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-        ) {
-            item {
-                Button(
-                    onClick = {},
-                    content = {
-                        Text(
-                            text = stringResource(MR.strings.first_run_social_add_new),
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                )
-            }
-            items(socials.toList()) { (network, name) ->
-                Row {
-                    Text(
-                        text = "$network: ",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = name,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
-            }
-        }
-    }
+//    val socials: Map<SocialNetwork, String> by viewModel.socialNetworks.collectAsState()
+//
+//    Column(modifier = modifier) {
+//        Text(
+//            text = stringResource(MR.strings.first_run_social_header),
+//            color = MaterialTheme.colorScheme.onSurface,
+//            style = MaterialTheme.typography.headlineMedium,
+//        )
+//        Spacer(modifier = Modifier.size(16.dp))
+//        Text(
+//            text = stringResource(MR.strings.first_run_social_description),
+//            color = MaterialTheme.colorScheme.onSurface,
+//            style = MaterialTheme.typography.bodyMedium,
+//        )
+//        LazyColumn(
+//            modifier = Modifier
+//                .padding(vertical = 16.dp)
+//        ) {
+//            item {
+//                Button(
+//                    onClick = {},
+//                    content = {
+//                        Text(
+//                            text = stringResource(MR.strings.first_run_social_add_new),
+//                            color = MaterialTheme.colorScheme.onSurface
+//                        )
+//                    }
+//                )
+//            }
+//            items(socials.toList()) { (network, name) ->
+//                Row {
+//                    Text(
+//                        text = "$network: ",
+//                        color = MaterialTheme.colorScheme.onSurface,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                    Text(
+//                        text = name,
+//                        color = MaterialTheme.colorScheme.onSurface,
+//                    )
+//                }
+//            }
+//        }
+//    }
 }
 
 @Composable
 fun FirstRunRankMethod(
     step: InitialRankSelection,
     modifier: Modifier = Modifier,
-    onRankMethodSelected: (InitState) -> Unit = {},
+    onInput: (FirstRunInput) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         @Composable
@@ -342,7 +479,7 @@ fun FirstRunRankMethod(
             method: InitState,
         ) {
             Button(
-                onClick = { onRankMethodSelected(method) },
+                onClick = { onInput(FirstRunInput.RankMathodSelected(method)) },
                 colors = primaryButtonColors(),
                 content = { Text(
                     text = method.description.localized(),
@@ -370,6 +507,78 @@ fun FirstRunRankMethod(
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun FirstRunHeaderPreview() {
+    LIFE4Theme {
+        FirstRunHeader(true)
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun FirstRunNewUserPreview() {
+    LIFE4Theme {
+        FirstRunNewUser {}
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun FirstRunUsernameNewPreview() {
+    LIFE4Theme {
+        FirstRunUsername(
+            step = Username(FirstRunPath.NEW_USER_LOCAL),
+        )
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun FirstRunUsernameExistingPreview() {
+    LIFE4Theme {
+        FirstRunUsername(
+            step = Username(FirstRunPath.EXISTING_USER_LOCAL),
+        )
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun FirstRunRivalCodePreview() {
+    LIFE4Theme {
+        FirstRunRivalCode(
+            step = RivalCode(FirstRunPath.NEW_USER_LOCAL, "12345678")
+        )
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun FirstRunRivalCodeEntryPreview() {
+    LIFE4Theme {
+        RivalCodeEntry("12345678")
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun FirstRunSocialsPreview() {
+    LIFE4Theme {
+        FirstRunSocials()
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun FirstRunRankMethodPreview() {
+    LIFE4Theme {
+        FirstRunRankMethod(
+            step = InitialRankSelection(FirstRunPath.NEW_USER_LOCAL)
         )
     }
 }

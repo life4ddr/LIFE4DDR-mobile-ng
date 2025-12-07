@@ -33,6 +33,7 @@ fun NavGraphBuilder.firstRunNavigation(
 
     composable(FirstRunDestination.FirstRun.baseRoute) {
         FirstRunScreen(
+            modifier = Modifier.fillMaxSize(),
             onComplete = { when (it) {
                 InitState.PLACEMENTS -> navController.popAndNavigate("placement_list")
                 InitState.RANKS -> navController.popAndNavigate("initial_rank_list")
