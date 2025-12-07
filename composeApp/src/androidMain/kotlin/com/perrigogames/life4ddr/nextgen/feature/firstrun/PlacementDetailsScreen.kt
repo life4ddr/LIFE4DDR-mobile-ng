@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
-import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsAction
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsInput
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsEvent
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trial.CameraBottomSheetContent
@@ -95,7 +95,7 @@ fun PlacementDetailsScreen(
                 }
                 CameraBottomSheetContent {
                     hideBottomSheet()
-                    viewModel.handleAction(PlacementDetailsAction.PictureTaken)
+                    viewModel.handleAction(PlacementDetailsInput.PictureTaken)
                 }
             }
         }
@@ -112,7 +112,7 @@ fun PlacementDetailsScreen(
 fun PlacementDetailsContent(
     viewData: UIPlacementDetails,
     modifier: Modifier = Modifier,
-    onAction: (PlacementDetailsAction) -> Unit,
+    onAction: (PlacementDetailsInput) -> Unit,
 ) {
     val context = LocalContext.current
     LadderRankClassTheme(ladderRankClass = viewData.rankIcon.group) {

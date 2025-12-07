@@ -23,6 +23,7 @@ import com.perrigogames.life4ddr.nextgen.util.openWebUrl
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelEvent
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListEvent
 
 fun NavGraphBuilder.firstRunNavigation(
     navController: NavController,
@@ -43,9 +44,19 @@ fun NavGraphBuilder.firstRunNavigation(
 
     composable(FirstRunDestination.PlacementList.baseRoute) {
         PlacementListScreen(
-            onPlacementSelected = { placementId -> navController.navigate("placement_details/$placementId") },
-            onRanksClicked = { navController.popAndNavigate("initial_rank_list") },
-            goToMainScreen = { navController.popAndNavigate("main_screen") }
+            onEvent = {
+                when(it) {
+                    is PlacementListEvent.NavigateToPlacementDetails -> {
+                        navController.navigate("placement_details/${it.placementId}")
+                    }
+                    PlacementListEvent.NavigateToRanks -> {
+                        navController.popAndNavigate("initial_rank_list")
+                    }
+                    PlacementListEvent.NavigateToMainScreen -> {
+                        navController.popAndNavigate("main_screen")
+                    }
+                }
+            },
         )
     }
 

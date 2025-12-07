@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.placements.view
 
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListInput
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.bags
 import dev.icerock.moko.resources.desc.StringDesc
@@ -26,6 +27,11 @@ object UIPlacementMocks {
         titleText = titleText,
         headerText = headerText,
         placements = placements,
+        ranksButtonText = MR.strings.select_rank_instead.desc(),
+        ranksButtonInput = PlacementListInput.GoToRanksScreen,
+        skipButtonText = MR.strings.start_no_rank.desc(),
+        skipButtonInput = PlacementListInput.SkipPlacement,
+        skipConfirmation = null,
     )
 
     fun createUIPlacementData(
@@ -38,5 +44,6 @@ object UIPlacementMocks {
         rankIcon = rankIcon,
         difficultyRangeString = difficultyRangeString,
         songs = songs,
+        selectedInput = PlacementListInput.PlacementSelected(id),
     )
 }

@@ -10,7 +10,7 @@ sealed class PlacementDetailsEvent {
         val title: StringDesc,
         val message: StringDesc,
         val ctaText: StringDesc,
-        val ctaAction: PlacementDetailsAction,
+        val ctaAction: PlacementDetailsInput,
     ) : PlacementDetailsEvent()
 
     data class NavigateToMainScreen(

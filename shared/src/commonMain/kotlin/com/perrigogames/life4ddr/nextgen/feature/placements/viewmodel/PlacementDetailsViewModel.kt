@@ -55,19 +55,19 @@ class PlacementDetailsViewModel(
         }
     }
 
-    fun handleAction(action: PlacementDetailsAction) {
+    fun handleAction(action: PlacementDetailsInput) {
         viewModelScope.launch {
             when (action) {
-                PlacementDetailsAction.FinalizeClicked -> _events.emit(PlacementDetailsEvent.ShowCamera)
-                PlacementDetailsAction.PictureTaken -> _events.emit(
+                PlacementDetailsInput.FinalizeClicked -> _events.emit(PlacementDetailsEvent.ShowCamera)
+                PlacementDetailsInput.PictureTaken -> _events.emit(
                     PlacementDetailsEvent.ShowTooltip(
                         title = MR.strings.placement_complete_tooltip_title.desc(),
                         message = MR.strings.placement_complete_tooltip_message.desc(),
                         ctaText = MR.strings.okay.desc(),
-                        ctaAction = PlacementDetailsAction.TooltipDismissed
+                        ctaAction = PlacementDetailsInput.TooltipDismissed
                     )
                 )
-                PlacementDetailsAction.TooltipDismissed -> {
+                PlacementDetailsInput.TooltipDismissed -> {
                     _events.emit(PlacementDetailsEvent.NavigateToMainScreen(
                         submissionUrl = MR.strings.url_submission.desc()
                     ))

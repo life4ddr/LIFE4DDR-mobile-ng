@@ -5,6 +5,8 @@ import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.PLACEMENTS_
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacement
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementListScreen
+import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementSkipConfirmation
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListInput
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialData
@@ -74,8 +76,13 @@ class PlacementManager: BaseModel() {
                     }
                     "L$lowest-L$highest" // FIXME resource
                 },
-                songs = placement.songs.map { it.toUITrialSong() }
+                songs = placement.songs.map { it.toUITrialSong() },
+                selectedInput = PlacementListInput.PlacementSelected(placement.id)
             )
-        }
+        },
+        ranksButtonText = MR.strings.select_rank_instead.desc(),
+        ranksButtonInput = PlacementListInput.GoToRanksScreen,
+        skipButtonText = MR.strings.start_no_rank.desc(),
+        skipButtonInput = PlacementListInput.SkipPlacement,
     )
 }
