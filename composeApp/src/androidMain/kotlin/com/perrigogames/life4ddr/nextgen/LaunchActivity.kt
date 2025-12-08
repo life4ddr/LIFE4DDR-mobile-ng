@@ -11,14 +11,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
+import com.perrigogames.life4ddr.nextgen.feature.launch.viewmodel.LaunchViewModel
 import com.perrigogames.life4ddr.nextgen.navigation.firstRunNavigation
 import com.perrigogames.life4ddr.nextgen.navigation.ladderNavigation
+import com.perrigogames.life4ddr.nextgen.navigation.popAndNavigate
 import com.perrigogames.life4ddr.nextgen.navigation.settingsNavigation
 import com.perrigogames.life4ddr.nextgen.navigation.trialNavigation
 import dev.icerock.moko.mvvm.createViewModelFactory
@@ -46,6 +48,10 @@ class LaunchActivity: AppCompatActivity(), KoinComponent {
 
         super.onCreate(savedInstanceState)
         setContent {
+//            RootNavHost(
+//                modifier = Modifier.fillMaxSize(),
+//                onLoaded = { loaded = true }
+//            ) TODO replace with CMP version when it's ready
             val navController = rememberNavController()
 
             val viewModel: LaunchViewModel = viewModel(
@@ -55,10 +61,10 @@ class LaunchActivity: AppCompatActivity(), KoinComponent {
             LaunchedEffect(Unit) {
                 val initialState = viewModel.launchState.first()
                 navController.popAndNavigate(when(initialState) {
-                    null -> "first_run"
-                    InitState.PLACEMENTS -> "placement_list"
-                    InitState.RANKS -> "initial_rank_list"
-                    InitState.DONE -> "main_screen"
+                    null -> FirstRunDestination.FirstRun
+                    InitState.PLACEMENTS -> FirstRunDestination.PlacementList
+                    InitState.RANKS -> FirstRunDestination.InitialRankList
+                    InitState.DONE -> FirstRunDestination.MainScreen
                 })
                 loaded = true
             }
@@ -92,9 +98,4 @@ class LaunchActivity: AppCompatActivity(), KoinComponent {
         println(uri)
         // Extract the authorization code from the URI and exchange it for an access token
     }
-}
-
-fun NavController.popAndNavigate(destination: String) {
-    popBackStack()
-    navigate(destination)
 }

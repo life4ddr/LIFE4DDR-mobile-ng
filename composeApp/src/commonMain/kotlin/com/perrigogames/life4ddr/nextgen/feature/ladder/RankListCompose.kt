@@ -26,6 +26,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,12 +39,34 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UIFooterData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UINoRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UIRankList
+import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModel
+import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelEvent
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelInput
 import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
 import com.perrigogames.life4ddr.nextgen.view.RankImageWithTitle
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun RankListScreen(
+    isFirstRun: Boolean = false,
+    onAction: (RankListViewModelEvent) -> Unit = {},
+) {
+    val viewModel = koinViewModel<RankListViewModel> { parametersOf(isFirstRun) }
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.actions.collect(onAction)
+    }
+    RankListContent(
+        state = state,
+        onInput = { viewModel.onInputAction(it) },
+    )
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,25 +136,29 @@ fun FirstRunWidget(
     data: UIFooterData,
     onInput: (RankListViewModelInput) -> Unit = {},
 ) {
-    data.footerText?.let { footer ->
-        AutoResizedText(
-            text = footer.localized(),
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .padding(horizontal = Paddings.HUGE)
-                .padding(top = Paddings.LARGE)
-        )
-    }
-    Button(
-        onClick = { onInput(data.buttonInput) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = Paddings.HUGE,
-                vertical = Paddings.LARGE
-            )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(text = data.buttonText.localized())
+        data.footerText?.let { footer ->
+            AutoResizedText(
+                text = footer.localized(),
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+                    .padding(horizontal = Paddings.HUGE)
+                    .padding(top = Paddings.LARGE)
+            )
+        }
+        Button(
+            onClick = { onInput(data.buttonInput) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = Paddings.HUGE,
+                    vertical = Paddings.LARGE
+                )
+        ) {
+            Text(text = data.buttonText.localized())
+        }
     }
 }
 

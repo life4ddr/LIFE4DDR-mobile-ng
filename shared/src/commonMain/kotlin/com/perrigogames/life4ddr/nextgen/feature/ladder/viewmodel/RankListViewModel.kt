@@ -1,5 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
@@ -13,25 +15,19 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderRankClass
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UINoRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UIRankList
-import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.util.ViewState
-import dev.icerock.moko.mvvm.flow.*
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class RankListViewModel(
-    isFirstRun: Boolean = false
+    isFirstRun: Boolean = false,
+    private val firstRunSettingsManager: FirstRunSettings,
+    private val userRankSettings: UserRankSettings,
+    private val ladderDataManager: LadderDataManager,
 ) : ViewModel(), KoinComponent {
-
-    private val firstRunSettingsManager: FirstRunSettings by inject()
-    private val userInfoSettings: UserInfoSettings by inject()
-    private val userRankSettings: UserRankSettings by inject()
-    private val ladderDataManager: LadderDataManager by inject()
 
     private val selectedRankClass = MutableStateFlow<LadderRankClass?>(null)
     private val selectedRankIndex = MutableStateFlow<Int?>(null)
@@ -65,11 +61,11 @@ class RankListViewModel(
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    private val _state = MutableStateFlow(UIRankList()).cMutableStateFlow()
-    val state: CStateFlow<UIRankList> = _state.cStateFlow()
+    private val _state = MutableStateFlow(UIRankList())
+    val state: StateFlow<UIRankList> = _state.asStateFlow()
 
     private val _actions = MutableSharedFlow<RankListViewModelEvent>()
-    val actions: CFlow<RankListViewModelEvent> = _actions.cFlow()
+    val actions: SharedFlow<RankListViewModelEvent> = _actions.asSharedFlow()
 
     init {
         viewModelScope.launch {

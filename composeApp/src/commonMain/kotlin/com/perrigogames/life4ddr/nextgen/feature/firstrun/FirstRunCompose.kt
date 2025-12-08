@@ -11,8 +11,15 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -24,6 +31,7 @@ import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.primaryButtonColors
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunInfoViewModel
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunInput
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunPath
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep
@@ -34,6 +42,31 @@ import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun FirstRunScreen(
+    modifier: Modifier = Modifier,
+    onComplete: (InitState) -> Unit,
+    onClose: () -> Unit,
+) {
+    val viewModel = koinViewModel<FirstRunInfoViewModel>()
+    val step: FirstRunStep by viewModel.state.collectAsState(Landing)
+
+    BackHandler {
+        if (!viewModel.navigateBack()) {
+            onClose()
+        }
+    }
+
+    FirstRunContent(
+        step = step,
+        modifier = modifier,
+        onInput = { viewModel.handleInput(it) },
+    )
+}
+
 
 @Composable
 fun FirstRunContent(
@@ -41,6 +74,8 @@ fun FirstRunContent(
     modifier: Modifier = Modifier,
     onInput: (FirstRunInput) -> Unit = {},
 ) {
+    var completeHandled by remember { mutableStateOf(false) }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier,
@@ -51,12 +86,12 @@ fun FirstRunContent(
             modifier = Modifier.fillMaxWidth(0.75f)
                 .fillMaxHeight()
         ) {
+            val contentModifier = Modifier.fillMaxWidth()
+
             FirstRunHeader(
                 showWelcome = step == Landing,
-                modifier = Modifier.fillMaxWidth()
+                modifier = contentModifier
             )
-
-            val contentModifier = Modifier.fillMaxWidth()
 
             AnimatedContent(
                 targetState = step,
@@ -66,42 +101,48 @@ fun FirstRunContent(
                     Landing -> {
                         FirstRunNewUser(
                             onInput = onInput,
+                            modifier = contentModifier,
                         )
                     }
                     is Username -> {
                         FirstRunUsername(
                             step = step,
                             onInput = onInput,
+                            modifier = contentModifier,
                         )
                     }
                     is UsernamePassword -> {
                         FirstRunUsernamePassword(
                             step = step,
                             onInput = onInput,
+                            modifier = contentModifier,
                         )
                     }
                     is RivalCode -> {
                         FirstRunRivalCode(
                             step = step,
                             onInput = onInput,
+                            modifier = contentModifier,
                         )
                     }
                     is SocialHandles -> {
                         FirstRunSocials(
                             onInput = onInput,
+                            modifier = contentModifier,
                         )
                     }
                     is InitialRankSelection -> {
                         FirstRunRankMethod(
                             step = step,
                             onInput = onInput,
+                            modifier = contentModifier,
                         )
                     }
                     is Completed -> {
-//                        if (!completeHandled) {
-//                            onComplete(step.rankSelection)
-//                            completeHandled = true
-//                        }
+                        if (!completeHandled) {
+                            onInput(FirstRunInput.RankMathodSelected(step.rankSelection))
+                            completeHandled = true
+                        }
                     }
                     else -> error("Unsupported step $step")
                 }
@@ -125,7 +166,10 @@ fun FirstRunHeader(
     showWelcome: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         AnimatedVisibility(
             visible = showWelcome,
             modifier = Modifier
@@ -194,6 +238,7 @@ fun FirstRunUsername(
     onInput: (FirstRunInput) -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
+    var usernameText by remember { mutableStateOf(step.username) }
 
     Column(modifier = modifier) {
         Text(
@@ -215,7 +260,7 @@ fun FirstRunUsername(
             )
         }
         OutlinedTextField(
-            value = step.username,
+            value = usernameText,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -235,7 +280,10 @@ fun FirstRunUsername(
                     ErrorText { step.usernameError?.errorText?.localized() }
                 }
             },
-            onValueChange = { onInput(FirstRunInput.UsernameUpdated(it)) },
+            onValueChange = {
+                usernameText = it
+                onInput(FirstRunInput.UsernameUpdated(it))
+            },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -351,11 +399,13 @@ fun RivalCodeEntry(
     onInput: (FirstRunInput) -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
+    var rivalCodeText by remember { mutableStateOf(rivalCode) }
 
     BasicTextField(
-        value = rivalCode,
+        value = rivalCodeText,
         onValueChange = {
             if (it.length <= 8) {
+                rivalCodeText = it
                 onInput(FirstRunInput.RivalCodeUpdated(it))
                 if (it.length == 8) {
                     focusManager.clearFocus()
@@ -392,8 +442,8 @@ fun RivalCodeEntry(
 
                 repeat(4) { idx ->
                     val char = when {
-                        idx >= rivalCode.length -> ""
-                        else -> rivalCode[idx].toString()
+                        idx >= rivalCodeText.length -> ""
+                        else -> rivalCodeText[idx].toString()
                     }
                     Cell(char)
                     Spacer(modifier = Modifier.size(6.dp))
@@ -405,8 +455,8 @@ fun RivalCodeEntry(
                 )
                 repeat(4) { idx ->
                     val char = when {
-                        idx + 4 >= rivalCode.length -> ""
-                        else -> rivalCode[idx + 4].toString()
+                        idx + 4 >= rivalCodeText.length -> ""
+                        else -> rivalCodeText[idx + 4].toString()
                     }
                     Spacer(modifier = Modifier.size(6.dp))
                     Cell(char)

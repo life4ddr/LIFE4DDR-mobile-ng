@@ -57,12 +57,13 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.coil.compose)
             implementation(libs.coil.ktor3)
+            implementation(libs.composeBackhandler)
             implementation(libs.composeNavigation)
             implementation(libs.composeSettings.ui)
             implementation(libs.composeSettings.ui.extended)
-            implementation(libs.koin.compose)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
+            implementation(libs.koin.composeViewModelNavigation)
             implementation(projects.shared)
         }
         commonTest.dependencies {

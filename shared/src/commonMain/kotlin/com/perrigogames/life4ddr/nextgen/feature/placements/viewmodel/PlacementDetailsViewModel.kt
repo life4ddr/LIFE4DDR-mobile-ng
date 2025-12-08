@@ -1,33 +1,29 @@
 package com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
-import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.toUITrialSong
-import com.perrigogames.life4ddr.nextgen.injectLogger
-import dev.icerock.moko.mvvm.flow.CStateFlow
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.flow.cStateFlow
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class PlacementDetailsViewModel(
-    placementId: String
+    placementId: String,
+    private val placementManager: PlacementManager,
+    private val logger: Logger,
 ) : ViewModel(), KoinComponent {
 
-    private val logger by injectLogger("PlacementDetailsViewModel")
-    private val placementManager: PlacementManager by inject()
-    private val songDataManager: SongDataManager by inject()
-
-    private val _state = MutableStateFlow(UIPlacementDetails()).cMutableStateFlow()
-    val state: CStateFlow<UIPlacementDetails> = _state.cStateFlow()
+    private val _state = MutableStateFlow(UIPlacementDetails())
+    val state: StateFlow<UIPlacementDetails> = _state.asStateFlow()
 
     private val _events = MutableSharedFlow<PlacementDetailsEvent>(replay = 0)
     val events = _events.asSharedFlow()

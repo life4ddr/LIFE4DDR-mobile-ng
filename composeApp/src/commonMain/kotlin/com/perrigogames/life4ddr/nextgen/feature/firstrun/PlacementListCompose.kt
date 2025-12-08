@@ -8,10 +8,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
@@ -22,7 +25,9 @@ import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacement
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementListScreen
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementMocks
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementSkipConfirmation
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListEvent
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListInput
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialMocks
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
@@ -30,8 +35,42 @@ import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.koin.compose.viewmodel.koinViewModel
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun PlacementListScreen(
+    modifier: Modifier = Modifier,
+    onEvent: (PlacementListEvent) -> Unit = {},
+) {
+    val viewModel = koinViewModel<PlacementListViewModel>()
+    val scope = rememberCoroutineScope()
+    val modalBottomSheetState = rememberModalBottomSheetState()
+
+    BackHandler {
+        scope.launch {
+            if (modalBottomSheetState.isVisible) {
+                modalBottomSheetState.hide()
+            } else {
+                modalBottomSheetState.show()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { onEvent(it) }
+    }
+
+    val data by viewModel.screenData.collectAsState()
+    PlacementListContent(
+        data = data,
+        modifier = modifier,
+        onInput = { viewModel.handleInput(it) }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,7 +154,10 @@ fun PlacementListContent(
         SizedSpacer(Paddings.LARGE)
     }
     data.skipConfirmation?.let {
-        PlacementSkipConfirmDialog(it)
+        PlacementSkipConfirmDialog(
+            data = it,
+            onInput = onInput
+        )
     }
 }
 

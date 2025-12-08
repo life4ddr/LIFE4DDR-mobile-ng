@@ -11,56 +11,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.composable
-import com.kevinnzou.web.*
+import com.kevinnzou.web.AccompanistWebViewClient
+import com.kevinnzou.web.LoadingState
+import com.kevinnzou.web.WebView
+import com.kevinnzou.web.rememberWebViewNavigator
+import com.kevinnzou.web.rememberWebViewState
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunScreen
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.PlacementDetailsScreen
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.PlacementListScreen
-import com.perrigogames.life4ddr.nextgen.feature.ladder.RankListScreen
-import com.perrigogames.life4ddr.nextgen.feature.mainscreen.MainScreen
-import com.perrigogames.life4ddr.nextgen.popAndNavigate
-import com.perrigogames.life4ddr.nextgen.util.openWebUrl
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
-import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.PlacementDetailsScreen
+import com.perrigogames.life4ddr.nextgen.feature.ladder.RankListScreen
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelEvent
-import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListEvent
+import com.perrigogames.life4ddr.nextgen.feature.mainscreen.MainScreen
 
 fun NavGraphBuilder.firstRunNavigation(
     navController: NavController,
     onFinish: () -> Unit,
 ) {
-    composable(FirstRunDestination.Landing.baseRoute) {}
-
-    composable(FirstRunDestination.FirstRun.baseRoute) {
-        FirstRunScreen(
-            modifier = Modifier.fillMaxSize(),
-            onComplete = { when (it) {
-                InitState.PLACEMENTS -> navController.popAndNavigate("placement_list")
-                InitState.RANKS -> navController.popAndNavigate("initial_rank_list")
-                InitState.DONE -> navController.popAndNavigate("main_screen")
-            } },
-            onClose = { onFinish() },
-        )
-    }
-
-    composable(FirstRunDestination.PlacementList.baseRoute) {
-        PlacementListScreen(
-            onEvent = {
-                when(it) {
-                    is PlacementListEvent.NavigateToPlacementDetails -> {
-                        navController.navigate("placement_details/${it.placementId}")
-                    }
-                    PlacementListEvent.NavigateToRanks -> {
-                        navController.popAndNavigate("initial_rank_list")
-                    }
-                    PlacementListEvent.NavigateToMainScreen -> {
-                        navController.popAndNavigate("main_screen")
-                    }
-                }
-            },
-        )
-    }
-
     composable(
         route = FirstRunDestination.PlacementDetails.BASE_ROUTE,
         arguments = listOf(
@@ -75,7 +41,7 @@ fun NavGraphBuilder.firstRunNavigation(
                 onNavigateToMainScreen = { url ->
                     navController.popBackStack()
                     navController.popAndNavigate("main_screen")
-                
+
                     url?.let { navController.context.openWebUrl(it) }
                 }
             )
