@@ -16,8 +16,8 @@ sealed class LadderDestination(override val baseRoute: String): Destination {
     data object RankList: LadderDestination("rank_list")
 
     @Serializable
-    data class RankDetails(val rank: LadderRank): LadderDestination(BASE_ROUTE) {
-        override val route = BASE_ROUTE.replace("{$RANK_ID}", rank.stableId.toString())
+    data class RankDetails(val rankId: Long): LadderDestination(BASE_ROUTE) {
+        override val route = BASE_ROUTE.replace("{$RANK_ID}", rankId.toString())
         companion object {
             const val RANK_ID = "rank_id"
             const val BASE_ROUTE = "rank_details/{$RANK_ID}"

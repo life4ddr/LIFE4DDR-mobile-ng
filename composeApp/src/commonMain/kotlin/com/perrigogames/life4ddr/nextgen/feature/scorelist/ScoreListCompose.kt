@@ -10,18 +10,68 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIScore
 import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIScoreList
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListEvent
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListInput
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun ScoreListScreen(
+    modifier: Modifier = Modifier,
+    onBackPressed: () -> Unit,
+    showSanbaiLogin: (String) -> Unit = {},
+) {
+    val viewModel = koinViewModel<ScoreListViewModel>()
+    val scope = rememberCoroutineScope()
+    val state by viewModel.state.collectAsState()
+
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false,
+        )
+    )
+
+    BackHandler {
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
+            scope.launch {
+                scaffoldState.bottomSheetState.hide()
+            }
+        } else {
+            onBackPressed()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect {
+            when(it) {
+                is ScoreListEvent.ShowSanbaiLogin -> showSanbaiLogin(it.url)
+            }
+        }
+    }
+
+    ScoreListContent(
+        scope = scope,
+        state = state,
+        scaffoldState = scaffoldState,
+        modifier = modifier,
+        onInput = { viewModel.handleInput(it) },
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable

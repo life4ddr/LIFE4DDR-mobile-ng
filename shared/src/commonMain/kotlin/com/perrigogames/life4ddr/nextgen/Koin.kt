@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
+
 package com.perrigogames.life4ddr.nextgen
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
@@ -13,6 +18,7 @@ import com.perrigogames.life4ddr.nextgen.feature.deeplink.DefaultDeeplinkManager
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.DefaultFirstRunSettings
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.FirstRunSettings
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunInfoViewModel
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderGoalMapper
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.db.GoalDatabaseHelper
@@ -23,16 +29,22 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.DefaultLadderSet
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.DefaultMASettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
+import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModel
+import com.perrigogames.life4ddr.nextgen.feature.launch.viewmodel.LaunchViewModel
 import com.perrigogames.life4ddr.nextgen.feature.motd.data.MotdLocalRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdSettings
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdSettings
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsViewModel
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.DefaultUserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.DefaultUserRankSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.MainScreenViewModel
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileViewModel
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.DefaultSanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.DefaultSanbaiAPISettings
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
@@ -48,18 +60,26 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResult
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultSongResultSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialRecordsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialListViewModel
 import com.perrigogames.life4ddr.nextgen.model.MajorUpdateManager
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.ExperimentalSettingsImplementation
+import com.russhwolf.settings.coroutines.FlowSettings
+import com.russhwolf.settings.datastore.DataStoreSettings
 import kotlinx.serialization.json.Json
+import okio.Path.Companion.toPath
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
@@ -76,8 +96,6 @@ fun initKoin(
     appDeclaration()
     modules(listOfNotNull(appModule, extraAppModule, platformModule, coreModule))
 }.apply {
-    // doOnStartup is a lambda which is implemented in Swift on iOS side
-//    koin.get<() -> Unit>().invoke()
     koin.get<Logger> { parametersOf(null) }.also { kermit ->
         kermit.v { "App Id ${koin.get<AppInfo>().appId}" }
     }
@@ -117,6 +135,16 @@ val coreModule = module {
     single<MotdSettings> { DefaultMotdSettings() }
     single<BannerManager> { DefaultBannerManager() }
 
+    viewModel { LaunchViewModel(get()) }
+    viewModel { FirstRunInfoViewModel(get(), get(), getLogger("FirstRunInfoViewModel")) }
+    viewModel { PlacementListViewModel(get(), get()) }
+    viewModel { params -> PlacementDetailsViewModel(placementId = params.get(), get(), getLogger("PlacementDetailsViewModel")) }
+    viewModel { params -> RankListViewModel(isFirstRun = params.get(), get(), get(), get()) }
+    viewModel { MainScreenViewModel() }
+    viewModel { PlayerProfileViewModel(get(), get(), get()) }
+    viewModel { ScoreListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { TrialListViewModel(get(), get(), get(), get()) }
+
     // platformLogWriter() is a relatively simple config option, useful for local debugging. For production
     // uses you *may* want to have a more robust configuration from the native platform. In KaMP Kit,
     // that would likely go into platformModule expect/actual.
@@ -128,7 +156,18 @@ val coreModule = module {
 // Simple function to clean up the syntax a bit
 fun KoinComponent.injectLogger(tag: String): Lazy<Logger> = inject { parametersOf(tag) }
 
+fun Scope.getLogger(tag: String? = null): Logger = get { parametersOf(tag) }
+
 expect val platformModule: Module
+
+fun platformSettingsModule(producePath: (String) -> String) = module {
+    single<DataStore<Preferences>> {
+        PreferenceDataStoreFactory.createWithPath(
+            produceFile = { producePath("life4.preferences_pb").toPath() }
+        )
+    }
+    single<FlowSettings> { DataStoreSettings(get()) }
+}
 
 fun makeNativeModule(
     appInfo: AppInfo,
@@ -138,18 +177,16 @@ fun makeNativeModule(
     songsReader: LocalDataReader,
     trialsReader: LocalDataReader,
     additionalItems: Module.() -> Unit = {},
-): Module {
-    return module {
-        single { appInfo }
-        single(named(GithubDataAPI.MOTD_FILE_NAME)) { motdReader }
-        single(named(GithubDataAPI.PLACEMENTS_FILE_NAME)) { placementsReader }
-        single(named(GithubDataAPI.RANKS_FILE_NAME)) { ranksReader }
-        single(named(GithubDataAPI.SONGS_FILE_NAME)) { songsReader }
-        single(named(GithubDataAPI.TRIALS_FILE_NAME)) { trialsReader }
-        single { LadderRemoteData() }
-        single { MotdLocalRemoteData() }
-        single { SongListRemoteData() }
-        single { TrialRemoteData() }
-        additionalItems()
-    }
+) = module {
+    single { appInfo }
+    single(named(GithubDataAPI.MOTD_FILE_NAME)) { motdReader }
+    single(named(GithubDataAPI.PLACEMENTS_FILE_NAME)) { placementsReader }
+    single(named(GithubDataAPI.RANKS_FILE_NAME)) { ranksReader }
+    single(named(GithubDataAPI.SONGS_FILE_NAME)) { songsReader }
+    single(named(GithubDataAPI.TRIALS_FILE_NAME)) { trialsReader }
+    single { LadderRemoteData() }
+    single { MotdLocalRemoteData() }
+    single { SongListRemoteData() }
+    single { TrialRemoteData() }
+    additionalItems()
 }

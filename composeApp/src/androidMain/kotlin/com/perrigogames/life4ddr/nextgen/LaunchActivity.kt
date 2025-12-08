@@ -11,14 +11,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
+import com.perrigogames.life4ddr.nextgen.feature.launch.viewmodel.LaunchViewModel
+import com.perrigogames.life4ddr.nextgen.navigation.RootNavHost
 import com.perrigogames.life4ddr.nextgen.navigation.firstRunNavigation
 import com.perrigogames.life4ddr.nextgen.navigation.ladderNavigation
+import com.perrigogames.life4ddr.nextgen.navigation.popAndNavigate
 import com.perrigogames.life4ddr.nextgen.navigation.settingsNavigation
 import com.perrigogames.life4ddr.nextgen.navigation.trialNavigation
 import dev.icerock.moko.mvvm.createViewModelFactory
@@ -46,43 +49,10 @@ class LaunchActivity: AppCompatActivity(), KoinComponent {
 
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-
-            val viewModel: LaunchViewModel = viewModel(
-                factory = createViewModelFactory { LaunchViewModel() }
+            RootNavHost(
+                modifier = Modifier.fillMaxSize(),
+                onLoaded = { loaded = true }
             )
-
-            LaunchedEffect(Unit) {
-                val initialState = viewModel.launchState.first()
-                navController.popAndNavigate(when(initialState) {
-                    null -> "first_run"
-                    InitState.PLACEMENTS -> "placement_list"
-                    InitState.RANKS -> "initial_rank_list"
-                    InitState.DONE -> "main_screen"
-                })
-                loaded = true
-            }
-
-            LIFE4Theme {
-                Surface(
-                    color = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.onBackground,
-                ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = "landing",
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        firstRunNavigation(
-                            navController = navController,
-                            onFinish = ::finish
-                        )
-                        ladderNavigation(navController)
-                        trialNavigation(navController)
-                        settingsNavigation(navController)
-                    }
-                }
-            }
         }
     }
 
@@ -92,9 +62,4 @@ class LaunchActivity: AppCompatActivity(), KoinComponent {
         println(uri)
         // Extract the authorization code from the URI and exchange it for an access token
     }
-}
-
-fun NavController.popAndNavigate(destination: String) {
-    popBackStack()
-    navigate(destination)
 }

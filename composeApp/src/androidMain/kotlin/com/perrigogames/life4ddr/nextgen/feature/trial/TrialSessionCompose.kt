@@ -36,6 +36,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSes
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionViewModel
 import com.perrigogames.life4ddr.nextgen.util.ViewState
+import com.perrigogames.life4ddr.nextgen.view.LargeCTAButton
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.resources.desc.color.getColor
 import kotlinx.coroutines.launch
@@ -557,21 +558,3 @@ fun RowScope.InProgressJacketItem(
 //            blendMode = BlendMode.DstIn // Multiplies alpha from the gradient with the underlying image
 //        )
 //    }
-
-@Composable
-fun LargeCTAButton(
-    text: String,
-    onClick: () -> Unit = {},
-    colors: ButtonColors = ButtonDefaults.elevatedButtonColors()
-) = Button(
-    elevation = ButtonDefaults.elevatedButtonElevation(),
-    colors = colors,
-    modifier = Modifier.fillMaxWidth(),
-    onClick = onClick
-) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.padding(vertical = 8.dp)
-    )
-}

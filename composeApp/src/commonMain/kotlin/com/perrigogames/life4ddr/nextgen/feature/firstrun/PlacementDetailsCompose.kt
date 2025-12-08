@@ -1,12 +1,31 @@
 package com.perrigogames.life4ddr.nextgen.feature.firstrun
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -14,10 +33,166 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
+import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsEvent
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsInput
+import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
 import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
+import com.perrigogames.life4ddr.nextgen.view.LargeCTAButton
+import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.localized
+import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun PlacementDetailsScreen(
+    placementId: String,
+    onBackPressed: () -> Unit = {},
+    onNavigateToMainScreen: (String?) -> Unit = {},
+) {
+    val viewModel = koinViewModel<PlacementDetailsViewModel> { parametersOf(placementId) }
+    val scope = rememberCoroutineScope()
+    val state = viewModel.state.collectAsState()
+    var dialogData by remember { mutableStateOf<PlacementDetailsEvent.ShowTooltip?>(null) }
+
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false,
+        )
+    )
+
+    fun hideBottomSheet() = scope.launch {
+        scaffoldState.bottomSheetState.hide()
+    }
+
+    BackHandler {
+        onBackPressed()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is PlacementDetailsEvent.NavigateToMainScreen -> {
+                    onNavigateToMainScreen(event.submissionUrl)
+                }
+                PlacementDetailsEvent.ShowCamera -> {
+                    scaffoldState.bottomSheetState.expand()
+                }
+                is PlacementDetailsEvent.ShowTooltip -> {
+                    dialogData = event
+                }
+            }
+        }
+    }
+
+    dialogData?.let { data ->
+        val onAction = { viewModel.handleAction(data.ctaAction) }
+        AlertDialog(
+            onDismissRequest = onAction,
+            confirmButton = {
+                TextButton(onClick = onAction) {
+                    Text(data.ctaText.localized())
+                }
+            },
+            title = { Text(text = data.title.localized()) },
+            text = { Text(text = data.message.localized()) }
+        )
+    }
+
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetPeekHeight = 0.dp,
+        sheetContent = {
+            if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
+                BackHandler {
+                    hideBottomSheet()
+                }
+                // FIXME Camera
+//                CameraBottomSheetContent {
+//                    hideBottomSheet()
+//                    viewModel.handleAction(PlacementDetailsInput.PictureTaken)
+//                }
+            }
+        }
+    ) {
+        PlacementDetailsContent(
+            viewData = state.value,
+            modifier = Modifier.fillMaxSize(),
+            onAction = viewModel::handleAction,
+        )
+    }
+}
+
+@Composable
+fun PlacementDetailsContent(
+    viewData: UIPlacementDetails,
+    modifier: Modifier = Modifier,
+    onAction: (PlacementDetailsInput) -> Unit,
+) {
+    LadderRankClassTheme(ladderRankClass = viewData.rankIcon.group) {
+        Column(
+            modifier = modifier
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
+                .padding(horizontal = 16.dp, vertical = 32.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                RankImage(
+                    rank = viewData.rankIcon,
+                    size = 64.dp,
+                )
+                Text(
+                    text = stringResource(viewData.rankIcon.group.nameRes),
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = colorResource(viewData.rankIcon.colorRes),
+                )
+            }
+            SizedSpacer(32.dp)
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                viewData.descriptionPoints.forEachIndexed { index, text ->
+                    if (index > 0) {
+                        SizedSpacer(8.dp)
+                    }
+                    Text(
+                        text = text.localized(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+                }
+                SizedSpacer(32.dp)
+
+                viewData.songs.forEach { song ->
+                    PlacementDetailsSongItem(
+                        data = song,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    SizedSpacer(16.dp)
+                }
+            }
+
+            LargeCTAButton(
+                text = viewData.ctaText.localized(),
+                onClick = { onAction(viewData.ctaAction) }
+            )
+        }
+    }
+}
 
 @Composable
 fun PlacementDetailsSongItem(

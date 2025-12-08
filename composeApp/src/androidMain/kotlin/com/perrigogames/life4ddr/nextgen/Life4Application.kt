@@ -2,7 +2,6 @@ package com.perrigogames.life4ddr.nextgen
 
 import android.app.Application
 import android.content.Context
-import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.MOTD_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
@@ -29,7 +28,8 @@ class Life4Application: Application(), KoinComponent {
                 trialsReader = AndroidDataReader(MR.files.trials_json.rawResId, TRIALS_FILE_NAME),
             ) {
                 single<Context> { this@Life4Application }
-            }
+            },
+            extraAppModule = platformSettingsModule { filesDir.resolve(it).absolutePath }
         )
     }
 }

@@ -1,5 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.db.SelectBestSessions
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
@@ -15,31 +17,28 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.view.UIPlacementBanner
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialList
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.toUIJacket
 import com.russhwolf.settings.Settings
-import dev.icerock.moko.mvvm.flow.CStateFlow
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.flow.cStateFlow
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class TrialListViewModel : ViewModel(), KoinComponent {
-
-    private val trialDataManager: TrialDataManager by inject()
-    private val userRankSettings: UserRankSettings by inject()
-    private val trialRecordsManager: TrialRecordsManager by inject()
-    private val settings: Settings by inject()
+class TrialListViewModel(
+    private val trialDataManager: TrialDataManager,
+    private val userRankSettings: UserRankSettings,
+    private val trialRecordsManager: TrialRecordsManager,
+    private val settings: Settings,
+) : ViewModel(), KoinComponent {
 
     private val trialsStateFlow = trialDataManager.trialsFlow
         .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList())
 
-    private val _state = MutableStateFlow(UITrialList()).cMutableStateFlow()
-    val state: CStateFlow<UITrialList> = _state.cStateFlow()
+    private val _state = MutableStateFlow(UITrialList())
+    val state: StateFlow<UITrialList> = _state.asStateFlow()
 
     init {
         val highlightNew = settings.getBoolean(KEY_TRIAL_LIST_HIGHLIGHT_NEW, true)
