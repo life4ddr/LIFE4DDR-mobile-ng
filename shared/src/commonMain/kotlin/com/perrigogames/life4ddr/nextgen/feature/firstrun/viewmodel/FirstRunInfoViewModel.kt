@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -42,7 +44,7 @@ class FirstRunInfoViewModel(
     private val currentPath: FirstRunPath? get() = (currentStep as? PathStep)?.path
 
     private val _errors = MutableStateFlow<List<FirstRunError>>(emptyList())
-    val errors: SharedFlow<List<FirstRunError>> = _errors.asSharedFlow()
+    val errors: StateFlow<List<FirstRunError>> = _errors.asStateFlow()
 
     inline fun <reified T : FirstRunError> errorOfType() : Flow<T?> =
         errors.map { errors -> errors.firstOrNull { it is T } as? T }
