@@ -1,4 +1,6 @@
 name: CI — Android
+permissions:
+  contents: read
 
 on:
   push:
