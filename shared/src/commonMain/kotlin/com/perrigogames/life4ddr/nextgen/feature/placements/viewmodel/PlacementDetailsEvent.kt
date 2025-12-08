@@ -14,6 +14,6 @@ sealed class PlacementDetailsEvent {
     ) : PlacementDetailsEvent()
 
     data class NavigateToMainScreen(
-        val submissionUrl: StringDesc? = null,
+        val submissionUrl: String,
     ) : PlacementDetailsEvent()
 }

@@ -18,6 +18,7 @@ import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
 import com.perrigogames.life4ddr.nextgen.feature.launch.viewmodel.LaunchViewModel
+import com.perrigogames.life4ddr.nextgen.navigation.RootNavHost
 import com.perrigogames.life4ddr.nextgen.navigation.firstRunNavigation
 import com.perrigogames.life4ddr.nextgen.navigation.ladderNavigation
 import com.perrigogames.life4ddr.nextgen.navigation.popAndNavigate
@@ -48,47 +49,10 @@ class LaunchActivity: AppCompatActivity(), KoinComponent {
 
         super.onCreate(savedInstanceState)
         setContent {
-//            RootNavHost(
-//                modifier = Modifier.fillMaxSize(),
-//                onLoaded = { loaded = true }
-//            ) TODO replace with CMP version when it's ready
-            val navController = rememberNavController()
-
-            val viewModel: LaunchViewModel = viewModel(
-                factory = createViewModelFactory { LaunchViewModel() }
+            RootNavHost(
+                modifier = Modifier.fillMaxSize(),
+                onLoaded = { loaded = true }
             )
-
-            LaunchedEffect(Unit) {
-                val initialState = viewModel.launchState.first()
-                navController.popAndNavigate(when(initialState) {
-                    null -> FirstRunDestination.FirstRun
-                    InitState.PLACEMENTS -> FirstRunDestination.PlacementList
-                    InitState.RANKS -> FirstRunDestination.InitialRankList
-                    InitState.DONE -> FirstRunDestination.MainScreen
-                })
-                loaded = true
-            }
-
-            LIFE4Theme {
-                Surface(
-                    color = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.onBackground,
-                ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = "landing",
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        firstRunNavigation(
-                            navController = navController,
-                            onFinish = ::finish
-                        )
-                        ladderNavigation(navController)
-                        trialNavigation(navController)
-                        settingsNavigation(navController)
-                    }
-                }
-            }
         }
     }
 

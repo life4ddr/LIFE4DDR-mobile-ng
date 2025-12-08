@@ -9,23 +9,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.R
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialJacketCorner
+import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun JacketCorner(
     corner: TrialJacketCorner,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     if (corner == TrialJacketCorner.NONE) return
     Box(
         contentAlignment = Alignment.Center,
@@ -34,10 +32,10 @@ fun JacketCorner(
             .aspectRatio(1f)
     ) {
         Image(
-            painter = painterResource(R.drawable.triangle_corner),
+            painter = painterResource(MR.images.trial_corner),
             colorFilter = ColorFilter.tint(when (corner) {
-                TrialJacketCorner.NEW -> Color(MR.colors.corner_new.getColor(context))
-                TrialJacketCorner.EVENT -> Color(MR.colors.corner_event.getColor(context))
+                TrialJacketCorner.NEW -> colorResource(MR.colors.corner_new)
+                TrialJacketCorner.EVENT -> colorResource(MR.colors.corner_event)
                 TrialJacketCorner.NONE -> error("Cannot make a JacketCorner for type NONE")
             }),
             contentDescription = "${corner.name} tag"

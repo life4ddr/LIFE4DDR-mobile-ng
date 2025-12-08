@@ -1,5 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.GoalStatus
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
@@ -21,10 +23,6 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoals
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.ViewState
-import dev.icerock.moko.mvvm.flow.CStateFlow
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.flow.cStateFlow
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
@@ -55,8 +53,8 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
             .onEach { logger.v { "requirementsFlow -> $it" } }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    private val _state = MutableStateFlow<ViewState<UILadderData, String>>(ViewState.Loading).cMutableStateFlow()
-    val state: CStateFlow<ViewState<UILadderData, String>> = _state.cStateFlow()
+    private val _state = MutableStateFlow<ViewState<UILadderData, String>>(ViewState.Loading)
+    val state: StateFlow<ViewState<UILadderData, String>> = _state.asStateFlow()
 
     private val _showBottomSheet = MutableSharedFlow<Unit>()
     val showBottomSheet: SharedFlow<Unit> = _showBottomSheet.asSharedFlow()

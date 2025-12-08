@@ -43,6 +43,8 @@ import com.perrigogames.life4ddr.nextgen.feature.profile.manager.DefaultUserInfo
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.DefaultUserRankSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.MainScreenViewModel
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileViewModel
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.DefaultSanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.DefaultSanbaiAPISettings
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
@@ -58,12 +60,14 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResult
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultSongResultSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialRecordsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialListViewModel
 import com.perrigogames.life4ddr.nextgen.model.MajorUpdateManager
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
@@ -136,6 +140,10 @@ val coreModule = module {
     viewModel { PlacementListViewModel(get(), get()) }
     viewModel { params -> PlacementDetailsViewModel(placementId = params.get(), get(), getLogger("PlacementDetailsViewModel")) }
     viewModel { params -> RankListViewModel(isFirstRun = params.get(), get(), get(), get()) }
+    viewModel { MainScreenViewModel() }
+    viewModel { PlayerProfileViewModel(get(), get(), get()) }
+    viewModel { ScoreListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { TrialListViewModel(get(), get(), get(), get()) }
 
     // platformLogWriter() is a relatively simple config option, useful for local debugging. For production
     // uses you *may* want to have a more robust configuration from the native platform. In KaMP Kit,

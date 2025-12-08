@@ -6,9 +6,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.enums.nameRes
@@ -16,13 +24,64 @@ import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoalsContent
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerInfoViewState
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileEvent
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileInput
+import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileViewModel
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun PlayerProfileScreen(
+    onBackPressed: () -> Unit = {},
+    onAction: (PlayerProfileEvent) -> Unit = {},
+) {
+    val scope = rememberCoroutineScope()
+    val viewModel = koinViewModel<PlayerProfileViewModel>()
+
+    val playerInfoViewState by viewModel.playerInfoViewState.collectAsState()
+    val goalListViewState by viewModel.goalListViewModel.state.collectAsState()
+    val density = LocalDensity.current
+    val bottomSheetState = remember {
+        SheetState(
+            initialValue = SheetValue.Hidden,
+            skipPartiallyExpanded = false,
+            positionalThreshold = { with(density) { 56.dp.toPx() }},
+            velocityThreshold = { with(density) { 125.dp.toPx() }},
+        )
+    }
+
+    BackHandler {
+        if (bottomSheetState.isVisible) {
+            scope.launch { bottomSheetState.hide() }
+        } else {
+            onBackPressed()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.goalListViewModel.showBottomSheet.collect {
+            bottomSheetState.expand()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { onAction(it) }
+    }
+
+    PlayerProfileContent(
+        playerInfoViewState = playerInfoViewState,
+        goalListViewState = goalListViewState,
+        bottomSheetState = bottomSheetState,
+        onInput = { viewModel.handleInput(it) },
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,6 +191,14 @@ fun PlayerProfileInfo(
                 color = state.rank?.colorRes?.let { colorResource(it) } ?: Color.Unspecified
             )
         }
+    }
+}
+
+@Composable
+@Preview(widthDp = 480)
+fun PlayerProfilePreview() {
+    LIFE4Theme {
+        PlayerProfileScreen {}
     }
 }
 

@@ -1,5 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
 import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
@@ -10,27 +12,24 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewMo
 import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
-import dev.icerock.moko.mvvm.flow.CStateFlow
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.flow.cStateFlow
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class PlayerProfileViewModel : ViewModel(), KoinComponent {
+class PlayerProfileViewModel(
+    private val userRankSettings: UserRankSettings,
+    private val infoSettings: UserInfoSettings,
+    private val bannerManager: BannerManager,
+) : ViewModel(), KoinComponent {
 
-    private val userRankSettings: UserRankSettings by inject()
-    private val infoSettings: UserInfoSettings by inject()
-    private val bannerManager: BannerManager by inject()
-
-    private val _playerInfoViewState = MutableStateFlow(PlayerInfoViewState()).cMutableStateFlow()
-    val playerInfoViewState: CStateFlow<PlayerInfoViewState> = _playerInfoViewState.cStateFlow()
+    private val _playerInfoViewState = MutableStateFlow(PlayerInfoViewState())
+    val playerInfoViewState: StateFlow<PlayerInfoViewState> = _playerInfoViewState.asStateFlow()
 
     val goalListViewModel = GoalListViewModel(GoalListConfig())
 

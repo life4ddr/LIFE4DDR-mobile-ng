@@ -81,7 +81,7 @@ fun PlacementDetailsScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is PlacementDetailsEvent.NavigateToMainScreen -> {
-                    onNavigateToMainScreen(event.submissionUrl?.localized())
+                    onNavigateToMainScreen(event.submissionUrl)
                 }
                 PlacementDetailsEvent.ShowCamera -> {
                     scaffoldState.bottomSheetState.expand()

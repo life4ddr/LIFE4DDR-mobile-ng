@@ -50,9 +50,9 @@ fun RootNavHost(
                     navController = navController,
                     onExit = onExit
                 )
-//                ladderNavigation(navController)
-//                trialNavigation(navController)
-//                settingsNavigation(navController)
+                ladderNavigation(navController)
+                trialNavigation(navController)
+                settingsNavigation(navController)
             }
         }
     }

@@ -9,7 +9,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -29,40 +37,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
-import com.perrigogames.life4ddr.nextgen.stringResource
-import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.JacketCorner
-import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UIPlacementBanner
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialJacket
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialList
 import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialListViewModel
-import dev.icerock.moko.mvvm.createViewModelFactory
+import com.perrigogames.life4ddr.nextgen.view.JacketCorner
+import com.perrigogames.life4ddr.nextgen.view.RankImage
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.desc.image.ImageDescResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TrialListScreen(
     modifier: Modifier = Modifier,
-    viewModel: TrialListViewModel = viewModel(
-        factory = createViewModelFactory { TrialListViewModel() }
-    ),
     onTrialSelected: (Trial) -> Unit = {},
     onPlacementsSelected: () -> Unit = {},
 ) {
+    val viewModel = koinViewModel<TrialListViewModel>()
     val state by viewModel.state.collectAsState()
     var quickAddDialogTrial by remember { mutableStateOf<Trial?>(null) }
     var deleteRecordsConfirmationTrial by remember { mutableStateOf<Trial?>(null) }
@@ -145,7 +148,7 @@ fun PlacementBanner(
         horizontalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = stringResource(banner.text),
+            text = banner.text.localized(),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
@@ -207,7 +210,6 @@ fun TrialJacket(
     onClearRecordsSelected: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     var contextMenuExpanded by remember { mutableStateOf(false) }
 
     Box(
@@ -263,7 +265,7 @@ fun TrialJacket(
                     size = 32.dp,
                 )
                 Text(
-                    text = exScore.toString(context),
+                    text = exScore.localized(),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                 )

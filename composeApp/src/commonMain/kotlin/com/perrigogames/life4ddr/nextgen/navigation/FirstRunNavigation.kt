@@ -1,6 +1,8 @@
 package com.perrigogames.life4ddr.nextgen.navigation
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.composable
@@ -73,5 +75,52 @@ fun NavGraphBuilder.firstRunNavigation(
                 RankListViewModelEvent.NavigateToMainScreen -> navController.popAndNavigate(FirstRunDestination.MainScreen)
             }
         }
+    }
+
+    composable<FirstRunDestination.MainScreen> {
+        MainScreen(
+            mainNavController = navController
+        )
+    }
+
+    composable<FirstRunDestination.SanbaiImport> { backStackEntry ->
+        val url = backStackEntry.toRoute<FirstRunDestination.SanbaiImport>().url
+//        val state = rememberWebViewState(url = url)
+//        val navigator = rememberWebViewNavigator()
+//
+//        Column {
+//            val loadingState = state.loadingState
+//            if (loadingState is LoadingState.Loading) {
+//                LinearProgressIndicator(
+//                    progress = { loadingState.progress },
+//                    modifier = Modifier.fillMaxWidth()
+//                )
+//            }
+//
+//            // A custom WebViewClient and WebChromeClient can be provided via subclassing
+//            val webClient = remember {
+//                object : AccompanistWebViewClient() {
+//                    override fun onPageStarted(
+//                        view: WebView,
+//                        url: String?,
+//                        favicon: Bitmap?
+//                    ) {
+//                        super.onPageStarted(view, url, favicon)
+//                        Log.d("Accompanist WebView", "Page started loading for $url")
+//                    }
+//                }
+//            }
+//
+//            WebView(
+//                state = state,
+//                modifier = Modifier
+//                    .weight(1f),
+//                navigator = navigator,
+//                onCreated = { webView ->
+//                    webView.settings.javaScriptEnabled = true
+//                },
+//                client = webClient
+//            )
+//        }
     }
 }

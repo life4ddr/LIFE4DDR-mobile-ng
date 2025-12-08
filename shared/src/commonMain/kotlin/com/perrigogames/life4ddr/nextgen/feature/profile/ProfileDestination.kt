@@ -7,8 +7,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class ProfileDestination(override val baseRoute: String, override val title: StringDesc) : Destination {
-    @Serializable data object Profile : ProfileDestination("profile", "Profile".desc())
-    @Serializable data object Scores : ProfileDestination("scores", "Scores".desc())
-    @Serializable data object Trials : ProfileDestination("trials", "Trials".desc())
-    @Serializable data object Settings : ProfileDestination("settings", "Settings".desc())
+
+    @Serializable
+    data object Profile : ProfileDestination("profile", "Profile".desc())
+
+    @Serializable
+    data object Scores : ProfileDestination("scores", "Scores".desc())
+
+    @Serializable
+    data object Trials : ProfileDestination("trials", "Trials".desc())
+
+    @Serializable
+    data object Settings : ProfileDestination("settings", "Settings".desc())
 }

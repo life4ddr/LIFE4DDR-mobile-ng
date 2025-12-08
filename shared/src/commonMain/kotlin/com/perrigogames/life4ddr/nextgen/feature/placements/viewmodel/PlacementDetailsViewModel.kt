@@ -65,10 +65,14 @@ class PlacementDetailsViewModel(
                 )
                 PlacementDetailsInput.TooltipDismissed -> {
                     _events.emit(PlacementDetailsEvent.NavigateToMainScreen(
-                        submissionUrl = MR.strings.url_submission.desc()
+                        submissionUrl = SUBMISSION_URL
                     ))
                 }
             }
         }
+    }
+
+    companion object {
+        const val SUBMISSION_URL = "https://life4ddr.com/submissions/"
     }
 }

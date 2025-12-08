@@ -1,9 +1,8 @@
 package com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel
 
+import androidx.lifecycle.ViewModel
 import com.perrigogames.life4ddr.nextgen.feature.profile.ProfileDestination
 import com.perrigogames.life4ddr.nextgen.feature.profile.ProfileDestination.*
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +15,7 @@ import org.koin.core.component.KoinComponent
  */
 class MainScreenViewModel : ViewModel(), KoinComponent {
 
-    private val _state = MutableStateFlow(MainScreenState()).cMutableStateFlow()
+    private val _state = MutableStateFlow(MainScreenState())
     val state: StateFlow<MainScreenState> = _state.asStateFlow()
 }
 
