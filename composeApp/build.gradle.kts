@@ -74,6 +74,8 @@ kotlin {
         }
         appleMain.dependencies {
             implementation(libs.coil.clientDarwin)
+            implementation(libs.koin.core)
+            implementation(projects.shared)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
