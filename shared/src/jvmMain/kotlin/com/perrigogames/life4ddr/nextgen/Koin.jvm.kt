@@ -8,8 +8,6 @@ import com.russhwolf.settings.Settings
 import org.koin.dsl.module
 import java.util.*
 
-// TODO Settings
-
 @OptIn(ExperimentalSettingsApi::class)
 actual val platformModule = module {
     single<Properties> { Properties() }

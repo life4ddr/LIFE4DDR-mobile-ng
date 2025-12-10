@@ -24,7 +24,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            export(libs.moko.resources.core)
         }
     }
     

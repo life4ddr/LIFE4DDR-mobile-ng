@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RawRes
 import com.perrigogames.life4ddr.nextgen.api.base.LocalDataReader
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
+import dev.icerock.moko.resources.FileResource
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.BufferedReader
@@ -18,15 +19,15 @@ import java.io.StringWriter
  * Android implementations of [LocalUncachedDataReader] and [LocalDataReader]
  */
 
-open class AndroidUncachedDataReader(@param:RawRes protected val rawResId: Int):
+open class AndroidUncachedDataReader(val fileResource: FileResource):
     LocalUncachedDataReader, KoinComponent {
 
     protected val context: Context by inject()
-    override fun loadInternalString(): String = context.loadRawString(rawResId)
+    override fun loadInternalString(): String = fileResource.readText(context)
 }
 
-class AndroidDataReader(rawResId: Int, private val cachedFileName: String):
-    AndroidUncachedDataReader(rawResId), LocalDataReader {
+class AndroidDataReader(fileResource: FileResource, private val cachedFileName: String):
+    AndroidUncachedDataReader(fileResource), LocalDataReader {
 
     override fun loadCachedString(): String? = context.readFromFile(cachedFileName)
 
