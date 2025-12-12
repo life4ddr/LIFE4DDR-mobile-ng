@@ -94,7 +94,7 @@ class SettingsViewModel(
     }
 
     private fun pushPage(page: SettingsPage) {
-        pageStackState.value + page
+        pageStackState.value += page
     }
 
     private fun popPage() {
