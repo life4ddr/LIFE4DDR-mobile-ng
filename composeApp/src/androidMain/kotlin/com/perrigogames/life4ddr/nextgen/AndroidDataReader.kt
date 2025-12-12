@@ -30,9 +30,9 @@ class AndroidDataReader(rawResId: Int, private val cachedFileName: String):
 
     override fun loadCachedString(): String? = context.readFromFile(cachedFileName)
 
-    override fun saveCachedString(data: String) = context.saveToFile(cachedFileName, data)
+    override fun saveNewCache(data: String) = context.saveToFile(cachedFileName, data)
 
-    override fun deleteCachedString() = context.deleteFile(cachedFileName)
+    override fun deleteCache() = context.deleteFile(cachedFileName)
 }
 
 fun Context.loadRawString(@RawRes res: Int): String {

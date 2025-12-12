@@ -18,10 +18,10 @@ class JvmDataReader(rawPath: String, private val cachedPath: String): JvmUncache
         if (it.exists()) it.readText() else null
     }
 
-    override fun saveCachedString(data: String): Boolean {
+    override fun saveNewCache(data: String): Boolean {
         File(cachedPath).writeText(data)
         return true
     }
 
-    override fun deleteCachedString() = false
+    override fun deleteCache() = false
 }

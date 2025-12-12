@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.trials.manager
 
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.api.base.CompositeData
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
@@ -12,6 +13,7 @@ import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
+import kotlin.getValue
 
 /**
  * Manages data relating to Trials.  This includes:
@@ -27,14 +29,13 @@ interface TrialDataManager {
     fun findTrial(id: String): Trial?
 }
 
-class DefaultTrialDataManager: BaseModel(), TrialDataManager {
-
-    private val appInfo: AppInfo by inject()
-    private val settings: Settings by inject()
-    private val songDataManager: SongDataManager by inject()
-    private val logger by injectLogger("TrialManager")
-
-    private var data = TrialRemoteData()
+class DefaultTrialDataManager(
+    private val appInfo: AppInfo,
+    private val settings: Settings,
+    private val songDataManager: SongDataManager,
+    private var data: TrialRemoteData,
+    private val logger: Logger? = null
+): BaseModel(), TrialDataManager {
 
     override val dataVersionString: Flow<String> =
         data.versionState.map { it.versionString }
@@ -74,7 +75,7 @@ class DefaultTrialDataManager: BaseModel(), TrialDataManager {
         trial.songs.forEach { sum += it.ex }
         if (sum != trial.totalEx) {
             if (!appInfo.isDebug) {
-                logger.e { "Trial ${trial.name} has improper EX values: total_ex=${trial.totalEx}, sum=$sum" }
+                logger?.e { "Trial ${trial.name} has improper EX values: total_ex=${trial.totalEx}, sum=$sum" }
             }
         }
     }

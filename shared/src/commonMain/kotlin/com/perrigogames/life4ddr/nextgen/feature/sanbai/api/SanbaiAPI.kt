@@ -35,8 +35,8 @@ interface SanbaiAPI {
     suspend fun getPlayerId(): String
 
     companion object {
-        const val SANBAI_CLIENT_ID = "SECRET"
-        const val SANBAI_CLIENT_SECRET = "SECRET"
+        const val SANBAI_CLIENT_ID = "82b5fefe2a194c74b7f82ec6357d9708"
+        const val SANBAI_CLIENT_SECRET = "eac97855b3f64be7aeec5154b4de9bb3" // FIXME DO NOT COMMIT
     }
 }
 

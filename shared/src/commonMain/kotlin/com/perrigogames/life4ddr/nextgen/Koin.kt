@@ -10,6 +10,11 @@ import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
 import com.perrigogames.life4ddr.nextgen.api.DefaultGithubDataAPI
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.MOTD_FILE_NAME
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.PLACEMENTS_FILE_NAME
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.base.LocalDataReader
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
 import com.perrigogames.life4ddr.nextgen.feature.banners.manager.DefaultBannerManager
@@ -110,13 +115,18 @@ val coreModule = module {
     single<SanbaiAPI> { DefaultSanbaiAPI() }
     single { Json { classDiscriminator = "t" } }
 
+    single { LadderRemoteData(get(), get(), get(named(RANKS_FILE_NAME)), logger = get { parametersOf("LadderRemoteData") }) }
+    single { MotdLocalRemoteData(get(), get(), get(named(MOTD_FILE_NAME)), logger = get { parametersOf("MotdLocalRemoteData") }) }
+    single { SongListRemoteData(get(), get(), get(named(SONGS_FILE_NAME)), logger = get { parametersOf("SongListRemoteData") }) }
+    single { TrialRemoteData(get(), get(), get(named(TRIALS_FILE_NAME)), logger = get { parametersOf("TrialRemoteData") }) }
+
     single { PlacementManager() }
     single { MajorUpdateManager() }
     single<MotdManager> { DefaultMotdManager() }
-    single { LadderDataManager() }
+    single { LadderDataManager(get(), get()) }
     single { SongResultsManager() }
     single { LadderGoalProgressManager() }
-    single<TrialDataManager> { DefaultTrialDataManager() }
+    single<TrialDataManager> { DefaultTrialDataManager(get(), get(), get(), get(), get { parametersOf("TrialDataManager") }) }
     single<TrialRecordsManager> { DefaultTrialRecordsManager() }
     single<SongDataManager> { DefaultSongDataManager() }
     single { ChartResultOrganizer() }
@@ -179,14 +189,10 @@ fun makeNativeModule(
     additionalItems: Module.() -> Unit = {},
 ) = module {
     single { appInfo }
-    single(named(GithubDataAPI.MOTD_FILE_NAME)) { motdReader }
-    single(named(GithubDataAPI.PLACEMENTS_FILE_NAME)) { placementsReader }
-    single(named(GithubDataAPI.RANKS_FILE_NAME)) { ranksReader }
-    single(named(GithubDataAPI.SONGS_FILE_NAME)) { songsReader }
-    single(named(GithubDataAPI.TRIALS_FILE_NAME)) { trialsReader }
-    single { LadderRemoteData() }
-    single { MotdLocalRemoteData() }
-    single { SongListRemoteData() }
-    single { TrialRemoteData() }
+    single(named(MOTD_FILE_NAME)) { motdReader }
+    single(named(PLACEMENTS_FILE_NAME)) { placementsReader }
+    single(named(RANKS_FILE_NAME)) { ranksReader }
+    single(named(SONGS_FILE_NAME)) { songsReader }
+    single(named(TRIALS_FILE_NAME)) { trialsReader }
     additionalItems()
 }
