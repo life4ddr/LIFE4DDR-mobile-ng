@@ -8,6 +8,11 @@ interface DelayedDataSource<T: Any> {
     fun fetch(listener: FetchListener<T>)
 }
 
+interface CachingDataSource<T: Any> {
+    fun saveNewCache(data: T): Boolean
+    fun deleteCache(): Boolean
+}
+
 interface StringToData<T: Any> {
 
     /** Provided a string, constructs and returns an appropriate [T]. */

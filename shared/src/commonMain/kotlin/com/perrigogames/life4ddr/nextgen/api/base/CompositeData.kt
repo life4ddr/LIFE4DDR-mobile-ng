@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.api.base
 
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.data.MajorVersioned
 import com.perrigogames.life4ddr.nextgen.data.Versioned
 import com.perrigogames.life4ddr.nextgen.injectLogger
@@ -12,13 +13,24 @@ typealias VersionChange = Pair<Long, Long>
  * A structure to unify the processes of reading raw data files, reading volatile cache files, and retrieving
  * remote files.
  */
-abstract class CompositeData<T: Versioned>: BaseModel() {
+open class CompositeData<T: Versioned>(
+    val data: T? = null,
+    val cacheData: CachedData<T>? = null,
+    val remoteData: RemoteData<T>? = null,
+    val logger: Logger? = null,
+): BaseModel() {
 
-    protected open val rawData: LocalData<T>? = null
-    protected open val cacheData: CachedData<T>? = null
-    protected open val remoteData: RemoteData<T>? = null
-
-    protected open val logger by injectLogger(this::class.simpleName ?: "CompositeData")
+    constructor(
+        rawData: LocalData<T>? = null,
+        cacheData: CachedData<T>? = null,
+        remoteData: RemoteData<T>? = null,
+        logger: Logger? = null,
+    ) : this(
+        data = rawData?.data,
+        cacheData = cacheData,
+        remoteData = remoteData,
+        logger = logger,
+    )
 
     private val ready = MutableStateFlow(false)
     private val majorVersionBlocked = MutableStateFlow(false)
@@ -68,7 +80,7 @@ abstract class CompositeData<T: Versioned>: BaseModel() {
     }
 
     private suspend fun loadRawData() {
-        rawData?.data?.let { _dataState.emit(LoadingState.Loaded(it)) }
+        data?.let { _dataState.emit(LoadingState.Loaded(it)) }
     }
 
     private suspend fun loadCachedData() {
@@ -77,7 +89,7 @@ abstract class CompositeData<T: Versioned>: BaseModel() {
                 _dataState.emit(LoadingState.Loaded(cache))
             } else {
                 _versionChangeFlow.emit(VersionChange(cache.version, currentData!!.version))
-                cacheData!!.deleteCache()
+                cacheData.deleteCache()
 //                listener?.onDataVersionChanged(currentData)
             }
         }
@@ -87,29 +99,39 @@ abstract class CompositeData<T: Versioned>: BaseModel() {
         remoteData?.fetch(object: FetchListener<T> {
             override suspend fun onFetchUpdated(newData: T) {
                 val currentMajorVersion = versionState.value.majorVersion
-                if (
-                    currentMajorVersion != null &&
-                    (newData as MajorVersioned).majorVersion > currentMajorVersion
-                ) { // new data has higher major version, do not use
-                    majorVersionBlocked.emit(true)
-                } else if (newData.version > (currentData?.version ?: 0)) { // new version is higher, use it and save it to cache
-                    _versionChangeFlow.emit(VersionChange(currentData!!.version, newData.version))
-                    _dataState.emit(LoadingState.Loaded(newData))
-                    cacheData?.saveNewCache(newData)
+                val newMajorVersion = (newData as? MajorVersioned)?.majorVersion
+                val majorVersionDifference = if (currentMajorVersion != null && newMajorVersion != null) {
+                    newMajorVersion - currentMajorVersion
+                } else {
+                    null
                 }
-                // otherwise versions are the same
-
-                extraListener?.onFetchUpdated(newData)
+                when {
+                    majorVersionDifference != null && majorVersionDifference > 0 -> {
+                        // new data has higher major version, alert and ignore
+                        majorVersionBlocked.emit(true)
+                    }
+                    majorVersionDifference != null && majorVersionDifference < 0 -> {
+                        // new data has lower major version, ignore it
+                    }
+                    newData.version > (currentData?.version ?: 0) -> {
+                        // major versions are the same or missing
+                        // new version is higher, use it and save it to cache
+                        _versionChangeFlow.emit(VersionChange(currentData!!.version, newData.version))
+                        _dataState.emit(LoadingState.Loaded(newData))
+                        cacheData?.saveNewCache(newData)
+                        extraListener?.onFetchUpdated(newData)
+                    }
+                }
             }
 
             override suspend fun onFetchFailed(e: Throwable) {
-                logger.e { e.message ?: "Undefined error" }
+                logger?.e { e.message ?: "Undefined error" }
                 extraListener?.onFetchFailed(e)
             }
         })
     }
 
-    open fun shouldUpdateWith(newData: T): Boolean =
+    fun shouldUpdateWith(newData: T): Boolean =
         newData.version > (currentData?.version ?: 0)
 
     sealed class LoadingState<T: Versioned> {

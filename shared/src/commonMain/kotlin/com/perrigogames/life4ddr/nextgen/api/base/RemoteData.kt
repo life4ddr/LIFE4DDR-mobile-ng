@@ -19,9 +19,9 @@ interface FetchListener<T> {
     suspend fun onFetchFailed(e: Throwable) {}
 }
 
-abstract class RemoteData<T: Any>: BaseModel(), DelayedDataSource<T> {
-
-    abstract val logger: Logger
+abstract class RemoteData<T: Any>(
+    private val logger: Logger? = null
+): BaseModel(), DelayedDataSource<T> {
 
     override fun fetch(listener: FetchListener<T>) {
         ktorScope.launch {
@@ -35,7 +35,7 @@ abstract class RemoteData<T: Any>: BaseModel(), DelayedDataSource<T> {
                     }
                 }
             } catch (e: Exception){
-                logger.e { e.toString() }
+                logger?.e { e.toString() }
                 withContext(Dispatchers.Main) { listener.onFetchFailed(e) }
             }
         }

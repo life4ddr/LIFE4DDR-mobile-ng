@@ -2111,13 +2111,22 @@
       "id": 8510,
       "t": "songs",
       "d": 16,
+      "song_count": 36,
+      "score": 810000,
+      "exceptions": 6,
+      "exception_score": 760000
+    },
+    {
+      "id": 8511,
+      "t": "songs",
+      "d": 16,
       "song_count": 42,
       "score": 820000,
       "exceptions": 7,
       "exception_score": 770000
     },
     {
-      "id": 8511,
+      "id": 8512,
       "t": "songs",
       "d": 16,
       "song_count": 48,
@@ -2126,7 +2135,7 @@
       "exception_score": 780000
     },
     {
-      "id": 8512,
+      "id": 8513,
       "t": "songs",
       "d": 16,
       "song_count": 54,
@@ -2135,7 +2144,7 @@
       "exception_score": 790000
     },
     {
-      "id": 8513,
+      "id": 8514,
       "t": "songs",
       "d": 16,
       "song_count": 60,
@@ -2144,7 +2153,7 @@
       "exception_score": 800000
     },
     {
-      "id": 8514,
+      "id": 8515,
       "t": "songs",
       "d": 16,
       "song_count": 64,
@@ -2153,7 +2162,7 @@
       "exception_score": 810000
     },
     {
-      "id": 8515,
+      "id": 8516,
       "t": "songs",
       "d": 16,
       "song_count": 68,
@@ -2162,7 +2171,7 @@
       "exception_score": 820000
     },
     {
-      "id": 8516,
+      "id": 8517,
       "t": "songs",
       "d": 16,
       "song_count": 72,
@@ -2171,7 +2180,7 @@
       "exception_score": 830000
     },
     {
-      "id": 8517,
+      "id": 8518,
       "t": "songs",
       "d": 16,
       "song_count": 76,
@@ -2180,7 +2189,7 @@
       "exception_score": 840000
     },
     {
-      "id": 8518,
+      "id": 8519,
       "t": "songs",
       "d": 16,
       "song_count": 80,
@@ -2189,7 +2198,7 @@
       "exception_score": 850000
     },
     {
-      "id": 8519,
+      "id": 8520,
       "t": "songs",
       "d": 16,
       "score": 910000,
@@ -2197,7 +2206,7 @@
       "exception_score": 860000
     },
     {
-      "id": 8520,
+      "id": 8521,
       "t": "songs",
       "d": 16,
       "score": 920000,
@@ -2205,7 +2214,7 @@
       "exception_score": 870000
     },
     {
-      "id": 8521,
+      "id": 8522,
       "t": "songs",
       "d": 16,
       "score": 930000,
@@ -2213,7 +2222,7 @@
       "exception_score": 880000
     },
     {
-      "id": 8522,
+      "id": 8523,
       "t": "songs",
       "d": 16,
       "score": 940000,
@@ -2221,7 +2230,7 @@
       "exception_score": 890000
     },
     {
-      "id": 8523,
+      "id": 8524,
       "t": "songs",
       "d": 16,
       "score": 950000,
@@ -2229,7 +2238,7 @@
       "exception_score": 900000
     },
     {
-      "id": 8524,
+      "id": 8525,
       "t": "songs",
       "d": 16,
       "score": 955000,
@@ -2237,7 +2246,7 @@
       "exception_score": 910000
     },
     {
-      "id": 8525,
+      "id": 8526,
       "t": "songs",
       "d": 16,
       "score": 960000,
@@ -2245,7 +2254,7 @@
       "exception_score": 920000
     },
     {
-      "id": 8526,
+      "id": 8527,
       "t": "songs",
       "d": 16,
       "score": 965000,
@@ -2253,7 +2262,7 @@
       "exception_score": 930000
     },
     {
-      "id": 8527,
+      "id": 8528,
       "t": "songs",
       "d": 16,
       "score": 970000,
@@ -2261,7 +2270,7 @@
       "exception_score": 940000
     },
     {
-      "id": 8528,
+      "id": 8529,
       "t": "songs",
       "d": 16,
       "score": 975000,
@@ -2269,7 +2278,7 @@
       "exception_score": 950000
     },
     {
-      "id": 8529,
+      "id": 8530,
       "t": "songs",
       "d": 16,
       "score": 980000,
@@ -2278,7 +2287,7 @@
       "exception_score": 955000
     },
     {
-      "id": 8530,
+      "id": 8531,
       "t": "songs",
       "d": 16,
       "score": 982000,
@@ -2287,7 +2296,7 @@
       "exception_score": 960000
     },
     {
-      "id": 8531,
+      "id": 8532,
       "t": "songs",
       "d": 16,
       "score": 985000,
@@ -2296,7 +2305,7 @@
       "exception_score": 965000
     },
     {
-      "id": 8532,
+      "id": 8533,
       "t": "songs",
       "d": 16,
       "score": 987000,
@@ -2305,7 +2314,7 @@
       "exception_score": 970000
     },
     {
-      "id": 8533,
+      "id": 8534,
       "t": "songs",
       "d": 16,
       "score": 990000,
@@ -2314,7 +2323,7 @@
       "exception_score": 975000
     },
     {
-      "id": 8534,
+      "id": 8535,
       "t": "songs",
       "d": 16,
       "score": 991000,
@@ -2323,7 +2332,7 @@
       "exception_score": 980000
     },
     {
-      "id": 8535,
+      "id": 8536,
       "t": "songs",
       "d": 16,
       "score": 992000,
@@ -2332,7 +2341,7 @@
       "exception_score": 982000
     },
     {
-      "id": 8536,
+      "id": 8537,
       "t": "songs",
       "d": 16,
       "score": 993000,
@@ -2341,7 +2350,7 @@
       "exception_score": 985000
     },
     {
-      "id": 8537,
+      "id": 8538,
       "t": "songs",
       "d": 16,
       "score": 994000,
@@ -2350,7 +2359,7 @@
       "exception_score": 987000
     },
     {
-      "id": 8538,
+      "id": 8539,
       "t": "songs",
       "d": 16,
       "score": 995000,
@@ -2359,7 +2368,7 @@
       "exception_score": 990000
     },
     {
-      "id": 8539,
+      "id": 8540,
       "t": "songs",
       "d": 16,
       "score": 996000,
@@ -2368,7 +2377,7 @@
       "exception_score": 991000
     },
     {
-      "id": 8540,
+      "id": 8541,
       "t": "songs",
       "d": 16,
       "score": 997000,
@@ -2377,7 +2386,7 @@
       "exception_score": 992000
     },
     {
-      "id": 8541,
+      "id": 8542,
       "t": "songs",
       "d": 16,
       "score": 998000,
@@ -2386,7 +2395,7 @@
       "exception_score": 993000
     },
     {
-      "id": 8542,
+      "id": 8543,
       "t": "songs",
       "d": 16,
       "score": 998500,
@@ -2395,7 +2404,7 @@
       "exception_score": 994000
     },
     {
-      "id": 8543,
+      "id": 8544,
       "t": "songs",
       "d": 16,
       "score": 999000,
@@ -2404,283 +2413,276 @@
       "exception_score": 995000
     },
     {
-      "id": 8544,
+      "id": 8545,
       "t": "songs",
       "d": 16,
       "song_count": 1,
       "clear_type": "perfect"
     },
     {
-      "id": 8545,
+      "id": 8546,
       "t": "songs",
       "d": 16,
       "song_count": 2,
       "clear_type": "perfect"
     },
     {
-      "id": 8546,
+      "id": 8547,
       "t": "songs",
       "d": 16,
       "song_count": 3,
       "clear_type": "perfect"
     },
     {
-      "id": 8547,
+      "id": 8548,
       "t": "songs",
       "d": 16,
       "song_count": 4,
       "clear_type": "perfect"
     },
     {
-      "id": 8548,
+      "id": 8549,
       "t": "songs",
       "d": 16,
       "song_count": 5,
       "clear_type": "perfect"
     },
     {
-      "id": 8549,
+      "id": 8550,
       "t": "songs",
       "d": 16,
       "song_count": 8,
       "clear_type": "perfect"
     },
     {
-      "id": 8550,
+      "id": 8551,
       "t": "songs",
       "d": 16,
       "song_count": 11,
       "clear_type": "perfect"
     },
     {
-      "id": 8551,
+      "id": 8552,
       "t": "songs",
       "d": 16,
       "song_count": 14,
       "clear_type": "perfect"
     },
     {
-      "id": 8552,
+      "id": 8553,
       "t": "songs",
       "d": 16,
       "song_count": 17,
       "clear_type": "perfect"
     },
     {
-      "id": 8553,
+      "id": 8554,
       "t": "songs",
       "d": 16,
       "song_count": 20,
       "clear_type": "perfect"
     },
     {
-      "id": 8554,
+      "id": 8555,
       "t": "songs",
       "d": 16,
       "song_count": 24,
       "clear_type": "perfect"
     },
     {
-      "id": 8555,
+      "id": 8556,
       "t": "songs",
       "d": 16,
       "song_count": 28,
       "clear_type": "perfect"
     },
     {
-      "id": 8556,
+      "id": 8557,
       "t": "songs",
       "d": 16,
       "song_count": 32,
       "clear_type": "perfect"
     },
     {
-      "id": 8557,
+      "id": 8558,
       "t": "songs",
       "d": 16,
       "song_count": 36,
       "clear_type": "perfect"
     },
     {
-      "id": 8558,
+      "id": 8559,
       "t": "songs",
       "d": 16,
       "song_count": 40,
       "clear_type": "perfect"
     },
     {
-      "id": 8559,
+      "id": 8560,
       "t": "songs",
       "d": 16,
       "song_count": 44,
       "clear_type": "perfect"
     },
     {
-      "id": 8560,
+      "id": 8561,
       "t": "songs",
       "d": 16,
       "song_count": 48,
       "clear_type": "perfect"
     },
     {
-      "id": 8561,
+      "id": 8562,
       "t": "songs",
       "d": 16,
       "song_count": 52,
       "clear_type": "perfect"
     },
     {
-      "id": 8562,
+      "id": 8563,
       "t": "songs",
       "d": 16,
       "song_count": 56,
       "clear_type": "perfect"
     },
     {
-      "id": 8563,
+      "id": 8564,
       "t": "songs",
       "d": 16,
       "song_count": 60,
       "clear_type": "perfect"
     },
     {
-      "id": 8564,
+      "id": 8565,
       "t": "songs",
       "d": 16,
       "song_count": 66,
       "clear_type": "perfect"
     },
     {
-      "id": 8565,
+      "id": 8566,
       "t": "songs",
       "d": 16,
       "song_count": 72,
       "clear_type": "perfect"
     },
     {
-      "id": 8566,
+      "id": 8567,
       "t": "songs",
       "d": 16,
       "song_count": 78,
       "clear_type": "perfect"
     },
     {
-      "id": 8567,
+      "id": 8568,
       "t": "songs",
       "d": 16,
       "song_count": 84,
       "clear_type": "perfect"
     },
     {
-      "id": 8568,
+      "id": 8569,
       "t": "songs",
       "d": 16,
       "song_count": 90,
       "clear_type": "perfect"
     },
     {
-      "id": 8569,
+      "id": 8570,
       "t": "songs",
       "d": 16,
       "score": 700000,
       "song_count": 1
     },
     {
-      "id": 8570,
+      "id": 8571,
       "t": "songs",
       "d": 16,
       "score": 750000,
       "song_count": 1
     },
     {
-      "id": 8571,
+      "id": 8572,
       "t": "songs",
       "d": 16,
       "score": 800000,
       "song_count": 1
     },
     {
-      "id": 8572,
+      "id": 8573,
       "t": "songs",
       "d": 16,
       "score": 850000,
       "song_count": 1
     },
     {
-      "id": 8573,
+      "id": 8574,
       "t": "songs",
       "d": 16,
       "score": 900000,
       "song_count": 1
     },
     {
-      "id": 8574,
+      "id": 8575,
       "t": "songs",
       "d": 16,
       "score": 910000,
       "song_count": 1
     },
     {
-      "id": 8575,
+      "id": 8576,
       "t": "songs",
       "d": 16,
       "score": 920000,
       "song_count": 1
     },
     {
-      "id": 8576,
+      "id": 8577,
       "t": "songs",
       "d": 16,
       "score": 930000,
       "song_count": 1
     },
     {
-      "id": 8577,
+      "id": 8578,
       "t": "songs",
       "d": 16,
       "score": 940000,
       "song_count": 1
     },
     {
-      "id": 8578,
+      "id": 8579,
       "t": "songs",
       "d": 16,
       "score": 950000,
       "song_count": 1
     },
     {
-      "id": 8579,
+      "id": 8580,
       "t": "songs",
       "d": 16,
       "score": 960000,
       "song_count": 1
     },
     {
-      "id": 8580,
+      "id": 8581,
       "t": "songs",
       "d": 16,
       "score": 970000,
       "song_count": 1
     },
     {
-      "id": 8581,
+      "id": 8582,
       "t": "songs",
       "d": 16,
       "score": 980000,
       "song_count": 1
     },
     {
-      "id": 8582,
-      "t": "songs",
-      "d": 16,
-      "score": 985000,
-      "song_count": 1
-    },
-    {
       "id": 8583,
       "t": "songs",
       "d": 16,
-      "score": 990000,
+      "score": 985000,
       "song_count": 1
     },
     {
@@ -2688,129 +2690,136 @@
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 2
+      "song_count": 1
     },
     {
       "id": 8585,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 5
+      "song_count": 2
     },
     {
       "id": 8586,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 10
+      "song_count": 5
     },
     {
       "id": 8587,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 15
+      "song_count": 10
     },
     {
       "id": 8588,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 20
+      "song_count": 15
     },
     {
       "id": 8589,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 24
+      "song_count": 20
     },
     {
       "id": 8590,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 28
+      "song_count": 24
     },
     {
       "id": 8591,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 32
+      "song_count": 28
     },
     {
       "id": 8592,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 36
+      "song_count": 32
     },
     {
       "id": 8593,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 40
+      "song_count": 36
     },
     {
       "id": 8594,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 44
+      "song_count": 40
     },
     {
       "id": 8595,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 48
+      "song_count": 44
     },
     {
       "id": 8596,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 52
+      "song_count": 48
     },
     {
       "id": 8597,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 56
+      "song_count": 52
     },
     {
       "id": 8598,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 60
+      "song_count": 56
     },
     {
       "id": 8599,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 67
+      "song_count": 60
     },
     {
       "id": 8600,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 74
+      "song_count": 67
     },
     {
       "id": 8601,
       "t": "songs",
       "d": 16,
       "score": 990000,
-      "song_count": 81
+      "song_count": 74
     },
     {
       "id": 8602,
+      "t": "songs",
+      "d": 16,
+      "score": 990000,
+      "song_count": 81
+    },
+    {
+      "id": 8603,
       "t": "songs",
       "d": 16,
       "score": 990000,
@@ -3679,63 +3688,63 @@
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 26
+      "song_count": 22
     },
     {
       "id": 9081,
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 32
+      "song_count": 24
     },
     {
       "id": 9082,
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 38
+      "song_count": 26
     },
     {
       "id": 9083,
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 44
+      "song_count": 28
     },
     {
       "id": 9084,
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 50
+      "song_count": 30
     },
     {
       "id": 9085,
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 60
+      "song_count": 35
     },
     {
       "id": 9086,
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 70
+      "song_count": 40
     },
     {
       "id": 9087,
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 80
+      "song_count": 45
     },
     {
       "id": 9088,
       "t": "songs",
       "d": 17,
       "score": 990000,
-      "song_count": 90
+      "song_count": 50
     },
     {
       "id": 9500,
@@ -4071,7 +4080,7 @@
       "higher_diff": true
     },
     {
-      "id": 8603,
+      "id": 8604,
       "t": "songs",
       "d": 16,
       "song_count": 1,
@@ -4879,35 +4888,35 @@
       "id": 10024,
       "t": "songs",
       "d": 19,
-      "score": 960000,
+      "score": 955000,
       "song_count": 1
     },
     {
       "id": 10025,
       "t": "songs",
       "d": 19,
-      "score": 970000,
+      "score": 960000,
       "song_count": 1
     },
     {
       "id": 10026,
       "t": "songs",
       "d": 19,
-      "score": 980000,
+      "score": 965000,
       "song_count": 1
     },
     {
       "id": 10027,
       "t": "songs",
       "d": 19,
-      "score": 985000,
+      "score": 970000,
       "song_count": 1
     },
     {
       "id": 10028,
       "t": "songs",
       "d": 19,
-      "score": 990000,
+      "score": 975000,
       "song_count": 1
     },
     {
@@ -5431,7 +5440,7 @@
       "higher_diff": true
     },
     {
-      "id": 8604,
+      "id": 8605,
       "t": "songs",
       "d": 16,
       "song_count": 1,
@@ -5439,7 +5448,7 @@
       "clear_type": "sdp"
     },
     {
-      "id": 8605,
+      "id": 8606,
       "t": "songs",
       "d": 16,
       "song_count": 2,
@@ -5447,7 +5456,7 @@
       "higher_diff": true
     },
     {
-      "id": 8606,
+      "id": 8607,
       "t": "songs",
       "d": 16,
       "song_count": 3,
@@ -5455,7 +5464,7 @@
       "higher_diff": true
     },
     {
-      "id": 8607,
+      "id": 8608,
       "t": "songs",
       "d": 16,
       "song_count": 4,
@@ -5463,7 +5472,7 @@
       "higher_diff": true
     },
     {
-      "id": 8608,
+      "id": 8609,
       "t": "songs",
       "d": 16,
       "song_count": 5,
@@ -5688,26 +5697,26 @@
     {
       "id": 4016,
       "t": "trial",
-      "rank": "ruby",
-      "count": 1
+      "rank": "emerald",
+      "count": 2
     },
     {
       "id": 4017,
       "t": "trial",
-      "rank": "ruby",
-      "count": 2
+      "rank": "onyx",
+      "count": 1
     },
     {
       "id": 4018,
       "t": "trial",
       "rank": "onyx",
-      "count": 1
+      "count": 2
     },
     {
       "id": 4019,
       "t": "trial",
-      "rank": "onyx",
-      "count": 2
+      "rank": "ruby",
+      "count": 1
     },
     {
       "id": 8115,
@@ -5751,6 +5760,27 @@
       "d": 13,
       "song_count": 1,
       "clear_type": "perfect"
+    },
+    {
+      "id": 10029,
+      "t": "songs",
+      "d": 19,
+      "score": 980000,
+      "song_count": 1
+    },
+    {
+      "id": 10030,
+      "t": "songs",
+      "d": 19,
+      "score": 985000,
+      "song_count": 1
+    },
+    {
+      "id": 10031,
+      "t": "songs",
+      "d": 19,
+      "score": 990000,
+      "song_count": 1
     },
     {
       "id": 7617,
@@ -6531,7 +6561,7 @@
       "song_count": 180
     },
     {
-      "id": 8609,
+      "id": 8610,
       "t": "songs",
       "d": 16,
       "song_count": 10,
@@ -6539,7 +6569,7 @@
       "exceptions": 2
     },
     {
-      "id": 8610,
+      "id": 8611,
       "t": "songs",
       "d": 16,
       "song_count": 20,
@@ -6547,7 +6577,7 @@
       "exceptions": 4
     },
     {
-      "id": 8611,
+      "id": 8612,
       "t": "songs",
       "d": 16,
       "song_count": 30,
@@ -6555,7 +6585,7 @@
       "exceptions": 6
     },
     {
-      "id": 8612,
+      "id": 8613,
       "t": "songs",
       "d": 16,
       "song_count": 40,
@@ -6563,7 +6593,7 @@
       "exceptions": 8
     },
     {
-      "id": 8613,
+      "id": 8614,
       "t": "songs",
       "d": 16,
       "song_count": 50,
@@ -6572,7 +6602,16 @@
       "exception_score": 750000
     },
     {
-      "id": 8614,
+      "id": 8615,
+      "t": "songs",
+      "d": 16,
+      "song_count": 60,
+      "score": 810000,
+      "exceptions": 12,
+      "exception_score": 760000
+    },
+    {
+      "id": 8616,
       "t": "songs",
       "d": 16,
       "song_count": 70,
@@ -6581,7 +6620,7 @@
       "exception_score": 770000
     },
     {
-      "id": 8615,
+      "id": 8617,
       "t": "songs",
       "d": 16,
       "song_count": 80,
@@ -6590,7 +6629,7 @@
       "exception_score": 780000
     },
     {
-      "id": 8616,
+      "id": 8618,
       "t": "songs",
       "d": 16,
       "song_count": 90,
@@ -6599,7 +6638,7 @@
       "exception_score": 790000
     },
     {
-      "id": 8617,
+      "id": 8619,
       "t": "songs",
       "d": 16,
       "song_count": 100,
@@ -6608,7 +6647,7 @@
       "exception_score": 800000
     },
     {
-      "id": 8618,
+      "id": 8620,
       "t": "songs",
       "d": 16,
       "song_count": 110,
@@ -6617,7 +6656,7 @@
       "exception_score": 810000
     },
     {
-      "id": 8619,
+      "id": 8621,
       "t": "songs",
       "d": 16,
       "song_count": 120,
@@ -6626,7 +6665,7 @@
       "exception_score": 820000
     },
     {
-      "id": 8620,
+      "id": 8622,
       "t": "songs",
       "d": 16,
       "song_count": 130,
@@ -6635,7 +6674,7 @@
       "exception_score": 830000
     },
     {
-      "id": 8621,
+      "id": 8623,
       "t": "songs",
       "d": 16,
       "song_count": 140,
@@ -6644,7 +6683,7 @@
       "exception_score": 840000
     },
     {
-      "id": 8622,
+      "id": 8624,
       "t": "songs",
       "d": 16,
       "song_count": 150,
@@ -6653,7 +6692,7 @@
       "exception_score": 850000
     },
     {
-      "id": 8623,
+      "id": 8625,
       "t": "songs",
       "d": 16,
       "score": 910000,
@@ -6661,7 +6700,7 @@
       "exception_score": 860000
     },
     {
-      "id": 8624,
+      "id": 8626,
       "t": "songs",
       "d": 16,
       "score": 920000,
@@ -6669,7 +6708,7 @@
       "exception_score": 870000
     },
     {
-      "id": 8625,
+      "id": 8627,
       "t": "songs",
       "d": 16,
       "score": 930000,
@@ -6677,7 +6716,7 @@
       "exception_score": 880000
     },
     {
-      "id": 8626,
+      "id": 8628,
       "t": "songs",
       "d": 16,
       "score": 940000,
@@ -6685,7 +6724,7 @@
       "exception_score": 890000
     },
     {
-      "id": 8627,
+      "id": 8629,
       "t": "songs",
       "d": 16,
       "score": 950000,
@@ -6693,7 +6732,7 @@
       "exception_score": 900000
     },
     {
-      "id": 8628,
+      "id": 8630,
       "t": "songs",
       "d": 16,
       "score": 955000,
@@ -6701,7 +6740,7 @@
       "exception_score": 910000
     },
     {
-      "id": 8629,
+      "id": 8631,
       "t": "songs",
       "d": 16,
       "score": 960000,
@@ -6709,7 +6748,7 @@
       "exception_score": 920000
     },
     {
-      "id": 8630,
+      "id": 8632,
       "t": "songs",
       "d": 16,
       "score": 965000,
@@ -6717,7 +6756,7 @@
       "exception_score": 930000
     },
     {
-      "id": 8631,
+      "id": 8633,
       "t": "songs",
       "d": 16,
       "score": 970000,
@@ -6725,7 +6764,7 @@
       "exception_score": 940000
     },
     {
-      "id": 8632,
+      "id": 8634,
       "t": "songs",
       "d": 16,
       "score": 975000,
@@ -6733,7 +6772,7 @@
       "exception_score": 950000
     },
     {
-      "id": 8633,
+      "id": 8635,
       "t": "songs",
       "d": 16,
       "score": 980000,
@@ -6742,7 +6781,7 @@
       "exception_score": 955000
     },
     {
-      "id": 8634,
+      "id": 8636,
       "t": "songs",
       "d": 16,
       "score": 982000,
@@ -6751,7 +6790,7 @@
       "exception_score": 960000
     },
     {
-      "id": 8635,
+      "id": 8637,
       "t": "songs",
       "d": 16,
       "score": 985000,
@@ -6760,7 +6799,7 @@
       "exception_score": 965000
     },
     {
-      "id": 8636,
+      "id": 8638,
       "t": "songs",
       "d": 16,
       "score": 987000,
@@ -6769,7 +6808,7 @@
       "exception_score": 970000
     },
     {
-      "id": 8637,
+      "id": 8639,
       "t": "songs",
       "d": 16,
       "score": 990000,
@@ -6778,7 +6817,7 @@
       "exception_score": 975000
     },
     {
-      "id": 8638,
+      "id": 8640,
       "t": "songs",
       "d": 16,
       "score": 991000,
@@ -6787,7 +6826,7 @@
       "exception_score": 980000
     },
     {
-      "id": 8639,
+      "id": 8641,
       "t": "songs",
       "d": 16,
       "score": 992000,
@@ -6796,7 +6835,7 @@
       "exception_score": 982000
     },
     {
-      "id": 8640,
+      "id": 8642,
       "t": "songs",
       "d": 16,
       "score": 993000,
@@ -6805,7 +6844,7 @@
       "exception_score": 985000
     },
     {
-      "id": 8641,
+      "id": 8643,
       "t": "songs",
       "d": 16,
       "score": 994000,
@@ -6814,7 +6853,7 @@
       "exception_score": 987000
     },
     {
-      "id": 8642,
+      "id": 8644,
       "t": "songs",
       "d": 16,
       "score": 995000,
@@ -6823,7 +6862,7 @@
       "exception_score": 990000
     },
     {
-      "id": 8643,
+      "id": 8645,
       "t": "songs",
       "d": 16,
       "score": 996000,
@@ -6832,7 +6871,7 @@
       "exception_score": 991000
     },
     {
-      "id": 8644,
+      "id": 8646,
       "t": "songs",
       "d": 16,
       "score": 997000,
@@ -6841,7 +6880,7 @@
       "exception_score": 992000
     },
     {
-      "id": 8645,
+      "id": 8647,
       "t": "songs",
       "d": 16,
       "score": 998000,
@@ -6850,7 +6889,7 @@
       "exception_score": 993000
     },
     {
-      "id": 8646,
+      "id": 8648,
       "t": "songs",
       "d": 16,
       "score": 998500,
@@ -6859,154 +6898,154 @@
       "exception_score": 994000
     },
     {
-      "id": 8647,
+      "id": 8649,
       "t": "songs",
       "d": 16,
       "song_count": 26,
       "clear_type": "perfect"
     },
     {
-      "id": 8648,
+      "id": 8650,
       "t": "songs",
       "d": 16,
       "song_count": 38,
       "clear_type": "perfect"
     },
     {
-      "id": 8649,
+      "id": 8651,
       "t": "songs",
       "d": 16,
       "song_count": 50,
       "clear_type": "perfect"
     },
     {
-      "id": 8650,
+      "id": 8652,
       "t": "songs",
       "d": 16,
       "song_count": 70,
       "clear_type": "perfect"
     },
     {
-      "id": 8651,
+      "id": 8653,
       "t": "songs",
       "d": 16,
       "song_count": 80,
       "clear_type": "perfect"
     },
     {
-      "id": 8652,
+      "id": 8654,
       "t": "songs",
       "d": 16,
       "song_count": 100,
       "clear_type": "perfect"
     },
     {
-      "id": 8653,
+      "id": 8655,
       "t": "songs",
       "d": 16,
       "song_count": 112,
       "clear_type": "perfect"
     },
     {
-      "id": 8654,
+      "id": 8656,
       "t": "songs",
       "d": 16,
       "song_count": 124,
       "clear_type": "perfect"
     },
     {
-      "id": 8655,
+      "id": 8657,
       "t": "songs",
       "d": 16,
       "song_count": 136,
       "clear_type": "perfect"
     },
     {
-      "id": 8656,
+      "id": 8658,
       "t": "songs",
       "d": 16,
       "song_count": 148,
       "clear_type": "perfect"
     },
     {
-      "id": 8657,
+      "id": 8659,
       "t": "songs",
       "d": 16,
       "song_count": 160,
       "clear_type": "perfect"
     },
     {
-      "id": 8658,
+      "id": 8660,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 26
     },
     {
-      "id": 8659,
+      "id": 8661,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 38
     },
     {
-      "id": 8660,
+      "id": 8662,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 50
     },
     {
-      "id": 8661,
+      "id": 8663,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 70
     },
     {
-      "id": 8662,
+      "id": 8664,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 80
     },
     {
-      "id": 8663,
+      "id": 8665,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 90
     },
     {
-      "id": 8664,
+      "id": 8666,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 100
     },
     {
-      "id": 8665,
+      "id": 8667,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 112
     },
     {
-      "id": 8666,
+      "id": 8668,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 124
     },
     {
-      "id": 8667,
+      "id": 8669,
       "t": "songs",
       "d": 16,
       "score": 990000,
       "song_count": 136
     },
     {
-      "id": 8668,
+      "id": 8670,
       "t": "songs",
       "d": 16,
       "score": 990000,
@@ -7131,6 +7170,55 @@
       "clear_type": "perfect"
     },
     {
+      "id": 9104,
+      "t": "songs",
+      "d": 17,
+      "score": 990000,
+      "song_count": 32
+    },
+    {
+      "id": 9105,
+      "t": "songs",
+      "d": 17,
+      "score": 990000,
+      "song_count": 38
+    },
+    {
+      "id": 9106,
+      "t": "songs",
+      "d": 17,
+      "score": 990000,
+      "song_count": 44
+    },
+    {
+      "id": 9107,
+      "t": "songs",
+      "d": 17,
+      "score": 990000,
+      "song_count": 60
+    },
+    {
+      "id": 9108,
+      "t": "songs",
+      "d": 17,
+      "score": 990000,
+      "song_count": 70
+    },
+    {
+      "id": 9109,
+      "t": "songs",
+      "d": 17,
+      "score": 990000,
+      "song_count": 80
+    },
+    {
+      "id": 9110,
+      "t": "songs",
+      "d": 17,
+      "score": 990000,
+      "song_count": 90
+    },
+    {
       "id": 9565,
       "t": "songs",
       "d": 18,
@@ -7249,20 +7337,20 @@
       "song_count": 50
     },
     {
-      "id": 10029,
+      "id": 10032,
       "t": "songs",
       "d": 19,
       "song_count": 4
     },
     {
-      "id": 10030,
+      "id": 10033,
       "t": "songs",
       "d": 19,
       "song_count": 5,
       "score": 750000
     },
     {
-      "id": 10031,
+      "id": 10034,
       "t": "songs",
       "d": 19,
       "song_count": 6,
@@ -7270,7 +7358,7 @@
       "exceptions": 1
     },
     {
-      "id": 10032,
+      "id": 10035,
       "t": "songs",
       "d": 19,
       "song_count": 7,
@@ -7278,7 +7366,7 @@
       "exceptions": 2
     },
     {
-      "id": 10033,
+      "id": 10036,
       "t": "songs",
       "d": 19,
       "song_count": 8,
@@ -7286,7 +7374,7 @@
       "exceptions": 3
     },
     {
-      "id": 10034,
+      "id": 10037,
       "t": "songs",
       "d": 19,
       "song_count": 9,
@@ -7294,7 +7382,7 @@
       "exceptions": 4
     },
     {
-      "id": 10035,
+      "id": 10038,
       "t": "songs",
       "d": 19,
       "song_count": 10,
@@ -7303,7 +7391,7 @@
       "exception_score": 750000
     },
     {
-      "id": 10036,
+      "id": 10039,
       "t": "songs",
       "d": 19,
       "score": 820000,
@@ -7311,7 +7399,7 @@
       "exception_score": 770000
     },
     {
-      "id": 10037,
+      "id": 10040,
       "t": "songs",
       "d": 19,
       "score": 840000,
@@ -7319,7 +7407,7 @@
       "exception_score": 790000
     },
     {
-      "id": 10038,
+      "id": 10041,
       "t": "songs",
       "d": 19,
       "score": 860000,
@@ -7327,7 +7415,7 @@
       "exception_score": 810000
     },
     {
-      "id": 10039,
+      "id": 10042,
       "t": "songs",
       "d": 19,
       "score": 880000,
@@ -7335,7 +7423,7 @@
       "exception_score": 830000
     },
     {
-      "id": 10040,
+      "id": 10043,
       "t": "songs",
       "d": 19,
       "score": 900000,
@@ -7343,13 +7431,7 @@
       "exception_score": 850000
     },
     {
-      "id": 4020,
-      "t": "trial",
-      "rank": "emerald",
-      "count": 2
-    },
-    {
-      "id": 9104,
+      "id": 9111,
       "t": "songs",
       "d": 17,
       "score": 990000,
@@ -7575,7 +7657,7 @@
             7605,
             6048,
             6511,
-            8603,
+            8604,
             3013,
             1013
           ]
@@ -7614,7 +7696,7 @@
           "substitutions": [
             7580,
             8080,
-            8569,
+            8570,
             7015,
             6515
           ]
@@ -7635,7 +7717,7 @@
           "substitutions": [
             7581,
             8081,
-            8570,
+            8571,
             7016,
             6516
           ]
@@ -7656,7 +7738,7 @@
           "substitutions": [
             7582,
             8082,
-            8571,
+            8572,
             7017,
             7030
           ]
@@ -7677,7 +7759,7 @@
           "substitutions": [
             7583,
             8083,
-            8572,
+            8573,
             7018,
             7031
           ]
@@ -7698,7 +7780,7 @@
           "substitutions": [
             7584,
             8084,
-            8573,
+            8574,
             7019,
             7032
           ]
@@ -7712,7 +7794,7 @@
             8005,
             8080,
             8500,
-            8569,
+            8570,
             7015,
             6515,
             4002
@@ -7720,7 +7802,7 @@
           "substitutions": [
             7585,
             8085,
-            8574,
+            8575,
             9055,
             7049
           ]
@@ -7734,7 +7816,7 @@
             8006,
             8081,
             8501,
-            8570,
+            8571,
             7016,
             6516,
             4002
@@ -7742,7 +7824,7 @@
           "substitutions": [
             7586,
             8086,
-            8575,
+            8576,
             9056,
             7021
           ]
@@ -7756,7 +7838,7 @@
             8007,
             8082,
             8502,
-            8571,
+            8572,
             7017,
             7030,
             4003
@@ -7764,7 +7846,7 @@
           "substitutions": [
             7587,
             8087,
-            8576,
+            8577,
             9057,
             7022
           ]
@@ -7778,7 +7860,7 @@
             8008,
             8083,
             8503,
-            8572,
+            8573,
             7018,
             7031,
             4003
@@ -7786,7 +7868,7 @@
           "substitutions": [
             7588,
             8088,
-            8577,
+            8578,
             9058,
             7023
           ]
@@ -7800,7 +7882,7 @@
             8009,
             8084,
             8504,
-            8573,
+            8574,
             7019,
             7032,
             4004
@@ -7808,7 +7890,7 @@
           "substitutions": [
             7589,
             8089,
-            8578,
+            8579,
             9059,
             7024
           ]
@@ -7822,7 +7904,7 @@
             8010,
             8085,
             8505,
-            8574,
+            8575,
             9000,
             9055,
             7020,
@@ -7833,7 +7915,7 @@
             7550,
             7590,
             8090,
-            8579,
+            8580,
             9060,
             6079
           ]
@@ -7847,7 +7929,7 @@
             8011,
             8086,
             8506,
-            8575,
+            8576,
             9001,
             9056,
             7021,
@@ -7858,7 +7940,7 @@
             7551,
             7591,
             8091,
-            8580,
+            8581,
             9061,
             6080
           ]
@@ -7872,7 +7954,7 @@
             8012,
             8087,
             8507,
-            8576,
+            8577,
             9002,
             9057,
             7022,
@@ -7883,7 +7965,7 @@
             7552,
             7592,
             8092,
-            8581,
+            8582,
             9062,
             6081
           ]
@@ -7897,7 +7979,7 @@
             8013,
             8088,
             8508,
-            8577,
+            8578,
             9003,
             9058,
             7023,
@@ -7908,7 +7990,7 @@
             7553,
             7593,
             8093,
-            8582,
+            8583,
             9063,
             6082
           ]
@@ -7922,7 +8004,7 @@
             8014,
             8089,
             8509,
-            8578,
+            8579,
             9004,
             9059,
             7024,
@@ -7933,7 +8015,7 @@
             7554,
             7594,
             8094,
-            8583,
+            8584,
             9064,
             6083
           ]
@@ -7947,7 +8029,8 @@
             7590,
             8015,
             8090,
-            8579,
+            8510,
+            8580,
             9005,
             9060,
             6079,
@@ -7957,10 +8040,10 @@
             7520,
             7555,
             7595,
-            7515,
+            8020,
             8050,
             8095,
-            8584,
+            8585,
             9065,
             9535,
             6084
@@ -7975,8 +8058,8 @@
             7591,
             8016,
             8091,
-            8510,
-            8580,
+            8511,
+            8581,
             9006,
             9061,
             6080,
@@ -7986,10 +8069,10 @@
             7521,
             7556,
             7596,
-            7516,
+            8021,
             8051,
             8096,
-            8585,
+            8586,
             9066,
             9536,
             6085
@@ -8004,8 +8087,8 @@
             7592,
             8017,
             8092,
-            8511,
-            8581,
+            8512,
+            8582,
             9007,
             9062,
             6081,
@@ -8015,10 +8098,10 @@
             7522,
             7557,
             7597,
-            7517,
+            8022,
             8052,
             8097,
-            8586,
+            8587,
             9067,
             9537,
             6086
@@ -8033,8 +8116,8 @@
             7593,
             8018,
             8093,
-            8512,
-            8582,
+            8513,
+            8583,
             9008,
             9063,
             6082,
@@ -8044,10 +8127,10 @@
             7523,
             7558,
             7598,
-            7518,
+            8023,
             8053,
             8098,
-            8587,
+            8588,
             9068,
             9538,
             6087
@@ -8062,8 +8145,8 @@
             7594,
             8019,
             8094,
-            8513,
-            8583,
+            8514,
+            8584,
             9009,
             9064,
             6083,
@@ -8073,10 +8156,10 @@
             7524,
             7559,
             7599,
-            7519,
+            8024,
             8054,
             8099,
-            8588,
+            8589,
             9069,
             9539,
             6520
@@ -8092,8 +8175,8 @@
             8020,
             8050,
             8095,
-            8514,
-            8584,
+            8515,
+            8585,
             9010,
             9065,
             9500,
@@ -8105,12 +8188,12 @@
             7525,
             7560,
             7600,
-            7520,
+            8025,
             8055,
             8100,
-            8519,
-            8544,
-            8589,
+            8520,
+            8545,
+            8590,
             9070,
             9540,
             6070,
@@ -8127,8 +8210,8 @@
             8021,
             8051,
             8096,
-            8515,
-            8585,
+            8516,
+            8586,
             9011,
             9066,
             9501,
@@ -8140,12 +8223,12 @@
             7526,
             7561,
             7601,
-            7521,
+            8026,
             8056,
             8101,
-            8520,
-            8545,
-            8590,
+            8521,
+            8546,
+            8591,
             9071,
             9541,
             6071,
@@ -8162,8 +8245,8 @@
             8022,
             8052,
             8097,
-            8516,
-            8586,
+            8517,
+            8587,
             9012,
             9067,
             9502,
@@ -8175,12 +8258,12 @@
             7527,
             7562,
             7602,
-            7522,
+            8027,
             8057,
             8102,
-            8521,
-            8546,
-            8591,
+            8522,
+            8547,
+            8592,
             9072,
             9542,
             6072,
@@ -8197,8 +8280,8 @@
             8023,
             8053,
             8098,
-            8517,
-            8587,
+            8518,
+            8588,
             9013,
             9068,
             9503,
@@ -8210,12 +8293,12 @@
             7528,
             7563,
             7603,
-            7523,
+            8028,
             8058,
             8103,
-            8522,
-            8547,
-            8592,
+            8523,
+            8548,
+            8593,
             9073,
             9543,
             6073,
@@ -8232,8 +8315,8 @@
             8024,
             8054,
             8099,
-            8518,
-            8588,
+            8519,
+            8589,
             9014,
             9069,
             9504,
@@ -8244,12 +8327,12 @@
           "substitutions": [
             7529,
             7564,
-            7524,
+            8029,
             8059,
             8104,
-            8523,
-            8548,
-            8593,
+            8524,
+            8549,
+            8594,
             9074,
             9544,
             6074,
@@ -8266,9 +8349,9 @@
             8025,
             8055,
             8100,
-            8519,
-            8544,
-            8589,
+            8520,
+            8545,
+            8590,
             9015,
             9070,
             9505,
@@ -8281,12 +8364,12 @@
           "substitutions": [
             7530,
             7565,
-            7525,
+            8030,
             8060,
             8105,
-            8524,
-            8549,
-            8594,
+            8525,
+            8550,
+            8595,
             9020,
             9075,
             9545,
@@ -8304,9 +8387,9 @@
             8026,
             8056,
             8101,
-            8520,
-            8545,
-            8590,
+            8521,
+            8546,
+            8591,
             9016,
             9071,
             9506,
@@ -8319,12 +8402,12 @@
           "substitutions": [
             7531,
             7566,
-            7526,
+            8031,
             8061,
             8106,
-            8525,
-            8550,
-            8595,
+            8526,
+            8551,
+            8596,
             9021,
             9076,
             9546,
@@ -8342,9 +8425,9 @@
             8027,
             8057,
             8102,
-            8521,
-            8546,
-            8591,
+            8522,
+            8547,
+            8592,
             9017,
             9072,
             9507,
@@ -8357,12 +8440,12 @@
           "substitutions": [
             7532,
             7567,
-            7527,
+            8032,
             8062,
             8107,
-            8526,
-            8551,
-            8596,
+            8527,
+            8552,
+            8597,
             9022,
             9077,
             9547,
@@ -8380,9 +8463,9 @@
             8028,
             8058,
             8103,
-            8522,
-            8547,
-            8592,
+            8523,
+            8548,
+            8593,
             9018,
             9073,
             9508,
@@ -8395,12 +8478,12 @@
           "substitutions": [
             7533,
             7568,
-            7528,
+            8033,
             8063,
             8108,
-            8527,
-            8552,
-            8597,
+            8528,
+            8553,
+            8598,
             9023,
             9078,
             9548,
@@ -8417,9 +8500,9 @@
             8029,
             8059,
             8104,
-            8523,
-            8548,
-            8593,
+            8524,
+            8549,
+            8594,
             9019,
             9074,
             9509,
@@ -8432,11 +8515,11 @@
           "substitutions": [
             7534,
             7569,
-            7529,
+            8034,
             8064,
-            8528,
-            8553,
-            8598,
+            8529,
+            8554,
+            8599,
             9024,
             9079,
             9549,
@@ -8453,9 +8536,9 @@
             8030,
             8060,
             8105,
-            8524,
-            8549,
-            8594,
+            8525,
+            8550,
+            8595,
             9020,
             9075,
             9510,
@@ -8468,11 +8551,11 @@
           "substitutions": [
             7535,
             7570,
-            7530,
+            8035,
             8065,
-            8529,
-            8554,
-            8599,
+            8530,
+            8555,
+            8600,
             9025,
             9040,
             9080,
@@ -8491,9 +8574,9 @@
             8031,
             8061,
             8106,
-            8525,
-            8550,
-            8595,
+            8526,
+            8551,
+            8596,
             9021,
             9076,
             9511,
@@ -8506,11 +8589,11 @@
           "substitutions": [
             7536,
             7571,
-            7531,
+            8036,
             8066,
-            8530,
-            8555,
-            8600,
+            8531,
+            8556,
+            8601,
             9026,
             9041,
             9081,
@@ -8529,9 +8612,9 @@
             8032,
             8062,
             8107,
-            8526,
-            8551,
-            8596,
+            8527,
+            8552,
+            8597,
             9022,
             9077,
             9512,
@@ -8544,11 +8627,11 @@
           "substitutions": [
             7537,
             7572,
-            7532,
+            8037,
             8067,
-            8531,
-            8556,
-            8601,
+            8532,
+            8557,
+            8602,
             9027,
             9042,
             9082,
@@ -8567,9 +8650,9 @@
             8033,
             8063,
             8108,
-            8527,
-            8552,
-            8597,
+            8528,
+            8553,
+            8598,
             9023,
             9078,
             9513,
@@ -8582,11 +8665,11 @@
           "substitutions": [
             7538,
             7573,
-            7533,
+            8038,
             8068,
-            8532,
-            8557,
-            8602,
+            8533,
+            8558,
+            8603,
             9028,
             9043,
             9083,
@@ -8604,9 +8687,9 @@
             7569,
             8034,
             8064,
-            8528,
-            8553,
-            8598,
+            8529,
+            8554,
+            8599,
             9024,
             9079,
             9514,
@@ -8619,10 +8702,10 @@
           "substitutions": [
             7539,
             7574,
-            7534,
+            8039,
             8069,
-            8533,
-            8558,
+            8534,
+            8559,
             9029,
             9044,
             9084,
@@ -8640,9 +8723,9 @@
             7570,
             8035,
             8065,
-            8529,
-            8554,
-            8599,
+            8530,
+            8555,
+            8600,
             9025,
             9040,
             9080,
@@ -8657,10 +8740,10 @@
           ],
           "substitutions": [
             7540,
-            7535,
+            8040,
             8070,
-            8534,
-            8559,
+            8535,
+            8560,
             9030,
             9045,
             9085,
@@ -8679,9 +8762,9 @@
             7571,
             8036,
             8066,
-            8530,
-            8555,
-            8600,
+            8531,
+            8556,
+            8601,
             9026,
             9041,
             9081,
@@ -8696,10 +8779,10 @@
           ],
           "substitutions": [
             7541,
-            7536,
+            8041,
             8071,
-            8535,
-            8560,
+            8536,
+            8561,
             9031,
             9046,
             9086,
@@ -8718,9 +8801,9 @@
             7572,
             8037,
             8067,
-            8531,
-            8556,
-            8601,
+            8532,
+            8557,
+            8602,
             9027,
             9042,
             9082,
@@ -8735,10 +8818,10 @@
           ],
           "substitutions": [
             7542,
-            7537,
+            8042,
             8072,
-            8536,
-            8561,
+            8537,
+            8562,
             9032,
             9047,
             9087,
@@ -8757,9 +8840,9 @@
             7573,
             8038,
             8068,
-            8532,
-            8557,
-            8602,
+            8533,
+            8558,
+            8603,
             9028,
             9043,
             9083,
@@ -8774,10 +8857,10 @@
           ],
           "substitutions": [
             7543,
-            7538,
+            8043,
             8073,
-            8537,
-            8562,
+            8538,
+            8563,
             9033,
             9048,
             9088,
@@ -8796,8 +8879,8 @@
             7574,
             8039,
             8069,
-            8533,
-            8558,
+            8534,
+            8559,
             9029,
             9044,
             9084,
@@ -8814,8 +8897,8 @@
             7544,
             8044,
             8074,
-            8538,
-            8563,
+            8539,
+            8564,
             9034,
             9049,
             9524,
@@ -8832,8 +8915,8 @@
             7540,
             8040,
             8070,
-            8534,
-            8559,
+            8535,
+            8560,
             9030,
             9045,
             9085,
@@ -8844,20 +8927,20 @@
             7036,
             8110,
             5015,
-            4016
+            4015
           ],
           "substitutions": [
             7545,
             8115,
-            8539,
-            8564,
+            8540,
+            8565,
             9035,
             9050,
             9525,
             9530,
             9560,
             10009,
-            10024,
+            10025,
             7607,
             8110
           ]
@@ -8869,8 +8952,8 @@
             7541,
             8041,
             8071,
-            8535,
-            8560,
+            8536,
+            8561,
             9031,
             9046,
             9086,
@@ -8881,20 +8964,20 @@
             7037,
             8111,
             5016,
-            4016
+            4015
           ],
           "substitutions": [
             7546,
             8116,
-            8540,
-            8565,
+            8541,
+            8566,
             9036,
             9051,
             9526,
             9531,
             9561,
             10010,
-            10025,
+            10027,
             7608,
             8111
           ]
@@ -8906,8 +8989,8 @@
             7542,
             8042,
             8072,
-            8536,
-            8561,
+            8537,
+            8562,
             9032,
             9047,
             9087,
@@ -8918,20 +9001,20 @@
             7038,
             8112,
             5017,
-            4017
+            4016
           ],
           "substitutions": [
             7547,
             8117,
-            8541,
-            8566,
+            8542,
+            8567,
             9037,
             9052,
             9527,
             9532,
             9562,
             10011,
-            10026,
+            10029,
             7609,
             8112
           ]
@@ -8943,8 +9026,8 @@
             7543,
             8043,
             8073,
-            8537,
-            8562,
+            8538,
+            8563,
             9033,
             9048,
             9088,
@@ -8955,20 +9038,20 @@
             7039,
             8113,
             5018,
-            4017
+            4016
           ],
           "substitutions": [
             7548,
             8118,
-            8542,
-            8567,
+            8543,
+            8568,
             9038,
             9053,
             9528,
             9533,
             9563,
             10012,
-            10027,
+            10030,
             7610,
             8113
           ]
@@ -8980,8 +9063,8 @@
             7544,
             8044,
             8074,
-            8538,
-            8563,
+            8539,
+            8564,
             9034,
             9049,
             9524,
@@ -8991,20 +9074,20 @@
             7040,
             8114,
             5019,
-            4018
+            4017
           ],
           "substitutions": [
             7549,
             8049,
-            8543,
-            8568,
+            8544,
+            8569,
             9039,
             9054,
             9529,
             9534,
             9564,
             10013,
-            10028,
+            10031,
             7611,
             8114
           ]
@@ -9015,8 +9098,8 @@
           "mandatory_goal_ids": [
             7545,
             8045,
-            8539,
-            8564,
+            8540,
+            8565,
             9035,
             9050,
             9525,
@@ -9025,9 +9108,9 @@
             10009,
             10024,
             7607,
-            8604,
+            8605,
             5020,
-            4018
+            4017
           ]
         },
         {
@@ -9036,8 +9119,8 @@
           "mandatory_goal_ids": [
             7546,
             8046,
-            8540,
-            8565,
+            8541,
+            8566,
             9036,
             9051,
             9526,
@@ -9046,9 +9129,9 @@
             10010,
             10025,
             7608,
-            8605,
+            8606,
             5021,
-            4018
+            4017
           ]
         },
         {
@@ -9057,8 +9140,8 @@
           "mandatory_goal_ids": [
             7547,
             8047,
-            8541,
-            8566,
+            8542,
+            8567,
             9037,
             9052,
             9527,
@@ -9067,9 +9150,9 @@
             10011,
             10026,
             7609,
-            8606,
+            8607,
             5022,
-            4019
+            4018
           ]
         },
         {
@@ -9078,8 +9161,8 @@
           "mandatory_goal_ids": [
             7548,
             8048,
-            8542,
-            8567,
+            8543,
+            8568,
             9038,
             9053,
             9528,
@@ -9088,9 +9171,9 @@
             10012,
             10027,
             7610,
-            8607,
+            8608,
             5023,
-            4019
+            4018
           ]
         },
         {
@@ -9099,8 +9182,8 @@
           "mandatory_goal_ids": [
             7549,
             8049,
-            8543,
-            8568,
+            8544,
+            8569,
             9039,
             9054,
             9529,
@@ -9109,9 +9192,9 @@
             10013,
             10028,
             7611,
-            8608,
+            8609,
             5024,
-            4016
+            4019
           ]
         }
       ]
@@ -9332,7 +9415,7 @@
             7605,
             6048,
             6511,
-            8603,
+            8604,
             3013,
             1013
           ]
@@ -9371,7 +9454,7 @@
           "substitutions": [
             7580,
             8080,
-            8569,
+            8570,
             7015,
             6515
           ]
@@ -9392,7 +9475,7 @@
           "substitutions": [
             7581,
             8081,
-            8570,
+            8571,
             7016,
             6516
           ]
@@ -9413,7 +9496,7 @@
           "substitutions": [
             7582,
             8082,
-            8571,
+            8572,
             7017,
             7030
           ]
@@ -9434,7 +9517,7 @@
           "substitutions": [
             7583,
             8083,
-            8572,
+            8573,
             7018,
             7031
           ]
@@ -9455,7 +9538,7 @@
           "substitutions": [
             7584,
             8084,
-            8573,
+            8574,
             7019,
             7032
           ]
@@ -9469,7 +9552,7 @@
             8119,
             8080,
             8500,
-            8569,
+            8570,
             7015,
             6515,
             4002
@@ -9477,7 +9560,7 @@
           "substitutions": [
             7585,
             8085,
-            8574,
+            8575,
             9055,
             7049
           ]
@@ -9491,7 +9574,7 @@
             8120,
             8081,
             8501,
-            8570,
+            8571,
             7016,
             6516,
             4002
@@ -9499,7 +9582,7 @@
           "substitutions": [
             7586,
             8086,
-            8575,
+            8576,
             9056,
             7021
           ]
@@ -9513,7 +9596,7 @@
             8121,
             8082,
             8502,
-            8571,
+            8572,
             7017,
             7030,
             4003
@@ -9521,7 +9604,7 @@
           "substitutions": [
             7587,
             8087,
-            8576,
+            8577,
             9057,
             7022
           ]
@@ -9535,7 +9618,7 @@
             8122,
             8083,
             8503,
-            8572,
+            8573,
             7018,
             7031,
             4003
@@ -9543,7 +9626,7 @@
           "substitutions": [
             7588,
             8088,
-            8577,
+            8578,
             9058,
             7023
           ]
@@ -9557,7 +9640,7 @@
             8123,
             8084,
             8504,
-            8573,
+            8574,
             7019,
             7032,
             4004
@@ -9565,7 +9648,7 @@
           "substitutions": [
             7589,
             8089,
-            8578,
+            8579,
             9059,
             7024
           ]
@@ -9578,8 +9661,8 @@
             7585,
             8124,
             8085,
-            8609,
-            8574,
+            8610,
+            8575,
             9000,
             9055,
             7020,
@@ -9590,7 +9673,7 @@
             7550,
             7590,
             8090,
-            8579,
+            8580,
             9060,
             6079
           ]
@@ -9603,8 +9686,8 @@
             7586,
             8125,
             8086,
-            8610,
-            8575,
+            8611,
+            8576,
             9001,
             9056,
             7021,
@@ -9615,7 +9698,7 @@
             7551,
             7591,
             8091,
-            8580,
+            8581,
             9061,
             6080
           ]
@@ -9628,8 +9711,8 @@
             7587,
             8126,
             8087,
-            8611,
-            8576,
+            8612,
+            8577,
             9002,
             9057,
             7022,
@@ -9640,7 +9723,7 @@
             7552,
             7592,
             8092,
-            8581,
+            8582,
             9062,
             6081
           ]
@@ -9653,8 +9736,8 @@
             7588,
             8127,
             8088,
-            8612,
-            8577,
+            8613,
+            8578,
             9003,
             9058,
             7023,
@@ -9665,7 +9748,7 @@
             7553,
             7593,
             8093,
-            8582,
+            8583,
             9063,
             6082
           ]
@@ -9678,8 +9761,8 @@
             7589,
             8128,
             8089,
-            8613,
-            8578,
+            8614,
+            8579,
             9004,
             9059,
             7024,
@@ -9690,7 +9773,7 @@
             7554,
             7594,
             8094,
-            8583,
+            8584,
             9064,
             6083
           ]
@@ -9704,7 +9787,8 @@
             7590,
             8129,
             8090,
-            8579,
+            8615,
+            8580,
             9005,
             9060,
             6079,
@@ -9717,7 +9801,7 @@
             8134,
             8050,
             8095,
-            8584,
+            8585,
             9065,
             9535,
             6084
@@ -9732,8 +9816,8 @@
             7591,
             8130,
             8091,
-            8614,
-            8580,
+            8616,
+            8581,
             9006,
             9061,
             6080,
@@ -9746,7 +9830,7 @@
             8135,
             8051,
             8096,
-            8585,
+            8586,
             9066,
             9536,
             6085
@@ -9761,8 +9845,8 @@
             7592,
             8131,
             8092,
-            8615,
-            8581,
+            8617,
+            8582,
             9007,
             9062,
             6081,
@@ -9775,7 +9859,7 @@
             8136,
             8052,
             8097,
-            8586,
+            8587,
             9067,
             9537,
             6086
@@ -9790,8 +9874,8 @@
             7593,
             8132,
             8093,
-            8616,
-            8582,
+            8618,
+            8583,
             9008,
             9063,
             6082,
@@ -9804,7 +9888,7 @@
             8137,
             8053,
             8098,
-            8587,
+            8588,
             9068,
             9538,
             6087
@@ -9819,8 +9903,8 @@
             7594,
             8133,
             8094,
-            8617,
-            8583,
+            8619,
+            8584,
             9009,
             9064,
             6083,
@@ -9833,7 +9917,7 @@
             8138,
             8054,
             8099,
-            8588,
+            8589,
             9069,
             9539,
             6520
@@ -9849,8 +9933,8 @@
             8134,
             8050,
             8095,
-            8618,
-            8584,
+            8620,
+            8585,
             9090,
             9065,
             9500,
@@ -9865,9 +9949,9 @@
             8139,
             8055,
             8100,
-            8623,
-            8544,
-            8658,
+            8625,
+            8545,
+            8660,
             9070,
             9540,
             6070,
@@ -9884,8 +9968,8 @@
             8135,
             8051,
             8096,
-            8619,
-            8585,
+            8621,
+            8586,
             9091,
             9066,
             9501,
@@ -9900,9 +9984,9 @@
             8140,
             8056,
             8101,
-            8624,
-            8545,
-            8591,
+            8626,
+            8546,
+            8592,
             9071,
             9541,
             6071,
@@ -9919,8 +10003,8 @@
             8136,
             8052,
             8097,
-            8620,
-            8586,
+            8622,
+            8587,
             9092,
             9067,
             9502,
@@ -9935,9 +10019,9 @@
             8141,
             8057,
             8102,
-            8625,
-            8546,
-            8659,
+            8627,
+            8547,
+            8661,
             9072,
             9542,
             6072,
@@ -9954,8 +10038,8 @@
             8137,
             8053,
             8098,
-            8621,
-            8587,
+            8623,
+            8588,
             9093,
             9068,
             9503,
@@ -9970,9 +10054,9 @@
             8142,
             8058,
             8103,
-            8626,
-            8547,
-            8594,
+            8628,
+            8548,
+            8595,
             9073,
             9543,
             6073,
@@ -9989,8 +10073,8 @@
             8138,
             8054,
             8099,
-            8622,
-            8588,
+            8624,
+            8589,
             9094,
             9069,
             9504,
@@ -10004,9 +10088,9 @@
             8143,
             8059,
             8104,
-            8627,
-            8548,
-            8660,
+            8629,
+            8549,
+            8662,
             9074,
             9544,
             6074,
@@ -10023,9 +10107,9 @@
             8139,
             8055,
             8100,
-            8623,
-            8544,
-            8658,
+            8625,
+            8545,
+            8660,
             9095,
             9070,
             9505,
@@ -10041,9 +10125,9 @@
             8144,
             8060,
             8108,
-            8628,
-            8549,
-            8598,
+            8630,
+            8550,
+            8599,
             9020,
             9075,
             9545,
@@ -10061,9 +10145,9 @@
             8140,
             8056,
             8101,
-            8624,
-            8545,
-            8591,
+            8626,
+            8546,
+            8592,
             9096,
             9071,
             9506,
@@ -10079,9 +10163,9 @@
             8145,
             8061,
             8166,
-            8629,
-            8550,
-            8661,
+            8631,
+            8551,
+            8663,
             9021,
             9076,
             9546,
@@ -10099,9 +10183,9 @@
             8141,
             8057,
             8102,
-            8625,
-            8546,
-            8659,
+            8627,
+            8547,
+            8661,
             9097,
             9072,
             9507,
@@ -10117,9 +10201,9 @@
             8146,
             8062,
             8167,
-            8630,
-            8551,
-            8662,
+            8632,
+            8552,
+            8664,
             9022,
             9077,
             9547,
@@ -10137,9 +10221,9 @@
             8142,
             8058,
             8103,
-            8626,
-            8547,
-            8594,
+            8628,
+            8548,
+            8595,
             9098,
             9073,
             9508,
@@ -10155,9 +10239,9 @@
             8147,
             8063,
             8168,
-            8631,
-            8552,
-            8663,
+            8633,
+            8553,
+            8665,
             9023,
             9078,
             9548,
@@ -10174,9 +10258,9 @@
             8143,
             8059,
             8104,
-            8627,
-            8548,
-            8660,
+            8629,
+            8549,
+            8662,
             9099,
             9074,
             9509,
@@ -10191,9 +10275,9 @@
             7569,
             8148,
             8064,
-            8632,
-            8553,
-            8664,
+            8634,
+            8554,
+            8666,
             9024,
             9079,
             9549,
@@ -10210,9 +10294,9 @@
             8144,
             8060,
             8108,
-            8628,
-            8549,
-            8598,
+            8630,
+            8550,
+            8599,
             9020,
             9075,
             9565,
@@ -10227,12 +10311,12 @@
             7573,
             8149,
             8158,
-            8633,
-            8647,
-            8665,
+            8635,
+            8649,
+            8667,
             9025,
             9040,
-            9080,
+            9082,
             9550,
             10014,
             6518,
@@ -10248,9 +10332,9 @@
             8145,
             8061,
             8166,
-            8629,
-            8550,
-            8661,
+            8631,
+            8551,
+            8663,
             9021,
             9076,
             9566,
@@ -10265,12 +10349,12 @@
             7653,
             8150,
             8159,
-            8634,
-            8556,
-            8666,
+            8636,
+            8557,
+            8668,
             9026,
             9041,
-            9081,
+            9104,
             9551,
             10015,
             6519,
@@ -10286,9 +10370,9 @@
             8146,
             8062,
             8167,
-            8630,
-            8551,
-            8662,
+            8632,
+            8552,
+            8664,
             9022,
             9077,
             9567,
@@ -10303,12 +10387,12 @@
             7654,
             8151,
             8069,
-            8635,
-            8648,
-            8667,
+            8637,
+            8650,
+            8669,
             9027,
             9042,
-            9082,
+            9105,
             9552,
             10016,
             7033,
@@ -10324,9 +10408,9 @@
             8147,
             8063,
             8168,
-            8631,
-            8552,
-            8663,
+            8633,
+            8553,
+            8665,
             9023,
             9078,
             9568,
@@ -10341,12 +10425,12 @@
             7655,
             8152,
             8160,
-            8636,
-            8559,
-            8668,
+            8638,
+            8560,
+            8670,
             9028,
             9043,
-            9083,
+            9106,
             9553,
             10017,
             7034,
@@ -10361,9 +10445,9 @@
             7569,
             8148,
             8064,
-            8632,
-            8553,
-            8664,
+            8634,
+            8554,
+            8666,
             9024,
             9079,
             9569,
@@ -10378,11 +10462,11 @@
             7656,
             8153,
             8161,
-            8637,
-            8649,
+            8639,
+            8651,
             9029,
             9044,
-            9084,
+            9088,
             9554,
             10018,
             7035,
@@ -10397,12 +10481,12 @@
             7573,
             8149,
             8158,
-            8633,
-            8647,
-            8665,
+            8635,
+            8649,
+            8667,
             9025,
             9040,
-            9080,
+            9082,
             9570,
             9550,
             10000,
@@ -10416,11 +10500,11 @@
             7540,
             8154,
             8074,
-            8638,
-            8563,
+            8640,
+            8564,
             9030,
             9045,
-            9085,
+            9107,
             9520,
             9555,
             10019,
@@ -10436,12 +10520,12 @@
             7653,
             8150,
             8159,
-            8634,
-            8556,
-            8666,
+            8636,
+            8557,
+            8668,
             9026,
             9041,
-            9081,
+            9104,
             9571,
             9551,
             10001,
@@ -10455,11 +10539,11 @@
             7541,
             8155,
             8162,
-            8639,
-            8650,
+            8641,
+            8652,
             9031,
             9046,
-            9086,
+            9108,
             9521,
             9556,
             10020,
@@ -10475,12 +10559,12 @@
             7654,
             8151,
             8069,
-            8635,
-            8648,
-            8667,
+            8637,
+            8650,
+            8669,
             9027,
             9042,
-            9082,
+            9105,
             9572,
             9552,
             10002,
@@ -10494,11 +10578,11 @@
             7542,
             8156,
             8163,
-            8640,
-            8651,
+            8642,
+            8653,
             9032,
             9047,
-            9087,
+            9109,
             9522,
             9557,
             10021,
@@ -10514,15 +10598,15 @@
             7655,
             8152,
             8160,
-            8636,
-            8559,
-            8668,
+            8638,
+            8560,
+            8670,
             9028,
             9043,
-            9083,
+            9106,
             9573,
             9553,
-            10029,
+            10032,
             10017,
             7034,
             7615,
@@ -10533,11 +10617,11 @@
             7543,
             8157,
             8164,
-            8641,
-            8568,
+            8643,
+            8569,
             9033,
             9048,
-            9088,
+            9110,
             9523,
             9558,
             10022,
@@ -10553,14 +10637,14 @@
             7656,
             8153,
             8161,
-            8637,
-            8649,
+            8639,
+            8651,
             9029,
             9044,
-            9084,
+            9088,
             9574,
             9554,
-            10030,
+            10033,
             10018,
             7035,
             7616,
@@ -10571,9 +10655,9 @@
             7544,
             8044,
             8165,
-            8642,
-            8652,
-            9104,
+            8644,
+            8654,
+            9111,
             9049,
             9524,
             9559,
@@ -10589,14 +10673,14 @@
             7540,
             8154,
             8074,
-            8638,
-            8563,
+            8640,
+            8564,
             9030,
             9045,
-            9085,
+            9107,
             9520,
             9555,
-            10031,
+            10034,
             10019,
             7036,
             8110,
@@ -10606,17 +10690,17 @@
           "substitutions": [
             7545,
             8115,
-            8643,
-            8653,
+            8645,
+            8655,
             9035,
             9100,
             9525,
             9530,
             9562,
-            10036,
-            10024,
+            10039,
+            10025,
             7607,
-            8604
+            8605
           ]
         },
         {
@@ -10626,14 +10710,14 @@
             7541,
             8155,
             8162,
-            8639,
-            8650,
+            8641,
+            8652,
             9031,
             9046,
-            9086,
+            9108,
             9521,
             9556,
-            10032,
+            10035,
             10020,
             7037,
             8111,
@@ -10643,17 +10727,17 @@
           "substitutions": [
             7546,
             8116,
-            8644,
-            8654,
+            8646,
+            8656,
             9036,
             9052,
             9526,
             9531,
             9575,
-            10037,
-            10025,
+            10040,
+            10027,
             7608,
-            8605
+            8606
           ]
         },
         {
@@ -10663,34 +10747,34 @@
             7542,
             8156,
             8163,
-            8640,
-            8651,
+            8642,
+            8653,
             9032,
             9047,
-            9087,
+            9109,
             9522,
             9557,
-            10033,
+            10036,
             10021,
             7038,
             8112,
             5017,
-            4020
+            4016
           ],
           "substitutions": [
             7547,
             8117,
-            8645,
-            8655,
+            8647,
+            8657,
             9037,
             9101,
             9527,
             9532,
             9576,
-            10038,
-            10026,
+            10041,
+            10029,
             7609,
-            8606
+            8607
           ]
         },
         {
@@ -10700,34 +10784,34 @@
             7543,
             8157,
             8164,
-            8641,
-            8568,
+            8643,
+            8569,
             9033,
             9048,
-            9088,
+            9110,
             9523,
             9558,
-            10034,
+            10037,
             10022,
             7039,
             8113,
             5018,
-            4020
+            4016
           ],
           "substitutions": [
             7548,
             8118,
-            8646,
-            8656,
+            8648,
+            8658,
             9038,
             9102,
             9528,
             9533,
             9577,
-            10039,
-            10027,
+            10042,
+            10030,
             7610,
-            8607
+            8608
           ]
         },
         {
@@ -10737,33 +10821,33 @@
             7544,
             8044,
             8165,
-            8642,
-            8652,
+            8644,
+            8654,
             9034,
             9049,
             9524,
             9559,
-            10035,
+            10038,
             10023,
             7040,
             8114,
             5019,
-            4018
+            4017
           ],
           "substitutions": [
             7549,
             8049,
-            8543,
-            8657,
+            8544,
+            8659,
             9039,
             9103,
             9529,
             9534,
             9578,
-            10040,
-            10028,
+            10043,
+            10031,
             7611,
-            8608
+            8609
           ]
         },
         {
@@ -10772,19 +10856,19 @@
           "mandatory_goal_ids": [
             7545,
             8045,
-            8643,
-            8653,
+            8645,
+            8655,
             9035,
             9100,
             9525,
             9530,
             9562,
-            10036,
-            10024,
+            10039,
+            10025,
             7607,
-            8604,
+            8605,
             5020,
-            4018
+            4017
           ]
         },
         {
@@ -10793,19 +10877,19 @@
           "mandatory_goal_ids": [
             7546,
             8046,
-            8644,
-            8654,
+            8646,
+            8656,
             9036,
             9052,
             9526,
             9531,
             9575,
-            10037,
-            10025,
+            10040,
+            10027,
             7608,
-            8605,
+            8606,
             5021,
-            4018
+            4017
           ]
         },
         {
@@ -10814,19 +10898,19 @@
           "mandatory_goal_ids": [
             7547,
             8047,
-            8645,
-            8655,
+            8647,
+            8657,
             9037,
             9101,
             9527,
             9532,
             9576,
-            10038,
-            10026,
+            10041,
+            10029,
             7609,
-            8606,
+            8607,
             5022,
-            4019
+            4018
           ]
         },
         {
@@ -10835,19 +10919,19 @@
           "mandatory_goal_ids": [
             7548,
             8048,
-            8646,
-            8656,
+            8648,
+            8658,
             9038,
             9102,
             9528,
             9533,
             9577,
-            10039,
-            10027,
+            10042,
+            10030,
             7610,
-            8607,
+            8608,
             5023,
-            4019
+            4018
           ]
         },
         {
@@ -10856,19 +10940,19 @@
           "mandatory_goal_ids": [
             7549,
             8049,
-            8543,
-            8657,
+            8544,
+            8659,
             9039,
             9103,
             9529,
             9534,
             9578,
-            10040,
-            10028,
+            10043,
+            10031,
             7611,
-            8608,
+            8609,
             5024,
-            4016
+            4019
           ]
         }
       ]

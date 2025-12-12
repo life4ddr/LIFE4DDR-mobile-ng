@@ -13,20 +13,16 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
+import kotlin.getValue
 
 /**
  * Manager class that deals with determining the correct ladder data to serve based on
  * the selected game version.
  */
-class LadderDataManager: BaseModel() {
-
-    private val ladderDialogs: LadderDialogs by inject()
-    private val ladderSettings: LadderSettings by inject()
-
-    //
-    // Ladder Data
-    //
-    private val data = LadderRemoteData()
+class LadderDataManager(
+    ladderSettings: LadderSettings,
+    private val data: LadderRemoteData
+): BaseModel() {
 
     val dataVersionString: Flow<String> =
         data.versionState.map { it.versionString }

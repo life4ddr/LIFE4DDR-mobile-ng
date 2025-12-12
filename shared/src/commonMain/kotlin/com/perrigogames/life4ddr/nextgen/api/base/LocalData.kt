@@ -16,24 +16,12 @@ interface LocalUncachedDataReader {
  * Interface for retrieving and committing data to/from a cached source,
  * usually elsewhere in local storage.
  */
-interface LocalDataReader: LocalUncachedDataReader {
+interface LocalDataReader: LocalUncachedDataReader, CachingDataSource<String> {
 
     /**
      * Loads the cached version of the data from internal storage, if it exists.
      */
     fun loadCachedString(): String?
-
-    /**
-     * Saves a set of data to the cache to be retrieved later.
-     * @return whether the save was successful
-     */
-    fun saveCachedString(data: String): Boolean
-
-    /**
-     * Deletes the cached data, returning priority to the app's internal data.
-     * @return whether the deletion was successful
-     */
-    fun deleteCachedString(): Boolean
 }
 
 class LocalData<T: Any>(
@@ -49,13 +37,13 @@ class CachedData<T: Any>(
     private val localReader: LocalDataReader,
     private val dataToString: DataToString<T>,
     private val stringToData: StringToData<T>,
-): InstantDataSource<T> {
+): InstantDataSource<T>, CachingDataSource<T> {
 
     override val data: T?
         get() = localReader.loadCachedString()
             ?.let { stringToData.create(it) }
 
-    fun saveNewCache(data: T) = localReader.saveCachedString(dataToString.create(data))
+    override fun saveNewCache(data: T) = localReader.saveNewCache(dataToString.create(data))
 
-    fun deleteCache() = localReader.deleteCachedString()
+    override fun deleteCache() = localReader.deleteCache()
 }

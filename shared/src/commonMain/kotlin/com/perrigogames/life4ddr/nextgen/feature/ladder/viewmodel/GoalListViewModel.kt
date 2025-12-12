@@ -77,8 +77,8 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
 //                goalStateManager.updated,
                 maSettings.maConfig
             ) { targetRank, requirements, progress, expanded, maConfig ->
-                logger.d { "Updating to $targetRank, requirements = $requirements" }
-                val substitutions = if (requirements != null && requirements.substitutionGoals.isNotEmpty()) {
+                logger.d { "Updating to $targetRank, requirements = $requirements, expanded = $expanded" }
+                val substitutions = if (requirements?.substitutionGoals?.isNotEmpty() == true) {
                     val goalStates = goalStateManager.getGoalStateList(requirements.substitutionGoals)
                     UILadderGoals.CategorizedList(
                         categories = listOf(
@@ -264,7 +264,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                         if (_expandedItems.value.contains(action.id)) {
                             _expandedItems.value -= action.id
                         } else {
-                            _expandedItems.value + action.id
+                            _expandedItems.value += action.id
                         }
                     }
                     is GoalListInput.OnGoal.ToggleHidden -> {
