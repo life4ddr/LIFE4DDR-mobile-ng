@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.androidNavigationSafeArgs)
+    alias(libs.plugins.mokoResources)
 }
 
 kotlin {

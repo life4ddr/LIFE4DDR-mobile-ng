@@ -75,6 +75,7 @@
 				66023465E5FD23B4E59B3201 /* Sources */,
 				5B0AE49C3197F0F95083C2E5 /* Frameworks */,
 				582A0C76D9DE5F359326E225 /* Resources */,
+				04683D1C2EEF548C003A048C /* Copy Moko Resources */,
 			);
 			buildRules = (
 			);
@@ -135,6 +136,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		04683D1C2EEF548C003A048C /* Copy Moko Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Moko Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$SRCROOT/../gradlew\" -p \"$SRCROOT/../\" :composeApp:copyFrameworkResourcesToApp \\\n    -Pmoko.resources.PLATFORM_NAME=\"$PLATFORM_NAME\" \\\n    -Pmoko.resources.CONFIGURATION=\"${KOTLIN_FRAMEWORK_BUILD_TYPE:-$CONFIGURATION}\" \\\n    -Pmoko.resources.ARCHS=\"$ARCHS\" \\\n    -Pmoko.resources.BUILT_PRODUCTS_DIR=\"$BUILT_PRODUCTS_DIR\" \\\n    -Pmoko.resources.CONTENTS_FOLDER_PATH=\"$CONTENTS_FOLDER_PATH\" \n";
+		};
 		510663AF44207E874A30E2AD /* Compile Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -254,6 +273,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				"OTHER_LDFLAGS[arch=*]" = "-lsqlite3";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -340,6 +360,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				"OTHER_LDFLAGS[arch=*]" = "-lsqlite3";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
