@@ -2,10 +2,21 @@ package com.perrigogames.life4ddr.nextgen.navigation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.composable
+import com.multiplatform.webview.request.RequestInterceptor
+import com.multiplatform.webview.request.WebRequest
+import com.multiplatform.webview.request.WebRequestInterceptResult
+import com.multiplatform.webview.web.LoadingState
+import com.multiplatform.webview.web.WebView
+import com.multiplatform.webview.web.WebViewNavigator
+import com.multiplatform.webview.web.rememberWebViewNavigator
+import com.multiplatform.webview.web.rememberWebViewState
+import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunScreen
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.PlacementDetailsScreen
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.PlacementListScreen
@@ -14,9 +25,12 @@ import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelEvent
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.firstRunNavigation(
     navController: NavController,
+    deeplinkManager: DeeplinkManager,
     onExit: () -> Unit,
 ) {
     composable<FirstRunDestination.Landing> {}
@@ -85,42 +99,52 @@ fun NavGraphBuilder.firstRunNavigation(
 
     composable<FirstRunDestination.SanbaiImport> { backStackEntry ->
         val url = backStackEntry.toRoute<FirstRunDestination.SanbaiImport>().url
-//        val state = rememberWebViewState(url = url)
-//        val navigator = rememberWebViewNavigator()
-//
-//        Column {
-//            val loadingState = state.loadingState
-//            if (loadingState is LoadingState.Loading) {
-//                LinearProgressIndicator(
-//                    progress = { loadingState.progress },
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//            }
-//
-//            // A custom WebViewClient and WebChromeClient can be provided via subclassing
-//            val webClient = remember {
-//                object : AccompanistWebViewClient() {
-//                    override fun onPageStarted(
-//                        view: WebView,
-//                        url: String?,
-//                        favicon: Bitmap?
-//                    ) {
-//                        super.onPageStarted(view, url, favicon)
-//                        Log.d("Accompanist WebView", "Page started loading for $url")
-//                    }
-//                }
-//            }
-//
-//            WebView(
-//                state = state,
-//                modifier = Modifier
-//                    .weight(1f),
-//                navigator = navigator,
-//                onCreated = { webView ->
-//                    webView.settings.javaScriptEnabled = true
-//                },
-//                client = webClient
-//            )
-//        }
+        val scope = rememberCoroutineScope { Dispatchers.Main }
+        val state = rememberWebViewState(
+            url = url,
+            extraSettings = {
+                androidWebSettings.textZoom = 50
+            }
+        )
+        val navigator = rememberWebViewNavigator(
+            requestInterceptor = object : RequestInterceptor {
+                override fun onInterceptUrlRequest(
+                    request: WebRequest,
+                    navigator: WebViewNavigator
+                ): WebRequestInterceptResult {
+                    return if (request.url.startsWith("life4://")) {
+                        val shouldClose = deeplinkManager.processDeeplink(request.url)
+                        if (shouldClose) {
+                            scope.launch {
+                                navController.popBackStack()
+                            }
+                            WebRequestInterceptResult.Reject
+                        } else {
+                            WebRequestInterceptResult.Allow
+                        }
+                    } else {
+                        WebRequestInterceptResult.Allow
+                    }
+                }
+            }
+        )
+        val loadingState by derivedStateOf { state.loadingState }
+
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            (loadingState as? LoadingState.Loading)?.let {
+                LinearProgressIndicator(
+                    progress = { it.progress },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            WebView(
+                state = state,
+                navigator = navigator,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
