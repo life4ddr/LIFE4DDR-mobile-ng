@@ -18,7 +18,7 @@ selectAll:
 SELECT * FROM ChartResult;
 
 insertResult:
-INSERT INTO ChartResult(skillId, difficultyClass, playStyle, clearType, score, exScore, flare, flareSkill)
+INSERT OR REPLACE INTO ChartResult(skillId, difficultyClass, playStyle, clearType, score, exScore, flare, flareSkill)
 VALUES (?,?,?,?,?,?,?,?);
 
 deleteAll:
