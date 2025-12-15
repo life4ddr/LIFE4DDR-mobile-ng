@@ -34,12 +34,7 @@ fun NavGraphBuilder.profileNavigation(
     composable<ProfileDestination.Scores> {
         ScoreListScreen(
             showSanbaiLogin = { url ->
-                // TODO Webview
-//                mainNavController.navigate(FirstRunDestination.SanbaiImport(url))
-//                val intent = Intent(Intent.ACTION_VIEW).apply {
-//                    data = android.net.Uri.parse(url)
-//                }
-//                context.startActivity(intent)
+                mainNavController.navigate(FirstRunDestination.SanbaiImport(url))
             },
             onBackPressed = { profileNavController.navigate(ProfileDestination.Profile) }
         )

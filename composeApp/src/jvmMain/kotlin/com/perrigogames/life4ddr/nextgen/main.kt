@@ -1,14 +1,35 @@
 package com.perrigogames.life4ddr.nextgen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import com.multiplatform.webview.util.addTempDirectoryRemovalHook
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.MOTD_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE_NAME
+import dev.datlag.kcef.KCEF
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 fun main() = application {
+    addTempDirectoryRemovalHook()
     initKoin(
         makeNativeModule(
             appInfo = object : AppInfo {
@@ -31,8 +52,63 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "LIFE4DDR",
     ) {
-        LIFE4App(
-            onExit = ::exitApplication
-        )
+        var restartRequired by remember { mutableStateOf(false) }
+        var initialized by remember { mutableStateOf(false) }
+        var downloadProgress by remember { mutableStateOf(-1F) }
+        val bundleLocation = System.getProperty("compose.application.resources.dir")?.let { File(it) } ?: File(".")
+
+        LaunchedEffect(Unit) {
+            withContext(Dispatchers.IO) { // IO scope recommended but not required
+                KCEF.init(
+                    builder = {
+                        installDir(File(bundleLocation, "kcef-bundle")) // recommended, but not necessary
+                        progress {
+                            onDownloading { downloadProgress = it }
+                            onInitialized { initialized = true }
+                        }
+                    },
+                    onError = { it?.printStackTrace() },
+                    onRestartRequired = { restartRequired = true }
+                )
+            }
+        }
+
+        Box {
+            LIFE4App(
+                onExit = ::exitApplication
+            )
+
+            when {
+                restartRequired -> {
+                    SystemText("Restart required.")
+                }
+                !initialized -> {
+                    SystemText("Downloading ${downloadProgress.toInt()}%")
+                }
+            }
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                KCEF.disposeBlocking()
+            }
+        }
     }
+}
+
+@Composable
+private fun BoxScope.SystemText(
+    text: String
+) {
+    Text(
+        text = text,
+        color = MaterialTheme.colorScheme.onErrorContainer,
+        modifier = Modifier
+            .align(Alignment.Center)
+            .background(
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = MaterialTheme.shapes.medium
+            )
+            .padding(16.dp)
+    )
 }

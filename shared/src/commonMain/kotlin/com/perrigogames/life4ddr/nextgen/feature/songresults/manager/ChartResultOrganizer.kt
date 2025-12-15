@@ -131,7 +131,7 @@ class ChartResultOrganizer: BaseModel(), KoinComponent {
                 }
                 floorAchieved = floorAchieved.sortedByDescending { it.result?.score ?: 0 }.toMutableList()
                 while(floorAchieved.size > goal.exceptions) {
-                    floorNotAchieved.add(floorAchieved.removeLast())
+                    floorNotAchieved.add(floorAchieved.removeAt(floorAchieved.lastIndex))
                 }
                 ResultsBundle(
                     resultsDone = results.resultsDone,

@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 
 interface DeeplinkManager {
-    fun processDeeplink(deeplink: String)
+    fun processDeeplink(deeplink: String): Boolean
 
     companion object {
         const val DEEPLINK_PREFIX = "life4://"
@@ -23,7 +23,7 @@ class DefaultDeeplinkManager : BaseModel(), DeeplinkManager {
     private val sanbaiManager: SanbaiManager by inject()
     private val logger by injectLogger("DeeplinkManager")
 
-    override fun processDeeplink(deeplink: String) {
+    override fun processDeeplink(deeplink: String): Boolean {
         val sections = deeplink
             .removePrefix(DEEPLINK_PREFIX)
             .split("/", "?")
@@ -46,7 +46,9 @@ class DefaultDeeplinkManager : BaseModel(), DeeplinkManager {
             }
             else -> {
                 logger.w("Unknown deeplink: ${sections[0]}")
+                return false
             }
         }
+        return true
     }
 }
