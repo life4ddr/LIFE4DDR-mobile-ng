@@ -91,6 +91,14 @@ object RankStrings {
         songCount,
     )
 
+    // Full Combo <group> over <score>
+    fun clearScoreString(clearType: ClearType, score: Int, groupString: StringDesc) = StringDesc.ResourceFormatted(
+        MR.strings.rank_goal_diff_clear_score,
+        clearTypeString(clearType),
+        groupString,
+        score.longNumberString(),
+    )
+
     // Score 945,000 on <group> / AAA <group>
     fun scoreString(score: Int, groupString: StringDesc): StringDesc = when (score) {
         GameConstants.MAX_SCORE -> throw IllegalArgumentException("Use MFC clear type")
