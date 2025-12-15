@@ -283,10 +283,21 @@ data class SongsClearGoal(
     }
 
     override fun goalString(): StringDesc = when {
-        score != null -> RankStrings.scoreString(score, songGroupString())
+        score != null -> {
+            if (clearType != ClearType.CLEAR) {
+                RankStrings.clearScoreString(
+                    clearType,
+                    score,
+                    songGroupString()
+                )
+            } else {
+                RankStrings.scoreString(score, songGroupString())
+            }
+        }
         averageScore != null -> RankStrings.averageScoreString(averageScore, songGroupString())
         else -> RankStrings.clearString(clearType, shouldUseLamp, songGroupString())
     }
+        .exceptionSection()
 
     private val shouldUseLamp =
         diffClassSet != null && folderCount != null
@@ -307,7 +318,6 @@ data class SongsClearGoal(
         }
     }
         .difficultySection()
-        .exceptionSection()
 
     private fun StringDesc.difficultySection() = when {
         diffClassSet != null -> RankStrings.difficultyClassSetModifier(this, diffClassSet, playStyle)

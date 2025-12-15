@@ -283,6 +283,7 @@
     <string name="rank_goal_clear_trial">Earn %s on %d Trials.</string>
     <string name="rank_goal_clear_trial_single">Earn %s on any Trial.</string>
     <string name="rank_goal_diff_clear_single">%s %s.</string>
+    <string name="rank_goal_diff_clear_score">%s %s over %s</string>
     <string name="rank_goal_diff_score">Score %s+ on %s.</string>
     <string name="rank_goal_diff_score_aaa">AAA %s.</string>
     <string name="rank_goal_diff_average">Score an average of %s on %s.</string>
