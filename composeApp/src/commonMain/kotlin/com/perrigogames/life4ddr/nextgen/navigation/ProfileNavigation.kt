@@ -5,14 +5,19 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.LoggerConfig
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderDestination
 import com.perrigogames.life4ddr.nextgen.feature.profile.PlayerProfileScreen
 import com.perrigogames.life4ddr.nextgen.feature.profile.ProfileDestination
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileEvent
 import com.perrigogames.life4ddr.nextgen.feature.scorelist.ScoreListScreen
+import com.perrigogames.life4ddr.nextgen.feature.settings.SettingsScreen
 import com.perrigogames.life4ddr.nextgen.feature.trial.TrialListScreen
 import com.perrigogames.life4ddr.nextgen.feature.trials.TrialDestination
+import org.koin.compose.koinInject
+import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.profileNavigation(
     mainNavController: NavController,
@@ -53,12 +58,13 @@ fun NavGraphBuilder.profileNavigation(
     }
 
     composable<ProfileDestination.Settings> {
-//        SettingsScreen(
-//            modifier = Modifier.fillMaxSize(),
-//            onClose = { mainNavController.popBackStack() },
-//            onNavigate = { destination ->
-//                mainNavController.navigate(destination)
-//            }
-//        )
+        SettingsScreen(
+            modifier = Modifier.fillMaxSize(),
+            onClose = { mainNavController.popBackStack() },
+            onNavigate = { destination ->
+                mainNavController.navigate(destination)
+            },
+            logger = koinInject { parametersOf("Settings") }
+        )
     }
 }

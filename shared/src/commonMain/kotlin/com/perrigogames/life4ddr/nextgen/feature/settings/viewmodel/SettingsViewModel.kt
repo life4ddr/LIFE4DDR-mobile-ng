@@ -1,5 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
@@ -13,35 +15,28 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResults
 import com.perrigogames.life4ddr.nextgen.util.Destination
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.FlowSettings
-import dev.icerock.moko.mvvm.flow.CStateFlow
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.flow.cStateFlow
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import kotlin.getValue
 
-@OptIn(ExperimentalSettingsApi::class)
+@OptIn(ExperimentalSettingsApi::class, ExperimentalCoroutinesApi::class)
 class SettingsViewModel(
-    private val onClose: () -> Unit,
-    private val onNavigate: (Destination) -> Unit,
+    private val appInfo: AppInfo,
+    private val resultsManager: SongResultsManager,
+    private val sanbaiManager: SanbaiManager,
+    private val songDataManager: SongDataManager,
+    private val settingsPageProvider: SettingsPageProvider,
+    private val flowSettings: FlowSettings,
+    private val userInfoSettings: UserInfoSettings,
+    private val ladderSettings: LadderSettings,
 ) : ViewModel(), KoinComponent {
-    private val appInfo: AppInfo by inject()
-    private val resultsManager: SongResultsManager by inject()
-    private val sanbaiManager: SanbaiManager by inject()
-    private val songDataManager: SongDataManager by inject()
-    private val settingsPageProvider: SettingsPageProvider by inject()
-    private val flowSettings: FlowSettings by inject() // FIXME need to figure out a way to make the action less generic
-    private val userInfoSettings: UserInfoSettings by inject()
-    private val ladderSettings: LadderSettings by inject()
 
-    private val pageStackState = MutableStateFlow(listOf(SettingsPage.ROOT)).cMutableStateFlow()
+    private val pageStackState = MutableStateFlow(listOf(SettingsPage.ROOT))
     private val pageFlow = pageStackState.map { it.last() }
 
-    val state: CStateFlow<UISettingsData?> = pageFlow.flatMapLatest { createPage(it) }
-        .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = null).cStateFlow()
+    val state: StateFlow<UISettingsData?> = pageFlow.flatMapLatest { createPage(it) }
+        .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = null)
     private val _events = MutableSharedFlow<SettingsEvent>()
     val events: SharedFlow<SettingsEvent> = _events
 
@@ -54,7 +49,9 @@ class SettingsViewModel(
                 if (pageStackState.value.size > 1) {
                     popPage()
                 } else {
-                    onClose()
+                    viewModelScope.launch {
+                        _events.emit(SettingsEvent.Close)
+                    }
                 }
             }
             is SettingsAction.SetBoolean -> {
@@ -74,22 +71,26 @@ class SettingsViewModel(
             }
             is SettingsAction.Email -> {
                 viewModelScope.launch {
-                    _events.emit(SettingsEvent.Email(action.email))
+                    _events.emit(SettingsEvent.NavigateToEmail(action.email))
                 }
             }
             is SettingsAction.WebLink -> {
                 viewModelScope.launch {
-                    _events.emit(SettingsEvent.WebLink(action.url))
+                    _events.emit(SettingsEvent.NavigateToWebLink(action.url))
                 }
             }
-            is SettingsAction.ShowCredits -> onNavigate(SettingsDestination.Credits)
+            is SettingsAction.ShowCredits -> viewModelScope.launch {
+                _events.emit(SettingsEvent.Navigate(SettingsDestination.Credits))
+            }
             is SettingsAction.Sanbai.RefreshLibrary -> songDataManager.refreshSanbaiData(force = true)
             is SettingsAction.Sanbai.RefreshUserScores -> {
                 viewModelScope.launch {
                     sanbaiManager.fetchScores()
                 }
             }
-            is SettingsAction.Debug.SongLockPage -> onNavigate(SettingsDestination.SongLock)
+            is SettingsAction.Debug.SongLockPage -> viewModelScope.launch {
+                _events.emit(SettingsEvent.Navigate(SettingsDestination.SongLock))
+            }
         }
     }
 
