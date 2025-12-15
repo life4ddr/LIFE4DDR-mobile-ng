@@ -57,6 +57,8 @@ import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPISettings
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.DefaultSanbaiManager
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
 import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsPageProvider
+import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsViewModel
+import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.VersionsDialogViewModel
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.SongListRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.DefaultSongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
@@ -153,7 +155,9 @@ val coreModule = module {
     viewModel { MainScreenViewModel() }
     viewModel { PlayerProfileViewModel(get(), get(), get()) }
     viewModel { ScoreListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TrialListViewModel(get(), get(), get(), get()) }
+    viewModel { VersionsDialogViewModel() }
 
     // platformLogWriter() is a relatively simple config option, useful for local debugging. For production
     // uses you *may* want to have a more robust configuration from the native platform. In KaMP Kit,

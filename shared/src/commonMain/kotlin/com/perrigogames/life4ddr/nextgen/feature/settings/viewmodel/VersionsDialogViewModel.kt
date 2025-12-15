@@ -1,12 +1,12 @@
 package com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDataManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdManager
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UIVersionsDialog
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -20,7 +20,7 @@ class VersionsDialogViewModel : ViewModel(), KoinComponent {
     private val songDataManager: SongDataManager by inject()
     private val trialDataManager: TrialDataManager by inject()
 
-    private val _state = MutableStateFlow(UIVersionsDialog()).cMutableStateFlow()
+    private val _state = MutableStateFlow(UIVersionsDialog())
     val state: StateFlow<UIVersionsDialog> = _state
 
     init {

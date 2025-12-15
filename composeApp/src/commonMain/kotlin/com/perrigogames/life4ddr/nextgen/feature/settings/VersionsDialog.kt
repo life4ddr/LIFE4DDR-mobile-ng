@@ -3,10 +3,27 @@ package com.perrigogames.life4ddr.nextgen.feature.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UIVersionsDialog
+import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.VersionsDialogViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun VersionsDialog(
+    onDismiss: () -> Unit = {}
+) {
+    val viewModel: VersionsDialogViewModel = koinViewModel<VersionsDialogViewModel>()
+    val state by viewModel.state.collectAsState()
+    VersionsDialog(
+        state = state,
+        onDismiss = onDismiss,
+    )
+}
 
 @Composable
 fun VersionsDialog(
