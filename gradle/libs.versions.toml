@@ -20,7 +20,7 @@ coil = "3.3.0"
 composeHotReload = "1.0.0-rc04"
 composeMultiplatform = "1.9.3"
 composeNavigation = "2.9.1"
-composeSettings = "2.16.0"
+composeSettings = "2.1.0"
 composeWebview = "2.0.3"
 junit = "4.13.2"
 kotlin = "2.2.21"
@@ -64,8 +64,7 @@ androidx-splashscreen = { module = "androidx.core:core-splashscreen", version.re
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 composeBackhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
 composeNavigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
-composeSettings-ui = { group = "com.github.alorma.compose-settings", name = "ui-tiles", version.ref = "composeSettings" }
-composeSettings-ui-extended = { group = "com.github.alorma.compose-settings", name = "ui-tiles-extended", version.ref = "composeSettings" }
+composeSettings-ui = { module = "me.zhanghai.compose.preference:preference", version.ref = "composeSettings" }
 composeWebview = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebview" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }

@@ -20,11 +20,14 @@ data class UISettingsData(
  */
 sealed class UISettingsItem {
 
+    abstract val key: String
+
     /**
      * A text header with no clickability.
      * @param title the text the header should display
      */
     data class Header(
+        override val key: String,
         val title: StringDesc
     ) : UISettingsItem()
 
@@ -36,6 +39,7 @@ sealed class UISettingsItem {
      * @param enabled Whether the item should be interactable. Defaults to true.
      */
     data class Link(
+        override val key: String,
         val title: StringDesc,
         val subtitle: StringDesc? = null,
         val action: SettingsAction,
@@ -50,6 +54,7 @@ sealed class UISettingsItem {
      * @param enabled Whether the item should be interactable. Defaults to true.
      */
     data class Dropdown(
+//        override val key: String,
         val title: StringDesc,
         val subtitle: StringDesc? = null,
         val dropdownItems: List<StringDesc>,
@@ -65,6 +70,7 @@ sealed class UISettingsItem {
      * @param toggled The current toggled state of checkbox. Defaults to false.
      */
     data class Checkbox(
+        override val key: String,
         val title: StringDesc,
         val subtitle: StringDesc? = null,
         val action: SettingsAction,
@@ -73,9 +79,30 @@ sealed class UISettingsItem {
     ) : UISettingsItem()
 
     /**
+     * An editable text item that saves its value in shared settings.
+     * @param title The main text to be shown.
+     * @param subtitle An optional less emphasized text to show.
+     * @param enabled Whether the item should be interactable. Defaults to true.
+     * @param initialValue The initial data this text item contains.
+     */
+    data class Text(
+        override val key: String,
+        val title: StringDesc,
+        val subtitle: StringDesc? = null,
+        val enabled: Boolean = true,
+        val initialValue: String,
+        val transform: (String) -> String = { it },
+    ) : UISettingsItem() {
+
+        fun getInputAction(input: String) = SettingsAction.SetString(key, input)
+    }
+
+    /**
      * A divider object.
      */
-    data object Divider : UISettingsItem()
+    data object Divider : UISettingsItem() {
+        override val key: String = "divider"
+    }
 }
 
 /**
