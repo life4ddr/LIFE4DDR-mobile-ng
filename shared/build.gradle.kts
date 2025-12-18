@@ -23,6 +23,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization)
             implementation(libs.androidx.datastore)
             implementation(libs.androidx.datastore.preferences)

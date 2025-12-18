@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.math.min
 
 class SongEntryViewModel(
     private val session: InProgressTrialSession,
@@ -133,7 +134,9 @@ class SongEntryViewModel(
     fun commitChanges(): InProgressTrialSession {
         val result = result.copy(
             score = _numberMap.value[ID_SCORE],
-            exScore = _numberMap.value[ID_EX_SCORE],
+            exScore = _numberMap.value[ID_EX_SCORE]?.let {
+                min(it, session.trial.songs[index].ex)
+            },
             misses = _numberMap.value[ID_MISSES],
             goods = _numberMap.value[ID_GOODS],
             greats = _numberMap.value[ID_GREATS],

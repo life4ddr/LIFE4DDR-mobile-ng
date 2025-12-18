@@ -30,7 +30,7 @@ class TrialContentProvider(private val trial: Trial) : KoinComponent {
                 UITrialSessionContent.Summary.Item(
                     jacketUrl = url,
                     difficultyClassText = chart.difficultyClass.nameRes.desc(),
-                    difficultyClassColor = chart.difficultyClass.colorRes.asColorDesc(),
+                    difficultyClassColor = chart.difficultyClass.colorRes,
                     difficultyNumberText = chart.difficultyNumber.toString().desc(),
                     summaryContent = null,
                 )
@@ -68,7 +68,7 @@ class TrialContentProvider(private val trial: Trial) : KoinComponent {
             focusedJacketUrl = trial.songs[stage].url,
             songTitleText = KsoupEntities.decodeHtml(currentSong.chart.song.title).desc(),
             difficultyClassText = currentChart.difficultyClass.nameRes.desc(),
-            difficultyClassColor = currentChart.difficultyClass.colorRes.asColorDesc(),
+            difficultyClassColor = currentChart.difficultyClass.colorRes,
             difficultyNumberText = currentChart.difficultyNumber.toString().desc(),
             exScoreText = StringDesc.ResourceFormatted(MR.strings.ex_score_string_format, currentSong.ex),
             reminder = when {
@@ -102,7 +102,7 @@ class TrialContentProvider(private val trial: Trial) : KoinComponent {
                 UITrialSessionContent.Summary.Item(
                     jacketUrl = song.url,
                     difficultyClassText = song.chart.difficultyClass.nameRes.desc(),
-                    difficultyClassColor = song.chart.difficultyClass.colorRes.asColorDesc(),
+                    difficultyClassColor = song.chart.difficultyClass.colorRes,
                     difficultyNumberText = song.chart.difficultyNumber.toString().desc(),
                     summaryContent = UITrialSessionContent.Summary.SummaryContent(
                         topText = result!!.score?.longNumberString()?.desc(),

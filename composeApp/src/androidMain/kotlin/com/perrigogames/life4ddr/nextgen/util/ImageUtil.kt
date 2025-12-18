@@ -1,63 +1,13 @@
 package com.perrigogames.life4ddr.nextgen.util
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.view.Surface
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.DefaultAlpha
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import dev.icerock.moko.resources.desc.image.ImageDesc
-import dev.icerock.moko.resources.desc.image.ImageDescResource
-import dev.icerock.moko.resources.desc.image.ImageDescUrl
+import androidx.exifinterface.media.ExifInterface
+import java.io.File
+import java.io.FileOutputStream
 import kotlin.math.atan2
-
-@Composable
-fun MokoImage(
-    desc: ImageDesc,
-    modifier: Modifier = Modifier,
-    contentDescription: String? = null,
-    alignment: Alignment = Alignment.Center,
-    alpha: Float = DefaultAlpha,
-    contentScale: ContentScale = ContentScale.Fit,
-    colorFilter: ColorFilter? = null,
-    asyncOptions: (ImageRequest.Builder.() -> ImageRequest.Builder) = { this },
-) {
-    when(desc) {
-        is ImageDescResource -> {
-            Image(
-                painter = painterResource(desc.resource.drawableResId),
-                modifier = modifier,
-                contentDescription = contentDescription,
-                alignment = alignment,
-                alpha = alpha,
-                contentScale = contentScale,
-                colorFilter = colorFilter,
-            )
-        }
-        is ImageDescUrl -> {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(desc.url)
-                    .asyncOptions()
-                    .build(),
-                contentDescription = contentDescription,
-                alignment = alignment,
-                alpha = alpha,
-                contentScale = contentScale,
-                colorFilter = colorFilter,
-                modifier = Modifier.size(64.dp)
-            )
-        }
-    }
-}
 
 fun getSensorRotation(x: Float, y: Float): Int {
     val angle = atan2(-x, y) * (180 / Math.PI).toFloat()
@@ -66,5 +16,32 @@ fun getSensorRotation(x: Float, y: Float): Int {
         in -45f..45f -> Surface.ROTATION_0
         in -135f..-45f -> Surface.ROTATION_90
         else -> Surface.ROTATION_180
+    }
+}
+
+fun correctImageOrientation(file: File) {
+    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+    val exif = ExifInterface(file.absolutePath)
+
+    val rotationAngle = when (exif.getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_NORMAL
+    )) {
+        ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+        ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+        ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+        else -> 0f // No rotation needed
+    }
+
+    val uprightBitmap = if (rotationAngle != 0f) {
+        val matrix = Matrix()
+        matrix.postRotate(rotationAngle)
+        Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    } else {
+        bitmap
+    }
+
+    FileOutputStream(file).use { fos ->
+        uprightBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
     }
 }

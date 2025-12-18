@@ -13,7 +13,7 @@ actual fun getPlatform(): Platform = IOSPlatform()
 actual fun Int.longNumberString(): String {
     return NSNumberFormatter().let { format ->
         format.usesGroupingSeparator = true
-        // format.locale = NSLocale.currentLocale() TODO figure out locale
+        //format.locale = NSLocale.currentLocale() TODO figure out locale
         format.stringFromNumber(NSNumber(this))!!
     }
 }

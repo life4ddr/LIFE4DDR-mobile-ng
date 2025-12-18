@@ -101,7 +101,7 @@ sealed class UITrialSessionContent {
         data class Item(
             val jacketUrl: String?,
             val difficultyClassText: StringDesc,
-            val difficultyClassColor: ColorDesc,
+            val difficultyClassColor: ColorResource,
             val difficultyNumberText: StringDesc,
             val summaryContent: SummaryContent? = null,
         )
@@ -124,7 +124,7 @@ sealed class UITrialSessionContent {
         val focusedJacketUrl: String?,
         val songTitleText: StringDesc,
         val difficultyClassText: StringDesc,
-        val difficultyClassColor: ColorDesc,
+        val difficultyClassColor: ColorResource,
         val difficultyNumberText: StringDesc,
         val exScoreText: StringDesc,
         val reminder: StringDesc? = null,

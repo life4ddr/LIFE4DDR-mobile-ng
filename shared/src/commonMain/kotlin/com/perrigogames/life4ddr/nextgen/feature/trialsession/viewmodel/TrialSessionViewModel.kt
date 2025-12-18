@@ -1,5 +1,8 @@
 package com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
@@ -19,8 +22,6 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialConte
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import com.perrigogames.life4ddr.nextgen.util.toViewState
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
@@ -31,13 +32,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.getValue
 
-class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
-
-    private val userRankSettings: UserRankSettings by inject()
-    private val trialDataManager: TrialDataManager by inject()
-    private val trialRecordsManager: TrialRecordsManager by inject()
-    private val logger by injectLogger("TrialSessionViewModel")
+class TrialSessionViewModel(
+    trialId: String,
+    private val userRankSettings: UserRankSettings,
+    private val trialDataManager: TrialDataManager,
+    private val trialRecordsManager: TrialRecordsManager,
+    private val logger: Logger
+) : ViewModel(), KoinComponent {
 
     private val trial = trialDataManager.trialsFlow.value.firstOrNull { it.id == trialId }
         ?: throw IllegalStateException("Can't find trial with id $trialId")
@@ -46,7 +49,6 @@ class TrialSessionViewModel(trialId: String) : ViewModel(), KoinComponent {
 
     private val targetRank = MutableStateFlow(TrialRank.BRONZE)
     private val _state = MutableStateFlow<ViewState<UITrialSession, Unit>>(ViewState.Loading)
-        .cMutableStateFlow()
     val state: StateFlow<ViewState<UITrialSession, Unit>> = _state.asStateFlow()
 
     private val _bottomSheetState = MutableStateFlow<UITrialBottomSheet?>(null)
