@@ -62,7 +62,6 @@ kotlin {
             implementation(libs.composeBackhandler)
             implementation(libs.composeNavigation)
             implementation(libs.composeSettings.ui)
-            implementation(libs.composeSettings.ui.extended)
             implementation(libs.composeWebview)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)

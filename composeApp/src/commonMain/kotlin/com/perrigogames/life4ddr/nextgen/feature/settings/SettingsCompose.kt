@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -19,8 +18,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import co.touchlab.kermit.Logger
-import com.alorma.compose.settings.ui.SettingsCheckbox
-import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsItem
@@ -29,6 +26,13 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsEven
 import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsViewModel
 import com.perrigogames.life4ddr.nextgen.util.Destination
 import dev.icerock.moko.resources.compose.localized
+import me.zhanghai.compose.preference.CheckboxPreference
+import me.zhanghai.compose.preference.PreferenceCategory
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.checkboxPreference
+import me.zhanghai.compose.preference.preference
+import me.zhanghai.compose.preference.preferenceCategory
+import me.zhanghai.compose.preference.textFieldPreference
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -115,53 +119,50 @@ fun SettingsScreenContent(
     modifier: Modifier = Modifier,
     onAction: (SettingsAction) -> Unit = {}
 ) {
-    LazyColumn(modifier = modifier) {
-        items(items) {
-            when (it) {
-                is UISettingsItem.Header -> SettingsHeaderItem(it)
-                is UISettingsItem.Link -> SettingsLinkItem(it, onAction)
-                is UISettingsItem.Checkbox -> SettingsCheckboxItem(it, onAction)
-                UISettingsItem.Divider -> HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = Paddings.LARGE)
-                )
+    ProvidePreferenceLocals {
+        LazyColumn(modifier = modifier) {
+            items.forEach { item ->
+                when (item) {
+                    is UISettingsItem.Header -> {
+                        preferenceCategory(
+                            key = item.key,
+                            title = { Text(item.title.localized()) }
+                        )
+                    }
+                    is UISettingsItem.Link -> {
+                        preference(
+                            key = item.key,
+                            title = { Text(item.title.localized()) },
+                            summary = { item.subtitle?.let { Text(it.localized()) } },
+                            enabled = item.enabled,
+                            onClick = { onAction(item.action) }
+                        )
+                    }
+                    is UISettingsItem.Checkbox -> {
+                        checkboxPreference(
+                            key = item.key,
+                            title = { _ -> Text(item.title.localized()) },
+                            summary = { item.subtitle?.let { Text(it.localized()) } },
+                            enabled = { item.enabled },
+                            defaultValue = item.toggled
+                        )
+                    }
+                    is UISettingsItem.Text -> {
+                        textFieldPreference(
+                            key = item.key,
+                            title = { Text(item.title.localized()) },
+                            summary = { item.subtitle?.let { Text(it.localized()) } },
+                            defaultValue = item.initialValue,
+                            textToValue = item.transform
+                        )
+                    }
+                    UISettingsItem.Divider -> item {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = Paddings.LARGE)
+                        )
+                    }
+                }
             }
         }
     }
-}
-
-@Composable
-private fun SettingsHeaderItem(
-    item: UISettingsItem.Header
-) {
-    Text(
-        text = item.title.localized(),
-        style = MaterialTheme.typography.titleSmall,
-        modifier = Modifier.padding(horizontal = Paddings.LARGE)
-            .padding(top = Paddings.LARGE)
-    )
-}
-
-@Composable
-private fun SettingsLinkItem(
-    item: UISettingsItem.Link,
-    onAction: (SettingsAction) -> Unit = {}
-) {
-    SettingsMenuLink(
-        title = { Text(text = item.title.localized()) },
-        subtitle = { item.subtitle?.let { Text(text = it.localized()) } },
-        enabled = item.enabled
-    ) { onAction(item.action) }
-}
-
-@Composable
-private fun SettingsCheckboxItem(
-    item: UISettingsItem.Checkbox,
-    onAction: (SettingsAction) -> Unit = {}
-) {
-    SettingsCheckbox(
-        title = { Text(text = item.title.localized()) },
-        subtitle = { item.subtitle?.let { Text(text = it.localized()) } },
-        enabled = item.enabled,
-        state = item.toggled
-    ) { onAction(item.action) }
 }

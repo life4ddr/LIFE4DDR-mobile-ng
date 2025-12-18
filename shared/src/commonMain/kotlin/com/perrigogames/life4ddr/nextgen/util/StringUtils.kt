@@ -23,3 +23,12 @@ fun List<StringDesc>.toListString(useAnd: Boolean, caps: Boolean): StringDesc = 
 }
 
 fun List<String>.toStringDescs() = map { StringDesc.Raw(it) }
+
+fun String.formatRivalCode(): String {
+    val nums = this.filter { it.isDigit() }
+    return if (nums.length > 4) {
+        nums.take(4) + "-" + nums.substring(4)
+    } else {
+        nums
+    }
+}
