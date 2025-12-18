@@ -4,7 +4,6 @@
     PlacementRankSerializer::class,
     PlayStyleSerializer::class,
     ChartTypeSerializer::class,
-//    InstantIso8601Serializer::class,
 )
 
 package com.perrigogames.life4ddr.nextgen.feature.trials.data
@@ -24,16 +23,17 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialType
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialTypeSerializer
 import dev.icerock.moko.resources.desc.image.asImageDesc
 import dev.icerock.moko.resources.getImageByFileName
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
 import kotlin.getValue
 import kotlin.math.min
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-
-// TODO InstantIso8601Serializer
-// TODO KotlinxDatetime
 
 @Serializable
 data class TrialData(
@@ -58,8 +58,8 @@ data class Trial(
     @SerialName("placement_rank") val placementRank: PlacementRank? = null,
     val songs: List<TrialSong>,
     @SerialName("play_style") val playStyle: PlayStyle = PlayStyle.SINGLE,
-//    @SerialName("event_start") val eventStart: LocalDateTime? = null,
-//    @SerialName("event_end") val eventEnd: LocalDateTime? = null,
+    @SerialName("event_start") val eventStart: LocalDateTime? = null,
+    @SerialName("event_end") val eventEnd: LocalDateTime? = null,
     @SerialName("scoring_groups") val scoringGroups: List<List<TrialRank>>? = null,
     val difficulty: Int? = null,
     val goals: List<TrialGoalSet>? = null,
@@ -73,13 +73,11 @@ data class Trial(
     }
 
     val isRetired: Boolean = state == TrialState.RETIRED
-    val isEvent: Boolean = type == TrialType.EVENT // FIXME KotlinxDatetime
-//    val isEvent: Boolean = type == TrialType.EVENT && eventStart != null && eventEnd != null
-    val isActiveEvent: Boolean = false // FIXME KotlinxDatetime
-//    val isActiveEvent: Boolean
-//        get() = isEvent && (eventStart!!.rangeTo(eventEnd!!)).contains(
-//            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-//        )
+    val isEvent: Boolean = type == TrialType.EVENT && eventStart != null && eventEnd != null
+    val isActiveEvent: Boolean
+        get() = isEvent && (eventStart!!.rangeTo(eventEnd!!)).contains(
+            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        )
     val new = state == TrialState.NEW
 
     fun goalSet(rank: TrialRank?): TrialGoalSet? = goals?.find { it.rank == rank }

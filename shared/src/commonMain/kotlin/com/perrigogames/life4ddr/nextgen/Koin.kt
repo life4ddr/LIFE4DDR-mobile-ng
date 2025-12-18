@@ -75,6 +75,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialReco
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialListViewModel
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionViewModel
 import com.perrigogames.life4ddr.nextgen.model.MajorUpdateManager
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
@@ -157,6 +158,7 @@ val coreModule = module {
     viewModel { ScoreListViewModel(get(), get(), get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TrialListViewModel(get(), get(), get(), get()) }
+    viewModel { params -> TrialSessionViewModel(trialId = params.get(), get(), get(), get(), getLogger("TrialSessionViewModel")) }
     viewModel { VersionsDialogViewModel() }
 
     // platformLogWriter() is a relatively simple config option, useful for local debugging. For production

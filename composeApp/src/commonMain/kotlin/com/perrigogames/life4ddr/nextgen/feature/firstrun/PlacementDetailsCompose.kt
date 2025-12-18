@@ -38,6 +38,7 @@ import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDeta
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsEvent
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsInput
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsViewModel
+import com.perrigogames.life4ddr.nextgen.feature.trial.CameraBottomSheetContent
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
 import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
 import com.perrigogames.life4ddr.nextgen.view.LargeCTAButton
@@ -115,11 +116,10 @@ fun PlacementDetailsScreen(
                 BackHandler {
                     hideBottomSheet()
                 }
-                // FIXME Camera
-//                CameraBottomSheetContent {
-//                    hideBottomSheet()
-//                    viewModel.handleAction(PlacementDetailsInput.PictureTaken)
-//                }
+                CameraBottomSheetContent {
+                    hideBottomSheet()
+                    viewModel.handleAction(PlacementDetailsInput.PictureTaken)
+                }
             }
         }
     ) {

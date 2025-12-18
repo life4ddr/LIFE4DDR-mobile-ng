@@ -1,4 +1,4 @@
-package com.perrigogames.life4ddr.nextgen.util
+package com.perrigogames.life4ddr.nextgen.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTransformGestures
