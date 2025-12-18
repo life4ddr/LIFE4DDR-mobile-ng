@@ -8,6 +8,7 @@ import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE
 import com.perrigogames.life4ddr.nextgen.api.base.LocalDataReader
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
 import dev.icerock.moko.resources.FileResource
+import platform.Foundation.NSFileManager
 
 fun MainViewController() = ComposeUIViewController {
     initKoin(
@@ -24,6 +25,7 @@ fun MainViewController() = ComposeUIViewController {
             trialsReader = IosDataReader(MR.files.trials_json, TRIALS_FILE_NAME),
         ),
         extraAppModule = platformSettingsModule {
+            val documentsDirectory = NSFileManager
 //            // Get the documents directory URL
 //            guard let documentsDirectory = NSFileManager.default.urls(for: .documentDirectory,
 //                in: .userDomainMask).first else {
@@ -32,17 +34,6 @@ fun MainViewController() = ComposeUIViewController {
 //
 //            // Create file URL
 //            let fileURL = documentsDirectory.appendingPathComponent("myFile.txt")
-//
-//            // Create file content
-//            let content = "Hello, iOS file system!"
-//
-//            // Write to file
-//            do {
-//                try content.write(to: fileURL, atomically: true, encoding: .utf8)
-//                    print("File created at: \(fileURL)")
-//                } catch {
-//                    print("Error creating file: \(error)")
-//                }
             // FIXME accurately provide a file URI
             "."
             },
@@ -67,11 +58,11 @@ class IosDataReader(
         return readFromFile(path = cachedFileName)
     }
 
-    override fun saveCachedString(data: String): Boolean {
+    override fun saveNewCache(data: String): Boolean {
         return saveToFile(path = cachedFileName, content = data)
     }
 
-    override fun deleteCachedString(): Boolean {
+    override fun deleteCache(): Boolean {
         return false // FIXME
 //        val url = URL.documentsDirectory.appending(path = cachedFileName)
 //        try {
