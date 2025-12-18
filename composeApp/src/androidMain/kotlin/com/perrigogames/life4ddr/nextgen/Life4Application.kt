@@ -21,11 +21,11 @@ class Life4Application: Application(), KoinComponent {
         initKoin(
             makeNativeModule(
                 appInfo = AndroidAppInfo,
-                motdReader = AndroidDataReader(MR.files.motd_json.rawResId, MOTD_FILE_NAME),
-                placementsReader = AndroidUncachedDataReader(MR.files.placements_json.rawResId),
-                ranksReader = AndroidDataReader(MR.files.ranks_json.rawResId, RANKS_FILE_NAME),
-                songsReader = AndroidDataReader(MR.files.songs_json.rawResId, SONGS_FILE_NAME),
-                trialsReader = AndroidDataReader(MR.files.trials_json.rawResId, TRIALS_FILE_NAME),
+                motdReader = AndroidDataReader(MR.files.motd_json, MOTD_FILE_NAME),
+                placementsReader = AndroidUncachedDataReader(MR.files.placements_json),
+                ranksReader = AndroidDataReader(MR.files.ranks_json, RANKS_FILE_NAME),
+                songsReader = AndroidDataReader(MR.files.songs_json, SONGS_FILE_NAME),
+                trialsReader = AndroidDataReader(MR.files.trials_json, TRIALS_FILE_NAME),
             ) {
                 single<Context> { this@Life4Application }
             },

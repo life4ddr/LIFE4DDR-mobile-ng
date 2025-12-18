@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.androidNavigationSafeArgs)
+    alias(libs.plugins.mokoResources)
 }
 
 kotlin {
@@ -24,7 +25,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            export(libs.moko.resources.core)
         }
     }
     
@@ -74,6 +74,8 @@ kotlin {
         }
         appleMain.dependencies {
             implementation(libs.coil.clientDarwin)
+            implementation(libs.koin.core)
+            implementation(projects.shared)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
