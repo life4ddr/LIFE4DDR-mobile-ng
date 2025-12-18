@@ -27,12 +27,10 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsView
 import com.perrigogames.life4ddr.nextgen.util.Destination
 import dev.icerock.moko.resources.compose.localized
 import me.zhanghai.compose.preference.CheckboxPreference
+import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.PreferenceCategory
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import me.zhanghai.compose.preference.checkboxPreference
-import me.zhanghai.compose.preference.preference
-import me.zhanghai.compose.preference.preferenceCategory
-import me.zhanghai.compose.preference.textFieldPreference
+import me.zhanghai.compose.preference.TextFieldPreference
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -122,44 +120,48 @@ fun SettingsScreenContent(
     ProvidePreferenceLocals {
         LazyColumn(modifier = modifier) {
             items.forEach { item ->
-                when (item) {
-                    is UISettingsItem.Header -> {
-                        preferenceCategory(
-                            key = item.key,
-                            title = { Text(item.title.localized()) }
-                        )
-                    }
-                    is UISettingsItem.Link -> {
-                        preference(
-                            key = item.key,
-                            title = { Text(item.title.localized()) },
-                            summary = { item.subtitle?.let { Text(it.localized()) } },
-                            enabled = item.enabled,
-                            onClick = { onAction(item.action) }
-                        )
-                    }
-                    is UISettingsItem.Checkbox -> {
-                        checkboxPreference(
-                            key = item.key,
-                            title = { _ -> Text(item.title.localized()) },
-                            summary = { item.subtitle?.let { Text(it.localized()) } },
-                            enabled = { item.enabled },
-                            defaultValue = item.toggled
-                        )
-                    }
-                    is UISettingsItem.Text -> {
-                        textFieldPreference(
-                            key = item.key,
-                            title = { Text(item.title.localized()) },
-                            summary = { item.subtitle?.let { Text(it.localized()) } },
-                            defaultValue = item.initialValue,
-                            textToValue = item.transform
-                        )
-                    }
-                    UISettingsItem.Divider -> item {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = Paddings.LARGE)
-                        )
+                item(item.key) {
+                    when (item) {
+                        is UISettingsItem.Header -> {
+                            PreferenceCategory(
+                                title = { Text(item.title.localized()) }
+                            )
+                        }
+
+                        is UISettingsItem.Link -> {
+                            Preference(
+                                title = { Text(item.title.localized()) },
+                                summary = { item.subtitle?.let { Text(it.localized()) } },
+                                enabled = item.enabled,
+                                onClick = { onAction(item.action) }
+                            )
+                        }
+
+                        is UISettingsItem.Checkbox -> {
+                            CheckboxPreference(
+                                title = { Text(item.title.localized()) },
+                                summary = { item.subtitle?.let { Text(it.localized()) } },
+                                enabled = item.enabled,
+                                value = item.toggled,
+                                onValueChange = { onAction(item.createAction(it)) }
+                            )
+                        }
+
+                        is UISettingsItem.Text -> {
+                            TextFieldPreference(
+                                title = { Text(item.title.localized()) },
+                                summary = { item.subtitle?.let { Text(it.localized()) } },
+                                textToValue = item.transform,
+                                value = item.initialValue,
+                                onValueChange = { onAction(item.createAction(it)) }
+                            )
+                        }
+
+                        UISettingsItem.Divider -> {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = Paddings.LARGE)
+                            )
+                        }
                     }
                 }
             }

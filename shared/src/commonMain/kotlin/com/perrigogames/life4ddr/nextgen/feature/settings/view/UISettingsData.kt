@@ -73,10 +73,12 @@ sealed class UISettingsItem {
         override val key: String,
         val title: StringDesc,
         val subtitle: StringDesc? = null,
-        val action: SettingsAction,
         val enabled: Boolean = true,
         val toggled: Boolean = false,
-    ) : UISettingsItem()
+    ) : UISettingsItem() {
+
+        fun createAction(input: Boolean) = SettingsAction.SetBoolean(key, input)
+    }
 
     /**
      * An editable text item that saves its value in shared settings.
@@ -94,7 +96,7 @@ sealed class UISettingsItem {
         val transform: (String) -> String = { it },
     ) : UISettingsItem() {
 
-        fun getInputAction(input: String) = SettingsAction.SetString(key, input)
+        fun createAction(input: String) = SettingsAction.SetString(key, input)
     }
 
     /**

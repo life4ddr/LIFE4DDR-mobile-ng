@@ -61,13 +61,15 @@
     <string name="tab_settings">Settings</string>
 
     <string name="action_settings">Settings</string>
-    <string name="action_progress_matrix">Progress Matrix</string>
+    <string name="action_header_ma_points">MA Points</string>
     <string name="action_name">Set name</string>
     <string name="action_rival_code">Set rival code</string>
     <string name="action_game_version">Select game version</string>
     <string name="action_view_blocklist">View ignored songs</string>
     <string name="action_clear_record_data">Clear Trial Records</string>
     <string name="action_refresh_song_db">Refresh Song Database</string>
+    <string name="action_combine_mfc">Combine MFCs</string>
+    <string name="action_combine_sdp">Combine SDPs</string>
     <string name="action_export">Export Ranks</string>
     <string name="action_import">Import Ranks</string>
     <string name="action_records">Records</string>

@@ -3,6 +3,7 @@ package com.perrigogames.life4ddr.nextgen.feature.settings.manager
 import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPISettings
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.SettingsPage
@@ -29,13 +30,10 @@ import org.koin.core.component.inject
 class SettingsPageProvider : BaseModel() {
 
     private val appInfo: AppInfo by inject()
-    private val flowSettings: FlowSettings by inject()
     private val userInfoSettings: UserInfoSettings by inject()
     private val ladderSettings: LadderSettings by inject()
+    private val maSettings: MASettings by inject()
     private val songResultSettings: SongResultSettings by inject()
-
-    private val difficultyTierFlow = songResultSettings.enableDifficultyTiers
-    private val removedSongsFlow = songResultSettings.showRemovedSongs
 
     fun getRootPage(isDebug: Boolean): Flow<UISettingsData> = flowOf(
         UISettingsData(
@@ -151,21 +149,35 @@ class SettingsPageProvider : BaseModel() {
     fun getSongListPage(): Flow<UISettingsData> = combine(
         songResultSettings.enableDifficultyTiers,
         songResultSettings.showRemovedSongs,
-    ) { diffTierEnabled, showRemovedSongs, ->
+        maSettings.combineMFCs,
+        maSettings.combineSDPs,
+    ) { diffTierEnabled, showRemovedSongs, combineMFCs, combineSDPs ->
         UISettingsData(
             screenTitle = MR.strings.song_list_settings.desc(),
             settingsItems = listOf(
                 UISettingsItem.Checkbox( // Enable Difficulty Tiers
                     key = KEY_ENABLE_DIFFICULTY_TIERS,
                     title = MR.strings.enable_difficulty_tiers.desc(),
-                    action = SettingsAction.SetBoolean(KEY_ENABLE_DIFFICULTY_TIERS, !diffTierEnabled),
                     toggled = diffTierEnabled
                 ),
                 UISettingsItem.Checkbox(
                     key = KEY_SHOW_REMOVED_SONGS,
                     title = MR.strings.show_removed_songs.desc(),
-                    action = SettingsAction.SetBoolean(KEY_SHOW_REMOVED_SONGS, !showRemovedSongs),
                     toggled = showRemovedSongs
+                ),
+                UISettingsItem.Header(
+                    key = "KEY_HEADER_MA",
+                    title = MR.strings.action_header_ma_points.desc()
+                ),
+                UISettingsItem.Checkbox( // Combine MFCs
+                    key = MASettings.KEY_COMBINE_MFCS_GOALLIST,
+                    title = MR.strings.action_combine_mfc.desc(),
+                    toggled = combineMFCs,
+                ),
+                UISettingsItem.Checkbox( // Combine SDPs
+                    key = MASettings.KEY_COMBINE_SDPS_GOALLIST,
+                    title = MR.strings.action_combine_sdp.desc(),
+                    toggled = combineSDPs,
                 ),
             )
         )

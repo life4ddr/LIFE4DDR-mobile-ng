@@ -49,10 +49,12 @@ class DefaultUserInfoSettings : SettingsManager(), UserInfoSettings {
         .stateIn(mainScope, SharingStarted.Eagerly, "")
 
     override val rivalCodeDisplay: Flow<String?> = rivalCode.map {
-        if (it.length == GameConstants.RIVAL_CODE_LENGTH) {
-            "${it.substring(0..3)}-${it.substring(4..7)}"
-        } else {
-            null
+        when (it.length) {
+            GameConstants.RIVAL_CODE_LENGTH + 1 -> it
+            GameConstants.RIVAL_CODE_LENGTH -> {
+                "${it.substring(0..3)}-${it.substring(4..7)}"
+            }
+            else -> null
         }
     }
 
