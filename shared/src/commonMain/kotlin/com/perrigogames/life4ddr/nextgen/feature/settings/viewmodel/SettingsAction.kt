@@ -22,6 +22,10 @@ sealed class SettingsAction {
     data class SetGameVersion(val newValue: GameVersion): SettingsAction()
     data class Modal(val modal: SettingsPageModal): SettingsAction()
     data object ShowCredits: SettingsAction()
+    sealed class ClearData: SettingsAction() {
+        data object Results: ClearData()
+        data object Trials: ClearData()
+    }
     sealed class Debug: SettingsAction() {
         data object SongLockPage: Debug()
     }

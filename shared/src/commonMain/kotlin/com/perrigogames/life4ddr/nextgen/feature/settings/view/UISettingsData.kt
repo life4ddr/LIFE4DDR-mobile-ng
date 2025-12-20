@@ -12,7 +12,8 @@ import dev.icerock.moko.resources.desc.StringDesc
  */
 data class UISettingsData(
     val screenTitle: StringDesc,
-    val settingsItems: List<UISettingsItem>
+    val settingsItems: List<UISettingsItem>,
+    val isRoot: Boolean = false,
 )
 
 /**
@@ -54,12 +55,17 @@ sealed class UISettingsItem {
      * @param enabled Whether the item should be interactable. Defaults to true.
      */
     data class Dropdown(
-//        override val key: String,
+        override val key: String,
         val title: StringDesc,
         val subtitle: StringDesc? = null,
-        val dropdownItems: List<StringDesc>,
+        val dropdownItems: List<Any>,
         val selectedIndex: Int,
-    )
+        val createAction: (Any) -> SettingsAction,
+        val createText: (Any) -> String,
+    ) : UISettingsItem() {
+
+        val currentItem get() = dropdownItems[selectedIndex]
+    }
 
     /**
      * A checkbox item that controls a boolean flag in the settings.
@@ -73,10 +79,12 @@ sealed class UISettingsItem {
         override val key: String,
         val title: StringDesc,
         val subtitle: StringDesc? = null,
-        val action: SettingsAction,
         val enabled: Boolean = true,
         val toggled: Boolean = false,
-    ) : UISettingsItem()
+    ) : UISettingsItem() {
+
+        fun createAction(input: Boolean) = SettingsAction.SetBoolean(key, input)
+    }
 
     /**
      * An editable text item that saves its value in shared settings.
@@ -94,7 +102,7 @@ sealed class UISettingsItem {
         val transform: (String) -> String = { it },
     ) : UISettingsItem() {
 
-        fun getInputAction(input: String) = SettingsAction.SetString(key, input)
+        fun createAction(input: String) = SettingsAction.SetString(key, input)
     }
 
     /**

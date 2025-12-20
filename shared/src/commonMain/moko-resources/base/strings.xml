@@ -61,13 +61,20 @@
     <string name="tab_settings">Settings</string>
 
     <string name="action_settings">Settings</string>
-    <string name="action_progress_matrix">Progress Matrix</string>
+    <string name="action_header_ma_points">MA Points</string>
+    <string name="action_header_filters">Filters</string>
+    <string name="action_filter_show_diff_class">Show difficulty class switches</string>
+    <string name="action_show_difficulty_number_range">Select difficulty as range</string>
+    <string name="action_show_difficulty_number_range_short">Use range</string>
     <string name="action_name">Set name</string>
     <string name="action_rival_code">Set rival code</string>
     <string name="action_game_version">Select game version</string>
     <string name="action_view_blocklist">View ignored songs</string>
-    <string name="action_clear_record_data">Clear Trial Records</string>
+    <string name="action_clear_result_data">Clear song results</string>
+    <string name="action_clear_trial_data">Clear trial records</string>
     <string name="action_refresh_song_db">Refresh Song Database</string>
+    <string name="action_combine_mfc">Combine MFCs</string>
+    <string name="action_combine_sdp">Combine SDPs</string>
     <string name="action_export">Export Ranks</string>
     <string name="action_import">Import Ranks</string>
     <string name="action_records">Records</string>
@@ -109,6 +116,11 @@
     <string name="csp">CSP</string>
     <string name="challenge">CHALLENGE</string>
     <!-- endregion -->
+
+    <!-- region Score List -->
+    <string name="score_list_empty_title">No songs selected</string>
+    <string name="score_list_empty_subtitle">Check your selected filters</string>
+    <string name="score_list_empty_cta">Reset filter</string>
 
     <!-- region Filter strings -->
     <string name="label_difficulty_number">Difficulty</string>

@@ -12,7 +12,7 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.view.SettingsPage
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
-import com.perrigogames.life4ddr.nextgen.util.Destination
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.FlowSettings
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,6 +27,7 @@ class SettingsViewModel(
     private val sanbaiManager: SanbaiManager,
     private val songDataManager: SongDataManager,
     private val settingsPageProvider: SettingsPageProvider,
+    private val trialRecordsManager: TrialRecordsManager,
     private val flowSettings: FlowSettings,
     private val userInfoSettings: UserInfoSettings,
     private val ladderSettings: LadderSettings,
@@ -90,6 +91,12 @@ class SettingsViewModel(
             }
             is SettingsAction.Debug.SongLockPage -> viewModelScope.launch {
                 _events.emit(SettingsEvent.Navigate(SettingsDestination.SongLock))
+            }
+            is SettingsAction.ClearData.Results -> {
+                resultsManager.clearAllResults()
+            }
+            is SettingsAction.ClearData.Trials -> {
+                trialRecordsManager.clearSessions()
             }
         }
     }

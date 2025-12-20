@@ -73,6 +73,35 @@ fun ScoreListScreen(
     )
 }
 
+@Composable
+fun ScoreListEmptyContent(
+    state: UIScoreList.Empty,
+    modifier: Modifier = Modifier,
+    onInput: (ScoreListInput) -> Unit = {},
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = state.title.localized(),
+            style = MaterialTheme.typography.titleLarge,
+        )
+        SizedSpacer(32.dp)
+        Text(
+            text = state.subtitle.localized(),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        SizedSpacer(64.dp)
+        Button(
+            onClick = { onInput(state.ctaInput) },
+        ) {
+            Text(text = state.ctaText.localized())
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ScoreListContent(
@@ -115,14 +144,22 @@ fun ScoreListContent(
                 }
             }
         ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                LazyColumn(modifier = Modifier.weight(1f)) {
-                    items(state.scores) {
-                        ScoreEntry(it)
+            val innerModifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+            when (state) {
+                is UIScoreList.Empty -> {
+                    ScoreListEmptyContent(
+                        state = state,
+                        modifier = innerModifier,
+                        onInput = onInput
+                    )
+                }
+                is UIScoreList.Loaded -> {
+                    LazyColumn(modifier = innerModifier) {
+                        items(state.scores) {
+                            ScoreEntry(it)
+                        }
                     }
                 }
             }

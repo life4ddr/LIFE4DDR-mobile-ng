@@ -6,6 +6,7 @@ import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.FilterFlags
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.FilterPanelInput
 import com.perrigogames.life4ddr.nextgen.util.CompoundIntRange
 import dev.icerock.moko.resources.desc.Raw
@@ -14,8 +15,11 @@ import dev.icerock.moko.resources.desc.StringDesc
 
 data class UIFilterView(
     val playStyleSelector: List<UIPlayStyleSelection>? = null,
-    val difficultyClassSelector: List<UIDifficultyClassSelection>,
+    val difficultyClassSelector: List<UIDifficultyClassSelection>? = null,
     val difficultyNumberTitle: StringDesc = StringDesc.Resource(MR.strings.label_difficulty_number),
+    val difficultyNumberUsesRange: Boolean,
+    val difficultyNumberUsesRangeText: StringDesc = StringDesc.Resource(MR.strings.action_show_difficulty_number_range_short),
+    val difficultyNumberUsesRangeInput: FilterPanelInput,
     val difficultyNumberRange: CompoundIntRange = CompoundIntRange(1..HIGHEST_DIFFICULTY),
     val clearTypeTitle: StringDesc = StringDesc.Resource(MR.strings.label_clear_type),
     val clearTypeRange: CompoundIntRange = CompoundIntRange(0 until ClearType.entries.size),
@@ -26,7 +30,7 @@ data class UIFilterView(
 ) {
 
     constructor(
-        showPlayStyleSelector: Boolean = true,
+        settingsFlags: FilterFlags = FilterFlags(),
         selectedPlayStyle: PlayStyle = PlayStyle.SINGLE,
         selectedDifficultyClasses: List<DifficultyClass> = DifficultyClass.entries,
         difficultyNumberSelection: IntRange? = null,
@@ -34,7 +38,7 @@ data class UIFilterView(
         scoreRangeBottomValue: Int? = null,
         scoreRangeTopValue: Int? = null
     ) : this(
-        playStyleSelector = if (showPlayStyleSelector) {
+        playStyleSelector = if (settingsFlags.showPlayStyleSelector) {
             PlayStyle.entries.map {
                 UIPlayStyleSelection(
                     text = it.uiName,
@@ -45,16 +49,22 @@ data class UIFilterView(
         } else {
             null
         },
-        difficultyClassSelector = DifficultyClass.entries.mapNotNull { diff ->
-            if (selectedPlayStyle == PlayStyle.DOUBLE && diff == DifficultyClass.BEGINNER) {
-                return@mapNotNull null
+        difficultyClassSelector = if (settingsFlags.showDiffClasses) {
+            DifficultyClass.entries.mapNotNull { diff ->
+                if (selectedPlayStyle == PlayStyle.DOUBLE && diff == DifficultyClass.BEGINNER) {
+                    return@mapNotNull null
+                }
+                UIDifficultyClassSelection(
+                    text = StringDesc.Raw(selectedPlayStyle.aggregateString(diff)),
+                    selected = selectedDifficultyClasses.contains(diff),
+                    action = FilterPanelInput.ToggleDifficultyClass(diff, !selectedDifficultyClasses.contains(diff))
+                )
             }
-            UIDifficultyClassSelection(
-                text = StringDesc.Raw(selectedPlayStyle.aggregateString(diff)),
-                selected = selectedDifficultyClasses.contains(diff),
-                action = FilterPanelInput.ToggleDifficultyClass(diff, !selectedDifficultyClasses.contains(diff))
-            )
+        } else {
+            null
         },
+        difficultyNumberUsesRange = settingsFlags.useDifficultyRange,
+        difficultyNumberUsesRangeInput = FilterPanelInput.ToggleDifficultyNumberRange(!settingsFlags.useDifficultyRange),
         difficultyNumberRange = CompoundIntRange(
             outerRange = 1..HIGHEST_DIFFICULTY,
             innerRange = difficultyNumberSelection
@@ -80,8 +90,10 @@ data class UIDifficultyClassSelection(
     val action: FilterPanelInput
 )
 
-fun FilterState.toUIFilterView(showPlayStyleSelector: Boolean) = UIFilterView(
-    showPlayStyleSelector = showPlayStyleSelector,
+fun FilterState.toUIFilterView(
+    settingsFlags: FilterFlags
+) = UIFilterView(
+    settingsFlags = settingsFlags,
     selectedPlayStyle = chartFilter.selectedPlayStyle,
     selectedDifficultyClasses = chartFilter.difficultyClassSelection,
     difficultyNumberSelection = chartFilter.difficultyNumberRange,

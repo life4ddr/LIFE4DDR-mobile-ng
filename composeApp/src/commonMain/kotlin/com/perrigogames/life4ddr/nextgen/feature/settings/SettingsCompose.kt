@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,7 +19,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.compose.ui.text.AnnotatedString
 import co.touchlab.kermit.Logger
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsItem
@@ -26,13 +30,16 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsEven
 import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsViewModel
 import com.perrigogames.life4ddr.nextgen.util.Destination
 import dev.icerock.moko.resources.compose.localized
+import dev.icerock.moko.resources.compose.painterResource
 import me.zhanghai.compose.preference.CheckboxPreference
+import me.zhanghai.compose.preference.ListPreference
+import me.zhanghai.compose.preference.ListPreferenceType
+import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.PreferenceCategory
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import me.zhanghai.compose.preference.checkboxPreference
-import me.zhanghai.compose.preference.preference
-import me.zhanghai.compose.preference.preferenceCategory
-import me.zhanghai.compose.preference.textFieldPreference
+import me.zhanghai.compose.preference.TextFieldPreference
+import org.jetbrains.compose.resources.imageResource
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -46,7 +53,7 @@ fun SettingsScreen(
 
     val state = viewModel.state.collectAsState()
     state.value?.let { data ->
-        SettingsScreen(
+        SettingsScreenContent(
             data = data,
             modifier = modifier,
             onAction = { viewModel.handleAction(it) }
@@ -81,7 +88,7 @@ fun SettingsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun SettingsScreen(
+fun SettingsScreenContent(
     data: UISettingsData,
     modifier: Modifier = Modifier,
     onAction: (SettingsAction) -> Unit = {}
@@ -99,6 +106,13 @@ fun SettingsScreen(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = { Text(text = data.screenTitle.localized()) },
+                navigationIcon = {
+                    if (!data.isRoot) {
+                        IconButton(
+                            onClick = { onAction(SettingsAction.NavigateBack) }
+                        ) { Icon(painter = painterResource(MR.images.arrow_back), "back") }
+                    }
+                }
             )
         },
     ) { contentPadding ->
@@ -122,44 +136,60 @@ fun SettingsScreenContent(
     ProvidePreferenceLocals {
         LazyColumn(modifier = modifier) {
             items.forEach { item ->
-                when (item) {
-                    is UISettingsItem.Header -> {
-                        preferenceCategory(
-                            key = item.key,
-                            title = { Text(item.title.localized()) }
-                        )
-                    }
-                    is UISettingsItem.Link -> {
-                        preference(
-                            key = item.key,
-                            title = { Text(item.title.localized()) },
-                            summary = { item.subtitle?.let { Text(it.localized()) } },
-                            enabled = item.enabled,
-                            onClick = { onAction(item.action) }
-                        )
-                    }
-                    is UISettingsItem.Checkbox -> {
-                        checkboxPreference(
-                            key = item.key,
-                            title = { _ -> Text(item.title.localized()) },
-                            summary = { item.subtitle?.let { Text(it.localized()) } },
-                            enabled = { item.enabled },
-                            defaultValue = item.toggled
-                        )
-                    }
-                    is UISettingsItem.Text -> {
-                        textFieldPreference(
-                            key = item.key,
-                            title = { Text(item.title.localized()) },
-                            summary = { item.subtitle?.let { Text(it.localized()) } },
-                            defaultValue = item.initialValue,
-                            textToValue = item.transform
-                        )
-                    }
-                    UISettingsItem.Divider -> item {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = Paddings.LARGE)
-                        )
+                item(item.key) {
+                    when (item) {
+                        is UISettingsItem.Header -> {
+                            PreferenceCategory(
+                                title = { Text(item.title.localized()) }
+                            )
+                        }
+
+                        is UISettingsItem.Link -> {
+                            Preference(
+                                title = { Text(item.title.localized()) },
+                                summary = { item.subtitle?.let { Text(it.localized()) } },
+                                enabled = item.enabled,
+                                onClick = { onAction(item.action) }
+                            )
+                        }
+
+                        is UISettingsItem.Checkbox -> {
+                            CheckboxPreference(
+                                title = { Text(item.title.localized()) },
+                                summary = { item.subtitle?.let { Text(it.localized()) } },
+                                enabled = item.enabled,
+                                value = item.toggled,
+                                onValueChange = { onAction(item.createAction(it)) }
+                            )
+                        }
+
+                        is UISettingsItem.Text -> {
+                            TextFieldPreference(
+                                title = { Text(item.title.localized()) },
+                                summary = { item.subtitle?.let { Text(it.localized()) } },
+                                textToValue = item.transform,
+                                value = item.initialValue,
+                                onValueChange = { onAction(item.createAction(it)) }
+                            )
+                        }
+
+                        is UISettingsItem.Dropdown -> {
+                            ListPreference(
+                                value = item.currentItem,
+                                values = item.dropdownItems,
+                                onValueChange = { onAction(item.createAction(it)) },
+                                title = { Text(item.title.localized()) },
+                                summary = { item.subtitle?.let { Text(it.localized()) } },
+                                type = ListPreferenceType.DROPDOWN_MENU,
+                                valueToText = { AnnotatedString(item.createText(it)) }
+                            )
+                        }
+
+                        UISettingsItem.Divider -> {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = Paddings.LARGE)
+                            )
+                        }
                     }
                 }
             }

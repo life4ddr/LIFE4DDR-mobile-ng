@@ -64,15 +64,19 @@ import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.DefaultSongDat
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultFilterPanelSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultSongResultSettings
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.FilterPanelSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialListSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialRecordsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialListSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionViewModel
@@ -133,12 +137,14 @@ val coreModule = module {
     single<TrialRecordsManager> { DefaultTrialRecordsManager() }
     single<SongDataManager> { DefaultSongDataManager() }
     single { ChartResultOrganizer() }
-    single<UserInfoSettings> { DefaultUserInfoSettings() }
+    single<FilterPanelSettings> { DefaultFilterPanelSettings() }
     single<FirstRunSettings> { DefaultFirstRunSettings() }
-    single<SongResultSettings> { DefaultSongResultSettings() }
-    single<MASettings> { DefaultMASettings() }
-    single<UserRankSettings> { DefaultUserRankSettings() }
     single<LadderSettings> { DefaultLadderSettings() }
+    single<MASettings> { DefaultMASettings() }
+    single<SongResultSettings> { DefaultSongResultSettings() }
+    single<TrialListSettings> { DefaultTrialListSettings() }
+    single<UserInfoSettings> { DefaultUserInfoSettings() }
+    single<UserRankSettings> { DefaultUserRankSettings() }
     single { SettingsPageProvider() }
     single { GoalStateManager() }
     single { LadderGoalMapper() }
@@ -156,7 +162,7 @@ val coreModule = module {
     viewModel { MainScreenViewModel() }
     viewModel { PlayerProfileViewModel(get(), get(), get()) }
     viewModel { ScoreListViewModel(get(), get(), get(), get(), get()) }
-    viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TrialListViewModel(get(), get(), get(), get()) }
     viewModel { params -> TrialSessionViewModel(trialId = params.get(), get(), get(), get(), getLogger("TrialSessionViewModel")) }
     viewModel { VersionsDialogViewModel() }

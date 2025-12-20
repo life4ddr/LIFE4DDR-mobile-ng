@@ -1,5 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.manager
 
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings.Companion.KEY_COMBINE_MFCS_GOALLIST
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings.Companion.KEY_COMBINE_SDPS_GOALLIST
 import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsManager
 import com.russhwolf.settings.ExperimentalSettingsApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,6 +16,11 @@ interface MASettings {
     val maConfig: StateFlow<MAConfig>
     fun setCombineMFCs(enabled: Boolean)
     fun setCombineSDPs(enabled: Boolean)
+
+    companion object {
+        const val KEY_COMBINE_MFCS_GOALLIST = "combine_mfcs_goallist"
+        const val KEY_COMBINE_SDPS_GOALLIST = "combine_sdps_goallist"
+    }
 }
 
 @OptIn(ExperimentalSettingsApi::class)
@@ -44,11 +51,6 @@ class DefaultMASettings : SettingsManager(), MASettings {
         mainScope.launch {
             settings.putBoolean(KEY_COMBINE_SDPS_GOALLIST, enabled)
         }
-    }
-
-    companion object {
-        const val KEY_COMBINE_MFCS_GOALLIST = "combine_mfcs_goallist"
-        const val KEY_COMBINE_SDPS_GOALLIST = "combine_sdps_goallist"
     }
 }
 

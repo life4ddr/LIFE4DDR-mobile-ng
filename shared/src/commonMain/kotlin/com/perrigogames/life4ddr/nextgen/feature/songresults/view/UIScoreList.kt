@@ -1,14 +1,33 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.view
 
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.FilterPanelInput
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListInput
 import dev.icerock.moko.resources.ColorResource
 import dev.icerock.moko.resources.desc.StringDesc
+import dev.icerock.moko.resources.desc.desc
 
-data class UIScoreList(
-    val scores: List<UIScore> = emptyList(),
-    val filter: UIFilterView = UIFilterView(),
-    val banner: UIBanner? = null,
-)
+sealed class UIScoreList {
+
+    open val filter: UIFilterView = UIFilterView()
+    open val banner: UIBanner? = null
+
+    data class Loaded(
+        val scores: List<UIScore> = emptyList(),
+        override val filter: UIFilterView = UIFilterView(),
+        override val banner: UIBanner? = null,
+    ) : UIScoreList()
+
+    data class Empty(
+        val title: StringDesc = MR.strings.score_list_empty_title.desc(),
+        val subtitle: StringDesc = MR.strings.score_list_empty_subtitle.desc(),
+        val ctaText: StringDesc = MR.strings.score_list_empty_cta.desc(),
+        val ctaInput: ScoreListInput = ScoreListInput.FilterInput(FilterPanelInput.ResetFilter),
+        override val filter: UIFilterView = UIFilterView(),
+        override val banner: UIBanner? = null,
+    ) : UIScoreList()
+}
 
 data class UIScore(
     val titleText: String = "",
