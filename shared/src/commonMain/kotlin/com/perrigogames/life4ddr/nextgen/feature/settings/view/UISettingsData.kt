@@ -12,7 +12,8 @@ import dev.icerock.moko.resources.desc.StringDesc
  */
 data class UISettingsData(
     val screenTitle: StringDesc,
-    val settingsItems: List<UISettingsItem>
+    val settingsItems: List<UISettingsItem>,
+    val isRoot: Boolean = false,
 )
 
 /**
@@ -54,12 +55,17 @@ sealed class UISettingsItem {
      * @param enabled Whether the item should be interactable. Defaults to true.
      */
     data class Dropdown(
-//        override val key: String,
+        override val key: String,
         val title: StringDesc,
         val subtitle: StringDesc? = null,
-        val dropdownItems: List<StringDesc>,
+        val dropdownItems: List<Any>,
         val selectedIndex: Int,
-    )
+        val createAction: (Any) -> SettingsAction,
+        val createText: (Any) -> String,
+    ) : UISettingsItem() {
+
+        val currentItem get() = dropdownItems[selectedIndex]
+    }
 
     /**
      * A checkbox item that controls a boolean flag in the settings.

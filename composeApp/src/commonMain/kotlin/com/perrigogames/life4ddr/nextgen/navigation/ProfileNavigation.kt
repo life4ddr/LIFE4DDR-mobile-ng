@@ -5,8 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import co.touchlab.kermit.Logger
-import co.touchlab.kermit.LoggerConfig
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderDestination
 import com.perrigogames.life4ddr.nextgen.feature.profile.PlayerProfileScreen

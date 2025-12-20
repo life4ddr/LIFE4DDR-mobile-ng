@@ -2,6 +2,8 @@ package com.perrigogames.life4ddr.nextgen.feature.settings.manager
 
 import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
+import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
@@ -14,6 +16,7 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsActi
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings.Companion.KEY_ENABLE_DIFFICULTY_TIERS
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings.Companion.KEY_SHOW_REMOVED_SONGS
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialListSettings
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.formatRivalCode
 import com.russhwolf.settings.ExperimentalSettingsApi
@@ -32,11 +35,13 @@ class SettingsPageProvider : BaseModel() {
     private val appInfo: AppInfo by inject()
     private val userInfoSettings: UserInfoSettings by inject()
     private val ladderSettings: LadderSettings by inject()
+    private val trialSettings: TrialListSettings by inject()
     private val maSettings: MASettings by inject()
     private val songResultSettings: SongResultSettings by inject()
 
     fun getRootPage(isDebug: Boolean): Flow<UISettingsData> = flowOf(
         UISettingsData(
+            isRoot = true,
             screenTitle = MR.strings.tab_settings.desc(),
             settingsItems = listOfNotNull(
                 UISettingsItem.Link( // Edit User Info
@@ -136,11 +141,14 @@ class SettingsPageProvider : BaseModel() {
                     initialValue = rivalCode,
                     transform = { it.formatRivalCode() }
                 ),
-                UISettingsItem.Link( // Game version
+                UISettingsItem.Dropdown( // Game version
                     key = LadderSettings.KEY_GAME_VERSION,
                     title = MR.strings.action_game_version.desc(),
                     subtitle = gameVersion.printName.desc(),
-                    action = SettingsAction.Modal(SettingsPageModal.GameVersion)
+                    dropdownItems = GameConstants.SUPPORTED_VERSIONS,
+                    selectedIndex = GameConstants.SUPPORTED_VERSIONS.indexOfFirst { it == gameVersion },
+                    createText = { (it as GameVersion).printName },
+                    createAction = { SettingsAction.SetGameVersion(it as GameVersion) }
                 ),
             )
         )
@@ -183,12 +191,26 @@ class SettingsPageProvider : BaseModel() {
         )
     }
 
-    fun getTrialPage(): Flow<UISettingsData> = flowOf(
+    fun getTrialPage(): Flow<UISettingsData> = combine(
+        trialSettings.highlightNewFlow,
+        trialSettings.highlightUnplayedFlow,
+    ) { highlightNew, highlightUnplayed ->
         UISettingsData(
             screenTitle = MR.strings.trial_settings.desc(),
-            settingsItems = listOf()
+            settingsItems = listOf(
+                UISettingsItem.Checkbox(
+                    key = TrialListSettings.KEY_TRIAL_LIST_HIGHLIGHT_NEW,
+                    title = MR.strings.highlight_new_trials.desc(),
+                    toggled = highlightNew
+                ),
+                UISettingsItem.Checkbox(
+                    key = TrialListSettings.KEY_TRIAL_LIST_HIGHLIGHT_UNPLAYED,
+                    title = MR.strings.highlight_unplayed_trials.desc(),
+                    toggled = highlightUnplayed
+                ),
+            )
         )
-    )
+    }
 
     fun getSanbaiPage(): Flow<UISettingsData> = flowOf(
         UISettingsData(
@@ -211,7 +233,23 @@ class SettingsPageProvider : BaseModel() {
     fun getClearDataPage(): Flow<UISettingsData> = flowOf(
         UISettingsData(
             screenTitle = MR.strings.clear_data.desc(),
-            settingsItems = listOf()
+            settingsItems = listOf(
+                UISettingsItem.Link(
+                    key = "KEY_CLEAR_SONG_DATA",
+                    title = MR.strings.action_clear_result_data.desc(),
+                    action = SettingsAction.ClearData.Results
+                ),
+                UISettingsItem.Link(
+                    key = "KEY_CLEAR_TRIAL_DATA",
+                    title = MR.strings.action_clear_trial_data.desc(),
+                    action = SettingsAction.ClearData.Trials
+                ),
+//                UISettingsItem.Link(
+//                    key = "KEY_CLEAR_ALL_DATA",
+//                    title = MR.strings.refresh_sanbai_library_data.desc(),
+//                    action = SettingsAction.Sanbai.RefreshLibrary
+//                ),
+            )
         )
     )
 
