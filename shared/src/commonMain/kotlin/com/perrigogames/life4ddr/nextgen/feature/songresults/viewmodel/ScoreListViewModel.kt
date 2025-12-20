@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamedrejeb.ksoup.entities.KsoupEntities
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.api.base.CompositeData
 import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
@@ -43,7 +44,7 @@ class ScoreListViewModel(
 
     private val filterViewModel = FilterPanelViewModel()
 
-    private val _state = MutableStateFlow(UIScoreList())
+    private val _state = MutableStateFlow<UIScoreList>(UIScoreList.Empty())
     val state: StateFlow<UIScoreList> = _state.asStateFlow()
 
     private val _events = MutableSharedFlow<ScoreListEvent>()
@@ -72,11 +73,18 @@ class ScoreListViewModel(
                 bannerManager.getBannerFlow(BannerLocation.SCORES),
                 songResultSettings.enableDifficultyTiers
             ) { results, filterView, banner, enableDifficultyTiers ->
-                UIScoreList(
-                    scores = results.resultsDone.map { it.toUIScore(enableDifficultyTiers) },
-                    filter = filterView,
-                    banner = banner
-                )
+                if (results.resultsDone.isEmpty()) {
+                    UIScoreList.Empty(
+                        filter = filterView,
+                        banner = banner
+                    )
+                } else {
+                    UIScoreList.Loaded(
+                        scores = results.resultsDone.map { it.toUIScore(enableDifficultyTiers) },
+                        filter = filterView,
+                        banner = banner
+                    )
+                }
             }.collect(_state)
         }
     }

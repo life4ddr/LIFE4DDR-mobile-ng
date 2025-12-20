@@ -39,37 +39,65 @@ fun FilterPanel(
                 }
             }
         }
-        Row {
-            data.difficultyClassSelector.forEach { item ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Switch(
-                        checked = item.selected,
-                        onCheckedChange = { onAction(item.action) }
-                    )
-                    Text(text = item.text.localized())
+        data.difficultyClassSelector?.let {
+            Row {
+                it.forEach { item ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Switch(
+                            checked = item.selected,
+                            onCheckedChange = { onAction(item.action) }
+                        )
+                        Text(text = item.text.localized())
+                    }
                 }
             }
+            SizedSpacer(8.dp)
         }
 
-        SizedSpacer(8.dp)
-        Text(
-            text = data.difficultyNumberTitle.localized(),
-            modifier = Modifier.align(Alignment.Start),
-            style = MaterialTheme.typography.labelLarge,
-        )
-        RangeSlider(
-            value = data.difficultyNumberRange.innerFloatRange,
-            valueRange = data.difficultyNumberRange.outerFloatRange,
-            steps = data.difficultyNumberRange.outerRange.count() - 2,
-            onValueChange = { range ->
-                onAction(
-                    FilterPanelInput.SetDifficultyNumberRange(range.start.roundToInt(), range.endInclusive.roundToInt())
-                )
-            }
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = data.difficultyNumberTitle.localized(),
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.labelLarge,
+            )
+            Checkbox(
+                checked = data.difficultyNumberUsesRange,
+                onCheckedChange = { onAction(data.difficultyNumberUsesRangeInput) },
+            )
+            Text(
+                text = data.difficultyNumberUsesRangeText.localized(),
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
+
+        if (data.difficultyNumberUsesRange) {
+            RangeSlider(
+                value = data.difficultyNumberRange.innerFloatRange,
+                valueRange = data.difficultyNumberRange.outerFloatRange,
+                steps = data.difficultyNumberRange.outerRange.count() - 2,
+                onValueChange = { range ->
+                    onAction(
+                        FilterPanelInput.SetDifficultyNumberRange(
+                            min = range.start.roundToInt(),
+                            max = range.endInclusive.roundToInt()
+                        )
+                    )
+                }
+            )
+        } else {
+            Slider(
+                value = data.difficultyNumberRange.innerFloatRange.start,
+                valueRange = data.difficultyNumberRange.outerFloatRange,
+                steps = data.difficultyNumberRange.outerRange.count() - 2,
+                onValueChange = { value -> onAction(FilterPanelInput.SetDifficultyNumber(value.roundToInt())) }
+            )
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -93,6 +121,7 @@ fun FilterPanel(
             modifier = Modifier.align(Alignment.Start),
             style = MaterialTheme.typography.labelLarge,
         )
+        SizedSpacer(8.dp)
         RangeSlider(
             value = data.clearTypeRange.innerFloatRange,
             valueRange = data.clearTypeRange.outerFloatRange,

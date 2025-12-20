@@ -7,20 +7,17 @@ import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
-import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPISettings
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.SettingsPage
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.SettingsPageModal
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsItem
 import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsAction
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.FilterPanelSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
-import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings.Companion.KEY_ENABLE_DIFFICULTY_TIERS
-import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings.Companion.KEY_SHOW_REMOVED_SONGS
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialListSettings
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.formatRivalCode
 import com.russhwolf.settings.ExperimentalSettingsApi
-import com.russhwolf.settings.coroutines.FlowSettings
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
@@ -33,6 +30,7 @@ import org.koin.core.component.inject
 class SettingsPageProvider : BaseModel() {
 
     private val appInfo: AppInfo by inject()
+    private val filterSettings: FilterPanelSettings by inject()
     private val userInfoSettings: UserInfoSettings by inject()
     private val ladderSettings: LadderSettings by inject()
     private val trialSettings: TrialListSettings by inject()
@@ -44,33 +42,33 @@ class SettingsPageProvider : BaseModel() {
             isRoot = true,
             screenTitle = MR.strings.tab_settings.desc(),
             settingsItems = listOfNotNull(
-                UISettingsItem.Link( // Edit User Info
+                UISettingsItem.Link(
                     key = KEY_NAV_USER_INFO,
                     title = MR.strings.edit_user_info.desc(),
                     action = SettingsAction.Navigate(SettingsPage.EDIT_USER_INFO)
                 ),
-                UISettingsItem.Link( // Song List Settings
+                UISettingsItem.Link(
                     key = KEY_NAV_SONG_LIST,
                     title = MR.strings.song_list_settings.desc(),
                     action = SettingsAction.Navigate(SettingsPage.SONG_LIST_SETTINGS)
                 ),
-                UISettingsItem.Link( // Trial Settings
+                UISettingsItem.Link(
                     key = KEY_NAV_TRIALS,
                     title = MR.strings.trial_settings.desc(),
                     action = SettingsAction.Navigate(SettingsPage.TRIAL_SETTINGS)
                 ),
-                UISettingsItem.Link( // Sanbai Settings
+                UISettingsItem.Link(
                     key = KEY_NAV_SANBAI,
                     title = MR.strings.sanbai_settings.desc(),
                     action = SettingsAction.Navigate(SettingsPage.SANBAI_SETTINGS)
                 ),
-                UISettingsItem.Link( // Clear Data
+                UISettingsItem.Link(
                     key = KEY_NAV_CLEAR_DATA,
                     title = MR.strings.clear_data.desc(),
                     action = SettingsAction.Navigate(SettingsPage.CLEAR_DATA)
                 ),
                 if (isDebug) {
-                    UISettingsItem.Link( // Debug Options
+                    UISettingsItem.Link(
                         key = KEY_NAV_DEBUG,
                         title = StringDesc.Raw("Debug Options"),
                         action = SettingsAction.Navigate(SettingsPage.DEBUG)
@@ -79,38 +77,38 @@ class SettingsPageProvider : BaseModel() {
                     null
                 },
                 UISettingsItem.Divider,
-                UISettingsItem.Header( // Help and Feedback
+                UISettingsItem.Header(
                     key = "HEADER_HELP",
                     title = MR.strings.help_and_feedback.desc()
                 ),
-                UISettingsItem.Link( // Shop LIFE4
+                UISettingsItem.Link(
                     key = "KEY_LINK_SHOP_LIFE4",
                     title = MR.strings.action_shop_life4.desc(),
                     subtitle = MR.strings.description_shop_life4.desc(),
                     action = SettingsAction.WebLink(URL_SHOP_LIFE4)
                 ),
-                UISettingsItem.Link( // Shop Dangershark
+                UISettingsItem.Link(
                     key = "KEY_LINK_SHOP_DANGERSHARK",
                     title = MR.strings.action_shop_dangershark.desc(),
                     subtitle = MR.strings.description_shop_dangershark.desc(),
                     action = SettingsAction.WebLink(URL_SHOP_DANGERSHARK)
                 ),
-                UISettingsItem.Link( // Discord Link
+                UISettingsItem.Link(
                     key = "KEY_LINK_DISCORD",
                     title = MR.strings.join_discord.desc(),
                     action = SettingsAction.WebLink(URL_JOIN_DISCORD)
                 ),
-                UISettingsItem.Link( // X Link
+                UISettingsItem.Link(
                     key = "KEY_LINK_X",
                     title = MR.strings.find_us_on_x.desc(),
                     action = SettingsAction.WebLink(URL_FIND_US_ON_X)
                 ),
-                UISettingsItem.Link( // Credits
+                UISettingsItem.Link(
                     key = "KEY_LINK_CREDITS",
                     title = MR.strings.credits.desc(),
                     action = SettingsAction.ShowCredits
                 ),
-                UISettingsItem.Link( // Version String
+                UISettingsItem.Link(
                     key = "KEY_LINK_VERSIONS",
                     title = StringDesc.Raw("Version ${appInfo.version}"),
                     action = SettingsAction.Modal(SettingsPageModal.AppVersion)
@@ -157,32 +155,47 @@ class SettingsPageProvider : BaseModel() {
     fun getSongListPage(): Flow<UISettingsData> = combine(
         songResultSettings.enableDifficultyTiers,
         songResultSettings.showRemovedSongs,
+        filterSettings.filterFlags,
         maSettings.combineMFCs,
         maSettings.combineSDPs,
-    ) { diffTierEnabled, showRemovedSongs, combineMFCs, combineSDPs ->
+    ) { diffTierEnabled, showRemovedSongs, filterFlags, combineMFCs, combineSDPs ->
         UISettingsData(
             screenTitle = MR.strings.song_list_settings.desc(),
             settingsItems = listOf(
-                UISettingsItem.Checkbox( // Enable Difficulty Tiers
-                    key = KEY_ENABLE_DIFFICULTY_TIERS,
+                UISettingsItem.Checkbox(
+                    key = SongResultSettings.KEY_ENABLE_DIFFICULTY_TIERS,
                     title = MR.strings.enable_difficulty_tiers.desc(),
                     toggled = diffTierEnabled
                 ),
                 UISettingsItem.Checkbox(
-                    key = KEY_SHOW_REMOVED_SONGS,
+                    key = SongResultSettings.KEY_SHOW_REMOVED_SONGS,
                     title = MR.strings.show_removed_songs.desc(),
                     toggled = showRemovedSongs
+                ),
+                UISettingsItem.Header(
+                    key = "KEY_HEADER_FILTERS",
+                    title = MR.strings.action_header_filters.desc()
+                ),
+                UISettingsItem.Checkbox(
+                    key = FilterPanelSettings.KEY_FILTER_SHOW_DIFF_CLASSES,
+                    title = MR.strings.action_filter_show_diff_class.desc(),
+                    toggled = filterFlags.showDiffClasses,
+                ),
+                UISettingsItem.Checkbox(
+                    key = FilterPanelSettings.KEY_FILTER_DIFFICULTY_RANGE,
+                    title = MR.strings.action_show_difficulty_number_range.desc(),
+                    toggled = filterFlags.useDifficultyRange,
                 ),
                 UISettingsItem.Header(
                     key = "KEY_HEADER_MA",
                     title = MR.strings.action_header_ma_points.desc()
                 ),
-                UISettingsItem.Checkbox( // Combine MFCs
+                UISettingsItem.Checkbox(
                     key = MASettings.KEY_COMBINE_MFCS_GOALLIST,
                     title = MR.strings.action_combine_mfc.desc(),
                     toggled = combineMFCs,
                 ),
-                UISettingsItem.Checkbox( // Combine SDPs
+                UISettingsItem.Checkbox(
                     key = MASettings.KEY_COMBINE_SDPS_GOALLIST,
                     title = MR.strings.action_combine_sdp.desc(),
                     toggled = combineSDPs,

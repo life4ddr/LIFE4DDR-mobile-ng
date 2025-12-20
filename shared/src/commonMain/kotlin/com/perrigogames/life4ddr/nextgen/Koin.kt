@@ -64,7 +64,9 @@ import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.DefaultSongDat
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultFilterPanelSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultSongResultSettings
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.FilterPanelSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
@@ -135,6 +137,7 @@ val coreModule = module {
     single<TrialRecordsManager> { DefaultTrialRecordsManager() }
     single<SongDataManager> { DefaultSongDataManager() }
     single { ChartResultOrganizer() }
+    single<FilterPanelSettings> { DefaultFilterPanelSettings() }
     single<FirstRunSettings> { DefaultFirstRunSettings() }
     single<LadderSettings> { DefaultLadderSettings() }
     single<MASettings> { DefaultMASettings() }
