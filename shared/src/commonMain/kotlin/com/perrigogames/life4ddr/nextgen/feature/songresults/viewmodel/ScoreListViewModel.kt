@@ -114,7 +114,7 @@ fun ChartResultPair.toUIScore(enableDifficultyTiers: Boolean) = UIScore(
                 chart.difficultyNumber.toString().desc()
             }
         ),
-        separator = " - "
+        separator = "–"
     ),
     scoreText = scoreText(result?.clearType, result?.score),
     difficultyColor = chart.difficultyClass.colorRes,
@@ -133,7 +133,7 @@ fun scoreText(clearType: ClearType?, score: Long?) = when (clearType) {
             (clearType ?: ClearType.NO_PLAY).clearResShort.desc(),
             (score ?: 0).toString().desc()
         ),
-        separator = " - "
+        separator = "–"
     )
 }
 
@@ -144,6 +144,6 @@ fun perfectsScoreText(clearType: ClearType, score: Long): StringDesc {
             clearType.clearResShort.desc(),
             StringDesc.ResourceFormatted(MR.strings.perfects_count, perfects)
         ),
-        separator = " - "
+        separator = "–"
     )
 }
