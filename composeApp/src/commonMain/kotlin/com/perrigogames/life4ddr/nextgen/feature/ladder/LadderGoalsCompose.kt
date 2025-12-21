@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.BasicAlertDialog
@@ -25,10 +27,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
@@ -46,13 +49,10 @@ import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
-import com.perrigogames.life4ddr.nextgen.feature.ladder.data.GoalListConfig
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderDetailItem
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoals
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderMocks
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderMocks.createSongDetailItem
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderMocks.createUILadderGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderProgress
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewModel
@@ -235,6 +235,10 @@ fun LadderGoalItem(
     onShowDebug: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var useAltDetails by remember { mutableStateOf(false) }
+    val showAltSwitch by derivedStateOf { goal.detailItems.isNotEmpty() && goal.altDetailItems.isNotEmpty() }
+    val detailItems by derivedStateOf { if (useAltDetails) goal.altDetailItems else goal.detailItems }
+
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = if (goal.hidden) 0.5f else 1f),
         shape = MaterialTheme.shapes.medium,
@@ -250,7 +254,7 @@ fun LadderGoalItem(
                 onInput = onInput,
                 onShowDebug = onShowDebug,
             )
-            if (goal.detailItems.isNotEmpty()) {
+            if (detailItems.isNotEmpty()) {
                 AnimatedVisibility(
                     visible = expanded,
                     enter = expandVertically(expandFrom = Alignment.Top),
@@ -258,9 +262,28 @@ fun LadderGoalItem(
                 ) {
                     Column {
                         Life4Divider()
-                        SizedSpacer(Paddings.LadderGoals.VERTICAL_PADDING)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(Paddings.LadderGoals.VERTICAL_PADDING)
+                            )
+                            if (showAltSwitch) {
+                                Text(
+                                    text = "Show done", // FIXME
+                                    style = MaterialTheme.typography.labelLarge,
+                                )
+                                Switch(
+                                    checked = useAltDetails,
+                                    onCheckedChange = { useAltDetails = it },
+                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                )
+                            }
+                        }
                         LadderGoalDetailShade(
-                            items = goal.detailItems,
+                            items = detailItems,
                             modifier = Modifier
                                 .padding(horizontal = Paddings.LadderGoals.HORIZONTAL_PADDING)
                                 .padding(bottom = Paddings.LadderGoals.VERTICAL_PADDING)
@@ -364,16 +387,33 @@ private fun LadderGoalDetailShade(
         items.forEach { item ->
             when (item) {
                 is UILadderDetailItem.Entry -> {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = item.leftText,
-                            color = item.leftColor?.let { colorResource(it) } ?: MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(item.leftWeight)
-                        )
-                        if (item.rightText != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row(
+                            modifier = Modifier.weight(item.leftWeight),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = item.leftText,
+                                color = item.leftColor?.let { colorResource(it) } ?: MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.weight(1f)
+                            )
+                            item.leftSubtitle?.let { subtitle ->
+                                Text(
+                                    text = subtitle,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    maxLines = 1,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                            }
+                        }
+                        item.rightText?.let { rightText ->
                             SizedSpacer(8.dp)
                             Text(
-                                text = item.rightText!!,
+                                text = rightText.localized(),
                                 color = item.rightColor?.let { colorResource(it) } ?: MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.End,
                                 modifier = Modifier.weight(item.rightWeight)

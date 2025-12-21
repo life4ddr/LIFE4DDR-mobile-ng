@@ -278,6 +278,8 @@ data class SongsClearGoal(
         }
     }
 
+    val hasMultipleDiffs: Boolean = diffNum == null || allowsHigherDiffNum
+
     inline fun forEachDiffNum(block: (Int) -> Unit) {
         diffNumRange?.forEachIndexed { _, diff -> block(diff) }
     }

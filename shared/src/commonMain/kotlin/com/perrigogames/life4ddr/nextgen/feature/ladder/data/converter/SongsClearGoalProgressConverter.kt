@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.math.min
 import kotlin.math.roundToLong
 
 class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, KoinComponent {
@@ -114,14 +115,20 @@ class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, K
                 progress = topScore.toInt(),
                 max = goal.score!!,
                 showMax = false,
-                results = match,
+                results = noMatch
+                    .sortedByDescending { it.result.safeScore }
+                    .clampIf { goal.hasMultipleDiffs },
+                altResults = match,
             )
         } else {
             LadderGoalProgress(
                 progress = completed,
                 max = goal.songCount!!,
                 showMax = true,
-                results = match,
+                results = noMatch
+                    .sortedByDescending { it.result.safeScore }
+                    .clampIf { goal.hasMultipleDiffs },
+                altResults = match,
             )
         }
     }
@@ -145,7 +152,11 @@ class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, K
             progress = completed,
             max = goal.songCount!!,
             showMax = true,
-            results = match,
+            diffTiersOnly = !goal.hasMultipleDiffs,
+            results = noMatch
+                .sortedByDescending { it.result.safeScore }
+                .clampIf { goal.hasMultipleDiffs },
+            altResults = match,
         )
     }
 
@@ -165,7 +176,8 @@ class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, K
             max = (match.size + noMatch.size) - freeExceptions,
             showMax = true,
             results = if (partMatch.isNotEmpty()) partMatch else noMatch,
-            resultsBottom = if (partMatch.isNotEmpty()) noMatch else null
+            resultsBottom = if (partMatch.isNotEmpty()) noMatch else null,
+            altResults = match,
         )
     }
 
@@ -181,6 +193,7 @@ class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, K
             max = goal.averageScore!!,
             showMax = false,
             results = noMatch,
+            altResults = match,
         )
     }
 
@@ -202,6 +215,14 @@ class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, K
         (sumOf { it.result.safeScore } / size.toDouble())
             .roundToLong()
     } else 0
+
+    private fun <T> List<T>.clampIf(condition: () -> Boolean): List<T> {
+        return if (condition()) {
+            this.subList(0, min(50, this.size))
+        } else {
+            this
+        }
+    }
 }
 
 class SongsClearStackedGoalProgressConverter : StackedGoalProgressConverter<SongsClearStackedGoal> {

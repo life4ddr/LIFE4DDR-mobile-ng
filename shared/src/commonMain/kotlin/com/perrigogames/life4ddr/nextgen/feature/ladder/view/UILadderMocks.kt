@@ -4,6 +4,7 @@ import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.longNumberString
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.StringDesc
+import dev.icerock.moko.resources.desc.desc
 import kotlin.random.Random
 
 object UILadderMocks {
@@ -33,6 +34,6 @@ object UILadderMocks {
     ) = UILadderDetailItem.Entry(
         leftText = songName,
         leftColor = difficultyClass?.colorRes,
-        rightText = score.longNumberString()
+        rightText = score.longNumberString().desc()
     )
 }

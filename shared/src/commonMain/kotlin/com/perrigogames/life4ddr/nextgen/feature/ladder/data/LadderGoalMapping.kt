@@ -12,9 +12,15 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.toMAPointsCategoryString
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.toMAPointsDouble
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.perfectsScoreText
 import com.perrigogames.life4ddr.nextgen.longNumberString
+import dev.icerock.moko.resources.desc.desc
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
+enum class DiffExtra {
+    NONE, DIFF, TIER, DIFF_TIER
+}
 
 class LadderGoalMapper : KoinComponent {
 
@@ -27,27 +33,54 @@ class LadderGoalMapper : KoinComponent {
         isExpanded: Boolean,
         allowCompleting: Boolean,
         allowHiding: Boolean,
-        maConfig: MAConfig = MAConfig(),
+        showDiffTiers: Boolean,
+        maConfig: MAConfig,
     ): UILadderGoal {
         val isComplete = goalStatus == GoalStatus.COMPLETE || progress?.isComplete == true
         val isMFC = base is MAPointsGoal ||
                 (base is StackedRankGoalWrapper && base.mainGoal is MAPointsStackedGoal)
+        val diffExtra = when {
+            progress == null -> DiffExtra.NONE
+            showDiffTiers -> when (progress.diffTiersOnly) {
+                true -> DiffExtra.TIER
+                false -> DiffExtra.DIFF_TIER
+            }
+            !progress.diffTiersOnly -> DiffExtra.DIFF
+            else -> DiffExtra.NONE
+        }
 
-        fun ChartResultPair.formatResultItem() : UILadderDetailItem.Entry {
+        fun ChartResultPair.formatResultItem(diffExtra: DiffExtra) : UILadderDetailItem.Entry {
+            val clearType = result?.clearType ?: ClearType.NO_PLAY
+            val isPFCOrHigher = clearType >= ClearType.PERFECT_FULL_COMBO
+
+            val title = KsoupEntities.decodeHtml(chart.song.title)
+            val subtitle = when (diffExtra) {
+                DiffExtra.NONE -> null
+                DiffExtra.DIFF -> "(${chart.difficultyNumber})"
+                DiffExtra.TIER -> "(.${chart.difficultyTierString})"
+                DiffExtra.DIFF_TIER -> "(${chart.combinedDifficultyNumberString})"
+            }
             return if (isMFC) {
                 UILadderDetailItem.Entry(
-                    leftText = KsoupEntities.decodeHtml(chart.song.title),
+                    leftText = title,
                     leftColor = chart.difficultyClass.colorRes,
                     leftWeight = 0.75f,
-                    rightText = "L${chart.difficultyNumber} > ${maPoints()}",
+                    leftSubtitle = subtitle,
+                    rightText = "L${chart.difficultyNumber} > ${maPoints()}".desc(),
                     rightColor = result!!.clearType.colorRes,
                     rightWeight = 0.25f
                 )
             } else {
                 UILadderDetailItem.Entry(
-                    leftText = KsoupEntities.decodeHtml(chart.song.title),
+                    leftText = title,
                     leftColor = chart.difficultyClass.colorRes,
-                    rightText = (result?.score ?: 0).toInt().longNumberString(),
+                    leftSubtitle = subtitle,
+                    rightText = if (isPFCOrHigher) {
+                        perfectsScoreText(result!!.clearType, result.score)
+                    } else {
+                        (result?.score ?: 0).toInt().longNumberString().desc()
+                    },
+                    rightColor = result?.clearType?.colorRes,
                 )
             }
         }
@@ -55,42 +88,42 @@ class LadderGoalMapper : KoinComponent {
         fun List<ChartResultPair>.formatCombinedMAPointsEntries(
             clearType: ClearType
         ) : List<UILadderDetailItem.Entry> {
-            return groupBy { it.maPointsThousandths() }
+            return groupBy { it.baseMAPoints() }
+                .entries.sortedBy { it.key }
                 .map { (points, results) ->
-                    val totalPoints = this.sumOf { it.maPoints() }
+                    val totalPoints = results.sumOf { it.maPointsThousandths() }.toMAPointsDouble()
                     UILadderDetailItem.Entry(
                         leftText = points.toMAPointsCategoryString(),
                         leftWeight = 0.75f,
-                        rightText = "${this.count()} * ${points.toMAPointsDouble()} > $totalPoints",
+                        leftColor = clearType.colorRes,
+                        leftSubtitle = "${results.first().maPoints()} Points",
+                        rightText = "x${results.count()} > $totalPoints".desc(),
                         rightColor = clearType.colorRes,
                         rightWeight = 0.25f
                     )
                 }
         }
 
-        fun List<ChartResultPair>?.formatResultList() : List<UILadderDetailItem.Entry> {
+        fun List<ChartResultPair>.formatResultList(diffExtra: DiffExtra) : List<UILadderDetailItem.Entry> {
             return if (isMFC && (maConfig.combineMFCs || maConfig.combineSDPs)) {
-                val mfcs = this?.filter { it.result?.clearType == ClearType.MARVELOUS_FULL_COMBO } ?: emptyList()
+                val mfcs = this.filter { it.result?.clearType == ClearType.MARVELOUS_FULL_COMBO }
                 val mfcEntries = if (maConfig.combineMFCs) {
                     mfcs.formatCombinedMAPointsEntries(ClearType.MARVELOUS_FULL_COMBO)
                 } else {
-                    mfcs.map { it.formatResultItem() }
+                    mfcs.map { it.formatResultItem(diffExtra) }
                 }
 
-                val sdps = this?.filter { it.result?.clearType == ClearType.SINGLE_DIGIT_PERFECTS } ?: emptyList()
+                val sdps = this.filter { it.result?.clearType == ClearType.SINGLE_DIGIT_PERFECTS }
                 val sdpEntries = if (maConfig.combineSDPs) {
                     sdps.formatCombinedMAPointsEntries(ClearType.SINGLE_DIGIT_PERFECTS)
                 } else {
-                    sdps.map { it.formatResultItem() }
+                    sdps.map { it.formatResultItem(diffExtra) }
                 }
                 mfcEntries + sdpEntries
             } else {
-                this?.map { it.formatResultItem() } ?: emptyList()
+                this.map { it.formatResultItem(diffExtra) }
             }
         }
-
-        val resultItems = progress?.results?.formatResultList() ?: emptyList()
-        val resultBottomItems = progress?.resultsBottom.formatResultList()
 
         return UILadderGoal(
             id = base.id.toLong(),
@@ -108,11 +141,18 @@ class LadderGoalMapper : KoinComponent {
                 null
             },
             detailItems = if (isExpanded && progress != null) {
+                val resultItems = progress.results?.formatResultList(diffExtra) ?: emptyList()
+                val resultBottomItems = progress.resultsBottom?.formatResultList(diffExtra) ?: emptyList()
                 if (!resultItems.isEmpty() && !resultBottomItems.isEmpty()) {
                     resultItems + listOf(UILadderDetailItem.Spacer) + resultBottomItems
                 } else {
                     resultItems + resultBottomItems
                 }
+            } else {
+                emptyList()
+            },
+            altDetailItems = if (isExpanded && progress != null) {
+                progress.altResults?.formatResultList(diffExtra) ?: emptyList()
             } else {
                 emptyList()
             },

@@ -77,6 +77,7 @@ data class UILadderGoal(
     val progress: UILadderProgress? = null,
     val expandAction: GoalListInput? = null,
     val detailItems: List<UILadderDetailItem> = emptyList(),
+    val altDetailItems: List<UILadderDetailItem> = emptyList(),
     val debugText: String? = null,
 ) {
     constructor(
@@ -90,6 +91,7 @@ data class UILadderGoal(
         progress: UILadderProgress? = null,
         expandAction: GoalListInput? = null,
         detailItems: List<UILadderDetailItem> = emptyList(),
+        altDetailItems: List<UILadderDetailItem> = emptyList(),
         debugText: String? = null,
     ) : this (
         id = id,
@@ -108,6 +110,7 @@ data class UILadderGoal(
         progress = progress,
         expandAction = expandAction,
         detailItems = detailItems,
+        altDetailItems = altDetailItems,
         debugText = debugText,
     )
 }
@@ -154,7 +157,8 @@ sealed class UILadderDetailItem {
         val leftText: String,
         val leftColor: ColorResource? = null,
         val leftWeight: Float = 0.8f,
-        val rightText: String? = null,
+        val leftSubtitle: String? = null,
+        val rightText: StringDesc? = null,
         val rightColor: ColorResource? = null,
         val rightWeight: Float = 0.2f,
     ) : UILadderDetailItem()

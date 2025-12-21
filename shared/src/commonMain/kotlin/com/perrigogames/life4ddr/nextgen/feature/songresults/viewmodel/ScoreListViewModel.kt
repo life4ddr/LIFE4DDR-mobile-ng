@@ -122,19 +122,23 @@ fun scoreText(clearType: ClearType?, score: Long?) = when (clearType) {
     ClearType.MARVELOUS_FULL_COMBO -> MR.strings.clear_mfc_caps.desc()
     ClearType.SINGLE_DIGIT_PERFECTS,
     ClearType.PERFECT_FULL_COMBO -> {
-        val perfects = (GameConstants.MAX_SCORE - (score ?: 0)) / 10
-        StringDesc.Composition(
-            args = listOf(
-                clearType.clearResShort.desc(),
-                StringDesc.ResourceFormatted(MR.strings.perfects_count, perfects)
-            ),
-            separator = " - "
-        )
+        perfectsScoreText(clearType, score ?: 0L)
     }
     else -> StringDesc.Composition(
         args = listOf(
             (clearType ?: ClearType.NO_PLAY).clearResShort.desc(),
             (score ?: 0).toString().desc()
+        ),
+        separator = " - "
+    )
+}
+
+fun perfectsScoreText(clearType: ClearType, score: Long): StringDesc {
+    val perfects = (GameConstants.MAX_SCORE - score) / 10
+    return StringDesc.Composition(
+        args = listOf(
+            clearType.clearResShort.desc(),
+            StringDesc.ResourceFormatted(MR.strings.perfects_count, perfects)
         ),
         separator = " - "
     )

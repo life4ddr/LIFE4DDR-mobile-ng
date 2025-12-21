@@ -9,24 +9,25 @@ data class ChartResultPair(
     val result: ChartResult?,
 ) {
 
+    fun baseMAPoints() = when (chart.difficultyNumber) { // first = MFC, 2nd = SDP
+        1 -> 100
+        2, 3 -> 250
+        4, 5, 6 -> 500
+        7, 8, 9 -> 1000
+        10 -> 1500
+        11 -> 2000
+        12 -> 4000
+        13 -> 6000
+        14 -> 8000
+        15 -> 15000
+        16, 17, 18, 19, 20 -> 25000
+        else -> 0
+    }
+
     fun maPointsThousandths(): Int {
-        val points = when (chart.difficultyNumber) { // first = MFC, 2nd = SDP
-            1 -> 100
-            2, 3 -> 250
-            4, 5, 6 -> 500
-            7, 8, 9 -> 1000
-            10 -> 1500
-            11 -> 2000
-            12 -> 4000
-            13 -> 6000
-            14 -> 8000
-            15 -> 15000
-            16, 17, 18, 19, 20 -> 25000
-            else -> 0
-        }
         return when (result?.clearType) {
-            ClearType.MARVELOUS_FULL_COMBO -> points
-            ClearType.SINGLE_DIGIT_PERFECTS -> points / 10
+            ClearType.MARVELOUS_FULL_COMBO -> baseMAPoints()
+            ClearType.SINGLE_DIGIT_PERFECTS -> baseMAPoints() / 10
             else -> 0
         }
     }

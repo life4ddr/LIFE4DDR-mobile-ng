@@ -16,11 +16,13 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.toViewData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.GoalStateManager
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDataManager
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderGoalProgressManager
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MAConfig
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoals
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import dev.icerock.moko.resources.desc.ResourceFormatted
@@ -31,6 +33,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.collections.listOf
+import kotlin.to
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinComponent {
@@ -40,6 +44,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
     private val ladderGoalProgressManager: LadderGoalProgressManager by inject()
     private val ladderGoalMapper: LadderGoalMapper by inject()
     private val userRankSettings: UserRankSettings by inject()
+    private val songResultSettings: SongResultSettings by inject()
     private val maSettings: MASettings by inject()
     private val logger by injectLogger("GoalListViewModel")
 
@@ -75,8 +80,11 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                 },
                 _expandedItems,
 //                goalStateManager.updated,
-                maSettings.maConfig
-            ) { targetRank, requirements, progress, expanded, maConfig ->
+                combine(
+                    maSettings.maConfig,
+                    songResultSettings.enableDifficultyTiers
+                ) { a, b -> a to b },
+            ) { targetRank, requirements, progress, expanded, (maConfig, showDiffTiers) ->
                 logger.d { "Updating to $targetRank, requirements = $requirements, expanded = $expanded" }
                 val substitutions = if (requirements?.substitutionGoals?.isNotEmpty() == true) {
                     val goalStates = goalStateManager.getGoalStateList(requirements.substitutionGoals)
@@ -93,6 +101,8 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                                     allowHiding = false,
                                     allowCompleting = config.allowCompleting,
                                     isExpanded = expanded.contains(goal.id.toLong()),
+                                    maConfig = maConfig,
+                                    showDiffTiers = showDiffTiers,
                                 )
                             }
                         )
@@ -106,14 +116,14 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                     targetRank >= LadderRank.PLATINUM1 -> ViewState.Success(
                         UILadderData(
                             targetRankClass = targetRank.group,
-                            goals = generateDifficultyCategories(requirements, progress, expanded),
+                            goals = generateDifficultyCategories(requirements, progress, expanded, maConfig, showDiffTiers),
                             substitutions = substitutions
                         )
                     )
                     else -> ViewState.Success(
                         UILadderData(
                             targetRankClass = targetRank.group,
-                            goals = generateCommonCategories(requirements, progress, expanded),
+                            goals = generateCommonCategories(requirements, progress, expanded, maConfig, showDiffTiers),
                             substitutions = substitutions
                         )
                     )
@@ -126,6 +136,8 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
         requirements: RankEntry,
         progress: Map<BaseRankGoal, LadderGoalProgress?>,
         expanded: Set<Long>,
+        maConfig: MAConfig,
+        showDiffTiers: Boolean,
     ) : UILadderGoals.CategorizedList {
         val goalStates = goalStateManager.getGoalStateList(requirements.allGoals)
         val finishedGoalCount = requirements.allGoals.count { goal ->
@@ -151,6 +163,8 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                         allowHiding = canHide,
                         allowCompleting = config.allowCompleting,
                         isExpanded = expanded.contains(goal.id.toLong()),
+                        maConfig = maConfig,
+                        showDiffTiers = showDiffTiers,
                     )
                 },
                 UILadderGoals.CategorizedList.Category(
@@ -164,6 +178,8 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                         allowHiding = false,
                         allowCompleting = config.allowCompleting,
                         isExpanded = expanded.contains(goal.id.toLong()),
+                        maConfig = maConfig,
+                        showDiffTiers = showDiffTiers,
                     )
                 }
             )
@@ -175,6 +191,8 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
         requirements: RankEntry,
         progress: Map<BaseRankGoal, LadderGoalProgress?>,
         expanded: Set<Long>,
+        maConfig: MAConfig,
+        showDiffTiers: Boolean,
     ) : UILadderGoals.CategorizedList {
         val goalStates = goalStateManager.getGoalStateList(requirements.allGoals)
         val songsClearGoals = requirements.allGoals.filterIsInstance<SongsClearGoal>()
@@ -227,6 +245,8 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                         allowHiding = !requirements.mandatoryGoalIds.contains(goal.id),
                         allowCompleting = config.allowCompleting,
                         isExpanded = expanded.contains(goal.id.toLong()),
+                        maConfig = maConfig,
+                        showDiffTiers = showDiffTiers,
                     )
                 }
             } + substitutionsItem(substitutionProgress),
