@@ -11,7 +11,8 @@ typealias CategorizedUILadderGoals = List<Pair<UILadderGoals.CategorizedList.Cat
 data class UILadderData(
     val targetRankClass: LadderRankClass,
     val goals: UILadderGoals,
-    val substitutions: UILadderGoals? = null
+    val substitutions: UILadderGoals? = null,
+    val useMonospaceFontForScore: Boolean = false,
 ) {
 
     val hasSubstitutions get() = substitutions?.rawGoals?.isNotEmpty() == true

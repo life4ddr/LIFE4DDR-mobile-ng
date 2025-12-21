@@ -138,7 +138,7 @@ class RankListViewModel(
                 _actions.emit(RankListViewModelEvent.NavigateToMainScreen)
             }
             is RankListViewModelInput.GoalList -> {
-                goalListViewModel.value!!.handleAction(input.input)
+                goalListViewModel.value!!.handleInput(input.input)
             }
         }
     }

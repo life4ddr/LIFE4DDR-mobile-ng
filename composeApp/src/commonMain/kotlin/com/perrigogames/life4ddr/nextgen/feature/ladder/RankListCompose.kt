@@ -113,6 +113,7 @@ fun RankListContent(
             if (ladderData != null) {
                 LadderGoalsContent(
                     goals = ladderData.goals,
+                    useMonospaceFontForScore = ladderData.useMonospaceFontForScore,
                     rankClass = ladderData.targetRankClass,
                     modifier = Modifier.weight(1f),
                     onInput = { onInput(RankListViewModelInput.GoalList(it)) },

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.MR
@@ -158,7 +159,7 @@ fun ScoreListContent(
                 is UIScoreList.Loaded -> {
                     LazyColumn(modifier = innerModifier) {
                         items(state.scores) {
-                            ScoreEntry(it)
+                            ScoreEntry(it, state.useMonospaceFontForScore)
                         }
                     }
                 }
@@ -218,7 +219,10 @@ private fun SongListFloatingActionButtons(
 }
 
 @Composable
-fun ScoreEntry(data: UIScore) {
+fun ScoreEntry(
+    data: UIScore,
+    useMonospaceFontForScore: Boolean
+) {
     Row(
         modifier = Modifier.padding(4.dp)
     ) {
@@ -239,6 +243,7 @@ fun ScoreEntry(data: UIScore) {
                 Text(
                     text = data.scoreText.localized(),
                     color = colorResource(data.scoreColor),
+                    fontFamily = if (useMonospaceFontForScore) { FontFamily.Monospace } else { null },
                 )
             }
         }

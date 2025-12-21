@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.BasicAlertDialog
@@ -77,8 +76,9 @@ fun LadderGoalsScreen(
     (state as? ViewState.Success)?.data?.let { data ->
         LadderGoalsContent(
             goals = data.goals,
+            useMonospaceFontForScore = data.useMonospaceFontForScore,
             rankClass = targetRank?.group,
-            onInput = {},
+            onInput = { viewModel.handleInput(it) },
             modifier = modifier,
         )
     }
@@ -87,16 +87,17 @@ fun LadderGoalsScreen(
 @Composable
 fun LadderGoalsContent(
     goals: UILadderGoals,
+    useMonospaceFontForScore: Boolean,
     rankClass: LadderRankClass? = null,
     onInput: (GoalListInput) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (rankClass != null) {
         LadderRankClassTheme(rankClass) {
-            LadderGoalsContent(goals, onInput, modifier)
+            LadderGoalsContent(goals, useMonospaceFontForScore, onInput, modifier)
         }
     } else {
-        LadderGoalsContent(goals, onInput, modifier)
+        LadderGoalsContent(goals, useMonospaceFontForScore, onInput, modifier)
     }
 }
 
@@ -104,6 +105,7 @@ fun LadderGoalsContent(
 @Composable
 fun LadderGoalsContent(
     goals: UILadderGoals,
+    useMonospaceFontForScore: Boolean,
     onInput: (GoalListInput) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -113,6 +115,7 @@ fun LadderGoalsContent(
         is UILadderGoals.SingleList -> {
             SingleGoalList(
                 goals = goals.items,
+                useMonospaceFontForScore = useMonospaceFontForScore,
                 onInput = onInput,
                 onShowDebug = { debugDialog = it },
                 modifier = modifier,
@@ -121,6 +124,7 @@ fun LadderGoalsContent(
         is UILadderGoals.CategorizedList -> {
             CategorizedList(
                 goals = goals,
+                useMonospaceFontForScore = useMonospaceFontForScore,
                 onInput = onInput,
                 onShowDebug = { debugDialog = it },
                 modifier = modifier,
@@ -153,6 +157,7 @@ fun LadderGoalsContent(
 @Composable
 fun SingleGoalList(
     goals: List<UILadderGoal>,
+    useMonospaceFontForScore: Boolean,
     onInput: (GoalListInput) -> Unit,
     onShowDebug: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -167,6 +172,7 @@ fun SingleGoalList(
             }
             LadderGoalItem(
                 goal = goal,
+                useMonospaceFontForScore = useMonospaceFontForScore,
                 onInput = onInput,
                 onShowDebug = onShowDebug,
                 modifier = Modifier.fillParentMaxWidth(),
@@ -178,6 +184,7 @@ fun SingleGoalList(
 @Composable
 fun CategorizedList(
     goals: UILadderGoals.CategorizedList,
+    useMonospaceFontForScore: Boolean,
     onInput: (GoalListInput) -> Unit,
     onShowDebug: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -217,6 +224,7 @@ fun CategorizedList(
                 is UILadderGoal -> {
                     LadderGoalItem(
                         goal = item,
+                        useMonospaceFontForScore = useMonospaceFontForScore,
                         expanded = item.detailItems.isNotEmpty(),
                         onInput = onInput,
                         onShowDebug = onShowDebug,
@@ -232,6 +240,7 @@ fun CategorizedList(
 fun LadderGoalItem(
     goal: UILadderGoal,
     expanded: Boolean = false,
+    useMonospaceFontForScore: Boolean,
     onInput: (GoalListInput) -> Unit,
     onShowDebug: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -285,6 +294,7 @@ fun LadderGoalItem(
                         }
                         LadderGoalDetailShade(
                             items = detailItems,
+                            useMonospaceFontForScore = useMonospaceFontForScore,
                             modifier = Modifier
                                 .padding(horizontal = Paddings.LadderGoals.HORIZONTAL_PADDING)
                                 .padding(bottom = Paddings.LadderGoals.VERTICAL_PADDING)
@@ -379,6 +389,7 @@ private fun LadderGoalHeaderRow(
 @Composable
 private fun LadderGoalDetailShade(
     items: List<UILadderDetailItem>,
+    useMonospaceFontForScore: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -416,7 +427,7 @@ private fun LadderGoalDetailShade(
                             Text(
                                 text = rightText.localized(),
                                 color = item.rightColor?.let { colorResource(it) } ?: MaterialTheme.colorScheme.onSurface,
-                                fontFamily = FontFamily.Monospace,
+                                fontFamily = if (useMonospaceFontForScore) { FontFamily.Monospace } else { null },
                                 textAlign = TextAlign.End,
                                 modifier = Modifier.weight(item.rightWeight)
                             )
@@ -507,6 +518,7 @@ private fun previewGoalItem(
 ) {
     LadderGoalItem(
         goal = goal,
+        useMonospaceFontForScore = false,
         modifier = modifier,
         expanded = goal.detailItems.isNotEmpty(),
         onInput = {

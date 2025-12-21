@@ -102,6 +102,7 @@ fun PlayerProfileContent(
             if (goalData?.hasSubstitutions == true) {
                 LadderGoalsContent(
                     goals = goalData.substitutions!!,
+                    useMonospaceFontForScore = goalData.useMonospaceFontForScore,
                     rankClass = goalData.targetRankClass,
                     onInput = { onInput(PlayerProfileInput.GoalList(it)) },
                     modifier = Modifier
@@ -126,6 +127,7 @@ fun PlayerProfileContent(
             if (goalData != null) {
                 LadderGoalsContent(
                     goals = goalData.goals,
+                    useMonospaceFontForScore = goalData.useMonospaceFontForScore,
                     rankClass = goalData.targetRankClass,
                     onInput = { onInput(PlayerProfileInput.GoalList(it)) },
                     modifier = Modifier

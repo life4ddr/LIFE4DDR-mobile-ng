@@ -15,6 +15,7 @@ sealed class UIScoreList {
 
     data class Loaded(
         val scores: List<UIScore> = emptyList(),
+        val useMonospaceFontForScore: Boolean = false,
         override val filter: UIFilterView = UIFilterView(),
         override val banner: UIBanner? = null,
     ) : UIScoreList()

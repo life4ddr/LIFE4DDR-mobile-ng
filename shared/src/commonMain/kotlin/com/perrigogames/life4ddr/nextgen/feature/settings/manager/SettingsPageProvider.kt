@@ -156,9 +156,9 @@ class SettingsPageProvider : BaseModel() {
         songResultSettings.enableDifficultyTiers,
         songResultSettings.showRemovedSongs,
         filterSettings.filterFlags,
-        maSettings.combineMFCs,
-        maSettings.combineSDPs,
-    ) { diffTierEnabled, showRemovedSongs, filterFlags, combineMFCs, combineSDPs ->
+        maSettings.maConfig,
+        ladderSettings.useMonospaceScore,
+    ) { diffTierEnabled, showRemovedSongs, filterFlags, maConfig, useMonospaceScore ->
         UISettingsData(
             screenTitle = MR.strings.song_list_settings.desc(),
             settingsItems = listOf(
@@ -171,6 +171,11 @@ class SettingsPageProvider : BaseModel() {
                     key = SongResultSettings.KEY_SHOW_REMOVED_SONGS,
                     title = MR.strings.show_removed_songs.desc(),
                     toggled = showRemovedSongs
+                ),
+                UISettingsItem.Checkbox(
+                    key = LadderSettings.KEY_USE_MONOSPACE_SCORE,
+                    title = MR.strings.use_monospace_font.desc(),
+                    toggled = useMonospaceScore
                 ),
                 UISettingsItem.Header(
                     key = "KEY_HEADER_FILTERS",
@@ -193,12 +198,12 @@ class SettingsPageProvider : BaseModel() {
                 UISettingsItem.Checkbox(
                     key = MASettings.KEY_COMBINE_MFCS_GOALLIST,
                     title = MR.strings.action_combine_mfc.desc(),
-                    toggled = combineMFCs,
+                    toggled = maConfig.combineMFCs,
                 ),
                 UISettingsItem.Checkbox(
                     key = MASettings.KEY_COMBINE_SDPS_GOALLIST,
                     title = MR.strings.action_combine_sdp.desc(),
-                    toggled = combineSDPs,
+                    toggled = maConfig.combineSDPs,
                 ),
             )
         )

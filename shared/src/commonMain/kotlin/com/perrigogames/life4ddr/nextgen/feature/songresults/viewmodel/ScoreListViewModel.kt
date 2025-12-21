@@ -9,6 +9,7 @@ import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
 import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
@@ -38,6 +39,7 @@ class ScoreListViewModel(
     private val resultOrganizer: ChartResultOrganizer,
     private val sanbaiAPI: SanbaiAPI,
     private val sanbaiManager: SanbaiManager,
+    private val ladderSettings: LadderSettings,
     private val bannerManager: BannerManager,
     private val songResultSettings: SongResultSettings,
 ): ViewModel(), KoinComponent {
@@ -71,8 +73,9 @@ class ScoreListViewModel(
                     },
                 filterViewModel.uiState,
                 bannerManager.getBannerFlow(BannerLocation.SCORES),
-                songResultSettings.enableDifficultyTiers
-            ) { results, filterView, banner, enableDifficultyTiers ->
+                songResultSettings.enableDifficultyTiers,
+                ladderSettings.useMonospaceScore,
+            ) { results, filterView, banner, enableDifficultyTiers, useMonospaceScore ->
                 if (results.resultsDone.isEmpty()) {
                     UIScoreList.Empty(
                         filter = filterView,
@@ -81,6 +84,7 @@ class ScoreListViewModel(
                 } else {
                     UIScoreList.Loaded(
                         scores = results.resultsDone.map { it.toUIScore(enableDifficultyTiers) },
+                        useMonospaceFontForScore = useMonospaceScore,
                         filter = filterView,
                         banner = banner
                     )

@@ -16,6 +16,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.toViewData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.GoalStateManager
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDataManager
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderGoalProgressManager
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MAConfig
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
@@ -43,6 +44,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
     private val goalStateManager: GoalStateManager by inject()
     private val ladderGoalProgressManager: LadderGoalProgressManager by inject()
     private val ladderGoalMapper: LadderGoalMapper by inject()
+    private val ladderSettings: LadderSettings by inject()
     private val userRankSettings: UserRankSettings by inject()
     private val songResultSettings: SongResultSettings by inject()
     private val maSettings: MASettings by inject()
@@ -82,9 +84,10 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
 //                goalStateManager.updated,
                 combine(
                     maSettings.maConfig,
-                    songResultSettings.enableDifficultyTiers
-                ) { a, b -> a to b },
-            ) { targetRank, requirements, progress, expanded, (maConfig, showDiffTiers) ->
+                    songResultSettings.enableDifficultyTiers,
+                    ladderSettings.useMonospaceScore,
+                ) { a, b, c -> Triple(a, b, c) },
+            ) { targetRank, requirements, progress, expanded, (maConfig, showDiffTiers, useMonospaceScore) ->
                 logger.d { "Updating to $targetRank, requirements = $requirements, expanded = $expanded" }
                 val substitutions = if (requirements?.substitutionGoals?.isNotEmpty() == true) {
                     val goalStates = goalStateManager.getGoalStateList(requirements.substitutionGoals)
@@ -117,14 +120,16 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                         UILadderData(
                             targetRankClass = targetRank.group,
                             goals = generateDifficultyCategories(requirements, progress, expanded, maConfig, showDiffTiers),
-                            substitutions = substitutions
+                            substitutions = substitutions,
+                            useMonospaceFontForScore = useMonospaceScore,
                         )
                     )
                     else -> ViewState.Success(
                         UILadderData(
                             targetRankClass = targetRank.group,
                             goals = generateCommonCategories(requirements, progress, expanded, maConfig, showDiffTiers),
-                            substitutions = substitutions
+                            substitutions = substitutions,
+                            useMonospaceFontForScore = useMonospaceScore,
                         )
                     )
                 }
@@ -266,7 +271,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
         )
     )
 
-    fun handleAction(action: GoalListInput) {
+    fun handleInput(action: GoalListInput) {
         when(action) {
             is GoalListInput.OnGoal -> {
                 val state = goalStateManager.getOrCreateGoalState(action.id)

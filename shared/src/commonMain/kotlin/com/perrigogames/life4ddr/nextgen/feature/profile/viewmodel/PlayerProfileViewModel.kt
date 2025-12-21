@@ -51,7 +51,7 @@ class PlayerProfileViewModel(
     }
 
     fun handleInput(input: PlayerProfileInput) = when(input) {
-        is PlayerProfileInput.GoalList -> goalListViewModel.handleAction(input.input)
+        is PlayerProfileInput.GoalList -> goalListViewModel.handleInput(input.input)
         PlayerProfileInput.ChangeRankClicked -> viewModelScope.launch {
             _events.emit(PlayerProfileEvent.NavigateToChangeRank)
         }
