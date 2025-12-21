@@ -1,6 +1,5 @@
 package com.perrigogames.life4ddr.nextgen.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
