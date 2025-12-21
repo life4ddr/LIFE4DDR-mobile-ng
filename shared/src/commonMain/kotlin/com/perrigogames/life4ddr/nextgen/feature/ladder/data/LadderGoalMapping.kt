@@ -64,11 +64,9 @@ class LadderGoalMapper : KoinComponent {
                 UILadderDetailItem.Entry(
                     leftText = title,
                     leftColor = chart.difficultyClass.colorRes,
-                    leftWeight = 0.75f,
                     leftSubtitle = subtitle,
                     rightText = "L${chart.difficultyNumber} > ${maPoints()}".desc(),
                     rightColor = result!!.clearType.colorRes,
-                    rightWeight = 0.25f
                 )
             } else {
                 UILadderDetailItem.Entry(
@@ -94,12 +92,10 @@ class LadderGoalMapper : KoinComponent {
                     val totalPoints = results.sumOf { it.maPointsThousandths() }.toMAPointsDouble()
                     UILadderDetailItem.Entry(
                         leftText = points.toMAPointsCategoryString(),
-                        leftWeight = 0.75f,
                         leftColor = clearType.colorRes,
                         leftSubtitle = "${results.first().maPoints()} Points",
                         rightText = "x${results.count()} > $totalPoints".desc(),
                         rightColor = clearType.colorRes,
-                        rightWeight = 0.25f
                     )
                 }
         }

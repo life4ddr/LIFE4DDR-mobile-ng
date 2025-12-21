@@ -40,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
@@ -415,6 +416,7 @@ private fun LadderGoalDetailShade(
                             Text(
                                 text = rightText.localized(),
                                 color = item.rightColor?.let { colorResource(it) } ?: MaterialTheme.colorScheme.onSurface,
+                                fontFamily = FontFamily.Monospace,
                                 textAlign = TextAlign.End,
                                 modifier = Modifier.weight(item.rightWeight)
                             )

@@ -156,11 +156,11 @@ sealed class UILadderDetailItem {
     data class Entry(
         val leftText: String,
         val leftColor: ColorResource? = null,
-        val leftWeight: Float = 0.8f,
+        val leftWeight: Float = 0.75f,
         val leftSubtitle: String? = null,
         val rightText: StringDesc? = null,
         val rightColor: ColorResource? = null,
-        val rightWeight: Float = 0.2f,
+        val rightWeight: Float = 0.25f,
     ) : UILadderDetailItem()
 
     data object Spacer : UILadderDetailItem()
