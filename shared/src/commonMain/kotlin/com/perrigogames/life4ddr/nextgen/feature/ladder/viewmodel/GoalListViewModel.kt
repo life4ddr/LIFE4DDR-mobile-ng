@@ -239,7 +239,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
 
         return UILadderGoals.CategorizedList(
             categories = categories.map { (level, goals) ->
-                val title = level?.let { StringDesc.ResourceFormatted(MR.strings.level_header, it) }
+                val title = level?.let { StringDesc.ResourceFormatted(MR.strings.rank_goal_category_level, it) }
                     ?: MR.strings.other_goals.desc()
                 UILadderGoals.CategorizedList.Category(title) to goals.map { goal ->
                     ladderGoalMapper.toViewData(

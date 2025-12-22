@@ -40,7 +40,7 @@ class SettingsPageProvider : BaseModel() {
     fun getRootPage(isDebug: Boolean): Flow<UISettingsData> = flowOf(
         UISettingsData(
             isRoot = true,
-            screenTitle = MR.strings.tab_settings.desc(),
+            screenTitle = MR.strings.action_settings.desc(),
             settingsItems = listOfNotNull(
                 UISettingsItem.Link(
                     key = KEY_NAV_USER_INFO,
