@@ -58,6 +58,6 @@ object UITrialSessionMocks {
             ),
         ),
         buttonText = "Start Trial".desc(),
-        buttonAction = TrialSessionInput.StartTrial,
+        buttonAction = TrialSessionInput.StartTrial(fromDialog = true),
     )
 }

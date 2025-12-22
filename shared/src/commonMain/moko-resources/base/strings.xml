@@ -329,6 +329,10 @@
         <string name="trial_fail_under_rank_confirmation">It is no longer possible to improve your rank on %s.\n\nWould you like to Concede this Trial attempt?</string>
         <string name="trial_close_confirmation">The progress made in this Trial will not be saved.</string>
 
+        <string name="trial_warning_dialog_title">Trials Unstable!</string>
+        <string name="trial_warning_dialog_body">The Trials feature is currently unstable. It is possible to use the feature, but you will likely run into unexpected bugs or crashes.\n\nWould you like to continue anyway?</string>
+        <string name="trial_warning_dialog_play">Play anyway</string>
+
         <string name="trial_reminder_score">You must score %s on this song!</string>
         <string name="trial_reminder_clear_type">You must %s this song!</string>
         <string name="trial_reminder_fail_allowed">You are not required to pass this song.</string>

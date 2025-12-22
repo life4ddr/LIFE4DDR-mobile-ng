@@ -190,7 +190,7 @@ class TrialSessionViewModel(
                     ),
                     content = contentProvider.provideSummary(),
                     buttonText = MR.strings.placement_start.desc(),
-                    buttonAction = TrialSessionInput.StartTrial,
+                    buttonAction = TrialSessionInput.StartTrial(fromDialog = false),
                 )
             )
             targetRank.value = rank
@@ -204,8 +204,22 @@ class TrialSessionViewModel(
                 targetRank.value = action.target
             }
 
-            TrialSessionInput.StartTrial -> {
-                stage.value = 0
+            is TrialSessionInput.StartTrial -> {
+                if (action.fromDialog) {
+                    stage.value = 0
+                } else {
+                    viewModelScope.launch {
+                        _events.emit(
+                            TrialSessionEvent.ShowWarningDialog(
+                                title = MR.strings.trial_warning_dialog_title.desc(),
+                                body = MR.strings.trial_warning_dialog_body.desc(),
+                                ctaCancelText = MR.strings.cancel.desc(),
+                                ctaConfirmText = MR.strings.trial_warning_dialog_play.desc(),
+                                ctaConfirmInput = TrialSessionInput.StartTrial(fromDialog = true),
+                            )
+                        )
+                    }
+                }
             }
 
             is TrialSessionInput.TakePhoto -> {

@@ -49,6 +49,7 @@ fun TrialSessionScreen(
 
     val viewState by viewModel.state.collectAsState()
     val bottomSheetState by viewModel.bottomSheetState.collectAsState()
+    var dialogData by remember { mutableStateOf<TrialSessionEvent.ShowWarningDialog?>(null) }
 
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
@@ -126,6 +127,31 @@ fun TrialSessionScreen(
         }
     }
 
+    dialogData?.let { data ->
+        AlertDialog(
+            onDismissRequest = { dialogData = null },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        dialogData = null
+                        viewModel.handleAction(data.ctaConfirmInput)
+                    }
+                ) {
+                    Text(data.ctaConfirmText.localized())
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { dialogData = null }
+                ) {
+                    Text(data.ctaCancelText.localized())
+                }
+            },
+            title = { Text(text = data.title.localized()) },
+            text = { Text(text = data.body.localized()) }
+        )
+    }
+
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
@@ -133,6 +159,9 @@ fun TrialSessionScreen(
                 TrialSessionEvent.HideBottomSheet -> {
                     focusManager.clearFocus()
                     scaffoldState.bottomSheetState.hide()
+                }
+                is TrialSessionEvent.ShowWarningDialog -> {
+                    dialogData = event
                 }
             }
         }
@@ -159,6 +188,8 @@ fun TrialSessionContent(
         Column(
             modifier = Modifier
                 .padding(16.dp)
+                .systemBarsPadding()
+                .navigationBarsPadding()
         ) {
             TrialSessionHeader(
                 viewData = viewData,

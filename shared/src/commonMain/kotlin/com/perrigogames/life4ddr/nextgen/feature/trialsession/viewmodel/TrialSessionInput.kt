@@ -4,7 +4,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 
 sealed class TrialSessionInput {
-    data object StartTrial : TrialSessionInput()
+    data class StartTrial(val fromDialog: Boolean) : TrialSessionInput()
 
     data class ChangeTargetRank(
         val target: TrialRank
