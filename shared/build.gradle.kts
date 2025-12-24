@@ -94,40 +94,62 @@ multiplatformResources {
     resourcesPackage.set("com.perrigogames.life4ddr.nextgen")
 }
 
-tasks.register("generateSecretsFile") {
-    doLast {
-        val properties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
+@CacheableTask
+abstract class GenerateSecretsFileTask : DefaultTask() {
 
-        val sanbaiId: String?
-        val sanbaiSecret: String?
+    @get:InputFile
+    @get:Optional
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val localPropertiesFile: RegularFileProperty
 
-        if (localPropertiesFile.exists()) {
-            println("Reading local.properties")
-            localPropertiesFile.inputStream().use { properties.load(it) }
-            sanbaiId = properties.getProperty("sanbai.app.id")
-            sanbaiSecret = properties.getProperty("sanbai.app.secret")
-        } else {
-            sanbaiId = System.getenv("SANBAI_APP_ID")
-            sanbaiSecret = System.getenv("SANBAI_APP_SECRET")
-        }
-        if (sanbaiId == null) { println("SANBAI_ID is null") }
-        if (sanbaiSecret == null) { println("SANBAI_SECRET is null") }
+    @get:Input
+    @get:Optional
+    abstract val sanbaiAppId: Property<String>
 
-        val outputFile = file("src/commonMain/kotlin/com/perrigogames/life4ddr/nextgen/feature/sanbai/api/SanbaiSecrets.kt")
-        outputFile.parentFile.mkdirs()
-        outputFile.writeText(
+    @get:Input
+    @get:Optional
+    abstract val sanbaiAppSecret: Property<String>
+
+    @get:OutputFile
+    abstract val secretsFile: RegularFileProperty
+
+    @TaskAction
+    fun generate() {
+        val sanbaiId = sanbaiAppId.getOrElse("NO_ID")
+        val sanbaiSecret = sanbaiAppSecret.getOrElse("NO_SECRET")
+
+        secretsFile.get().asFile.writeText(
             """
         package com.perrigogames.life4ddr.nextgen.feature.sanbai.api
 
         object SanbaiSecrets {
-            const val SANBAI_APP_ID = "${sanbaiId ?: "NO_ID"}"
-            const val SANBAI_APP_SECRET = "${sanbaiSecret ?: "NO_SECRET"}"
+            const val SANBAI_APP_ID = "$sanbaiId"
+            const val SANBAI_APP_SECRET = "$sanbaiSecret"
         }
         """.trimIndent()
         )
-        println("Generated Kotlin source file at ${outputFile.path}")
+        println("Generated Kotlin source file at ${secretsFile.get().asFile.path}")
     }
+}
+
+tasks.register<GenerateSecretsFileTask>("generateSecretsFile") {
+    val localProps = rootProject.file("local.properties")
+
+    localPropertiesFile.set(localProps)
+
+    if (localProps.exists()) {
+        println("Using local.properties")
+        val properties = Properties()
+        localProps.inputStream().use { properties.load(it) }
+        sanbaiAppId.set(properties.getProperty("sanbai.app.id"))
+        sanbaiAppSecret.set(properties.getProperty("sanbai.app.secret"))
+    } else {
+        println("Using env variables")
+        sanbaiAppId.set(providers.environmentVariable("SANBAI_APP_ID").orNull)
+        sanbaiAppSecret.set(providers.environmentVariable("SANBAI_APP_SECRET").orNull)
+    }
+
+    secretsFile.set(layout.projectDirectory.file("src/commonMain/kotlin/com/perrigogames/life4ddr/nextgen/feature/sanbai/api/SanbaiSecrets.kt"))
 }
 
 tasks.named("preBuild") {
