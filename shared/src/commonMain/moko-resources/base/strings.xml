@@ -327,7 +327,7 @@
         <string name="trial_close_confirmation">The progress made in this Trial will not be saved.</string>
 
         <string name="trial_warning_dialog_title">Trials Unstable!</string>
-        <string name="trial_warning_dialog_body">The Trials feature is currently unstable. It is possible to use the feature, but you will likely run into unexpected bugs or crashes.\n\nWould you like to continue anyway?</string>
+        <string name="trial_warning_dialog_body">The Trials feature is currently unstable. It is possible to use the feature, but you will likely run into unexpected bugs or crashes.\n\nTo accept a Trial, we require photos of each song's results screen, as well as the final results screen showing your sequential plays. Photos are placed in the Photos/LIFE4 folder.\n\nYou must also clear the Extra Stage with fewer than 4 Misses.\n\nWould you like to continue anyway?</string>
         <string name="trial_warning_dialog_play">Play anyway</string>
         <string name="trial_warning_message_retired">This Trial has been retired.</string>
         <string name="trial_warning_message_expired_event">This event has ended.</string>
