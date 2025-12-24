@@ -50,8 +50,8 @@ fun sanbaiHttpClient(
                 val tokenResponse = client.post("https://3icecream.com/oauth/token") {
                     setBody(
                         SanbaiAuthTokenRequest(
-                            clientId = SanbaiAPI.SANBAI_CLIENT_ID,
-                            clientSecret = SanbaiAPI.SANBAI_CLIENT_SECRET,
+                            clientId = SanbaiSecrets.SANBAI_APP_ID,
+                            clientSecret = SanbaiSecrets.SANBAI_APP_SECRET,
                             grantType = "refresh_token",
                             refreshToken = sanbaiSettings.refreshToken,
                             redirectUri = SANBAI_AUTH_RETURN_PATH_FULL

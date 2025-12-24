@@ -12,6 +12,9 @@ jobs:
   android:
     name: Android — build, lint, test
     runs-on: ubuntu-latest
+    env:
+      SANBAI_APP_ID: ${{ secrets.SANBAI_APP_ID }}
+      SANBAI_APP_SECRET: ${{ secrets.SANBAI_APP_SECRET }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -51,4 +54,4 @@ jobs:
             **/build/outputs/**/*.apk
             **/build/outputs/**/*.aab
             **/build/outputs/**/*bundle*
-            app/build/outputs/**
+            composeApp/build/outputs/**

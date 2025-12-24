@@ -92,3 +92,26 @@ sqldelight {
 multiplatformResources {
     resourcesPackage.set("com.perrigogames.life4ddr.nextgen")
 }
+
+tasks.register("generateSecretsFile") {
+    val sanbaiId = System.getenv("SANBAI_APP_ID") ?: "NO_ID_DEFINED".also { println(it) }
+    val sanbaiSecret = System.getenv("SANBAI_APP_SECRET") ?: "NO_SECRET_DEFINED".also { println(it) }
+
+    val outputFile = file("src/commonMain/kotlin/com/perrigogames/life4ddr/nextgen/feature/sanbai/api/SanbaiSecrets.kt")
+    outputFile.parentFile.mkdirs()
+    outputFile.writeText(
+        """
+        package com.perrigogames.life4ddr.nextgen.feature.sanbai.api
+
+        object SanbaiSecrets {
+            const val SANBAI_APP_ID = "$sanbaiId"
+            const val SANBAI_APP_SECRET = "$sanbaiSecret"
+        }
+        """.trimIndent()
+    )
+    println("Generated Kotlin source file at ${outputFile.path}")
+}
+
+tasks.named("preBuild") {
+    dependsOn("generateSecretsFile")
+}

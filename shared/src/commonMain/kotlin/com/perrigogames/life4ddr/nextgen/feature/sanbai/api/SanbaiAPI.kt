@@ -3,8 +3,6 @@ package com.perrigogames.life4ddr.nextgen.feature.sanbai.api
 import com.perrigogames.life4ddr.nextgen.api.SanbaiAuthTokenRequest
 import com.perrigogames.life4ddr.nextgen.api.SanbaiAuthTokenResponse
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager.Companion.SANBAI_AUTH_RETURN_PATH_FULL
-import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI.Companion.SANBAI_CLIENT_ID
-import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI.Companion.SANBAI_CLIENT_SECRET
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SanbaiScoreResult
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponse
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SongListResponseItem
@@ -65,7 +63,7 @@ class DefaultSanbaiAPI : SanbaiAPI, KoinComponent {
 
     override fun getAuthorizeUrl(): String {
         return "https://3icecream.com/oauth/authorize" +
-                "?client_id=$SANBAI_CLIENT_ID" +
+                "?client_id=${SanbaiSecrets.SANBAI_APP_ID}" +
                 "&response_type=code" +
                 "&scope=read_scores" +
                 "&redirect_uri=$SANBAI_AUTH_RETURN_PATH_FULL"
@@ -75,8 +73,8 @@ class DefaultSanbaiAPI : SanbaiAPI, KoinComponent {
         val response = client.post("https://3icecream.com/oauth/token") {
             setBody(
                 SanbaiAuthTokenRequest(
-                    clientId = SANBAI_CLIENT_ID,
-                    clientSecret = SANBAI_CLIENT_SECRET,
+                    clientId = SanbaiSecrets.SANBAI_APP_ID,
+                    clientSecret = SanbaiSecrets.SANBAI_APP_SECRET,
                     code = code,
                     redirectUri = SANBAI_AUTH_RETURN_PATH_FULL,
                     grantType = "authorization_code"
