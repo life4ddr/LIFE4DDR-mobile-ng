@@ -46,12 +46,9 @@ jobs:
         env:
           JAVA_OPTS: -Xmx3g
 
-      - name: Upload APK/AAB artifacts
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v5
         with:
-          name: android-build
-          path: |
-            **/build/outputs/**/*.apk
-            **/build/outputs/**/*.aab
-            **/build/outputs/**/*bundle*
-            composeApp/build/outputs/**
+          name: composeApp-debug
+          path: composeApp/build/outputs/apk/debug/composeApp-debug.apk
+          retention-days: 30
