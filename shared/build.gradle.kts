@@ -95,28 +95,29 @@ multiplatformResources {
 }
 
 tasks.register("generateSecretsFile") {
-    val properties = Properties()
-    val localPropertiesFile = rootProject.file("local.properties")
+    doLast {
+        val properties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
 
-    val sanbaiId: String?
-    val sanbaiSecret: String?
+        val sanbaiId: String?
+        val sanbaiSecret: String?
 
-    if (localPropertiesFile.exists()) {
-        println("Reading local.properties")
-        localPropertiesFile.inputStream().use { properties.load(it) }
-        sanbaiId = properties.getProperty("sanbai.app.id")
-        sanbaiSecret = properties.getProperty("sanbai.app.secret")
-    } else {
-        sanbaiId = System.getenv("SANBAI_APP_ID")
-        sanbaiSecret = System.getenv("SANBAI_APP_SECRET")
-    }
-    if (sanbaiId == null) { println("SANBAI_ID is null") }
-    if (sanbaiSecret == null) { println("SANBAI_SECRET is null") }
+        if (localPropertiesFile.exists()) {
+            println("Reading local.properties")
+            localPropertiesFile.inputStream().use { properties.load(it) }
+            sanbaiId = properties.getProperty("sanbai.app.id")
+            sanbaiSecret = properties.getProperty("sanbai.app.secret")
+        } else {
+            sanbaiId = System.getenv("SANBAI_APP_ID")
+            sanbaiSecret = System.getenv("SANBAI_APP_SECRET")
+        }
+        if (sanbaiId == null) { println("SANBAI_ID is null") }
+        if (sanbaiSecret == null) { println("SANBAI_SECRET is null") }
 
-    val outputFile = file("src/commonMain/kotlin/com/perrigogames/life4ddr/nextgen/feature/sanbai/api/SanbaiSecrets.kt")
-    outputFile.parentFile.mkdirs()
-    outputFile.writeText(
-        """
+        val outputFile = file("src/commonMain/kotlin/com/perrigogames/life4ddr/nextgen/feature/sanbai/api/SanbaiSecrets.kt")
+        outputFile.parentFile.mkdirs()
+        outputFile.writeText(
+            """
         package com.perrigogames.life4ddr.nextgen.feature.sanbai.api
 
         object SanbaiSecrets {
@@ -124,8 +125,9 @@ tasks.register("generateSecretsFile") {
             const val SANBAI_APP_SECRET = "${sanbaiSecret ?: "NO_SECRET"}"
         }
         """.trimIndent()
-    )
-    println("Generated Kotlin source file at ${outputFile.path}")
+        )
+        println("Generated Kotlin source file at ${outputFile.path}")
+    }
 }
 
 tasks.named("preBuild") {
