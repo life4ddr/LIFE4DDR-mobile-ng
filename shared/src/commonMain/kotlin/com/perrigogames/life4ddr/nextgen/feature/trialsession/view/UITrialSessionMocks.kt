@@ -57,7 +57,9 @@ object UITrialSessionMocks {
                 ),
             ),
         ),
-        buttonText = "Start Trial".desc(),
-        buttonAction = TrialSessionInput.StartTrial(fromDialog = true),
+        footer = UITrialSession.Footer.Button(
+            buttonText = "Start Trial".desc(),
+            buttonAction = TrialSessionInput.StartTrial(fromDialog = true),
+        ),
     )
 }

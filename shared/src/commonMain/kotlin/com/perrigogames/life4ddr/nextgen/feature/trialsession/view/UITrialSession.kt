@@ -17,9 +17,20 @@ data class UITrialSession(
     val exScoreBar: UIEXScoreBar,
     val targetRank: UITargetRank,
     val content: UITrialSessionContent,
-    val buttonText: StringDesc,
-    val buttonAction: TrialSessionInput,
-)
+    val footer: Footer
+) {
+
+    sealed class Footer {
+        data class Button(
+            val buttonText: StringDesc,
+            val buttonAction: TrialSessionInput,
+        ) : Footer()
+
+        data class Message(
+            val message: StringDesc,
+        ) : Footer()
+    }
+}
 
 /**
  * Describes the content of the EX score bar.

@@ -219,13 +219,34 @@ fun TrialSessionContent(
             }
             SizedSpacer(32.dp)
             AnimatedContent(
-                targetState = viewData.buttonText,
+                targetState = viewData.footer,
                 transitionSpec = { fadeIn() togetherWith fadeOut() }
             ) {
-                LargeCTAButton(
-                    text = it.localized(),
-                    onClick = { onAction(viewData.buttonAction) }
-                )
+                when (it) {
+                    is UITrialSession.Footer.Button -> {
+                        LargeCTAButton(
+                            text = it.buttonText.localized(),
+                            onClick = { onAction(it.buttonAction) }
+                        )
+                    }
+                    is UITrialSession.Footer.Message -> {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.errorContainer,
+                                shape = MaterialTheme.shapes.medium,
+                            ) {
+                                Text(
+                                    text = it.message.localized(),
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -316,9 +316,6 @@
         <string name="event_tag">EVENT</string>
         <string name="author_credit_format">Created by %s</string>
 
-        <string name="trial_retired_dialog_title">Retired</string>
-        <string name="trial_retired_dialog_description_format">LIFE4 no longer accepts new submissions for %s.\n\nYou may still track your progress, but it will not be saved in the app and cannot be submitted to earn a rank.</string>
-
         <string name="trial_clear_records_title">Clear Trial Records</string>
         <string name="trial_clear_records_body">Are you sure you want to delete all records for %s?</string>
         <!--  endregion  -->
@@ -332,6 +329,8 @@
         <string name="trial_warning_dialog_title">Trials Unstable!</string>
         <string name="trial_warning_dialog_body">The Trials feature is currently unstable. It is possible to use the feature, but you will likely run into unexpected bugs or crashes.\n\nWould you like to continue anyway?</string>
         <string name="trial_warning_dialog_play">Play anyway</string>
+        <string name="trial_warning_message_retired">This Trial has been retired.</string>
+        <string name="trial_warning_message_expired_event">This event has ended.</string>
 
         <string name="trial_reminder_score">You must score %s on this song!</string>
         <string name="trial_reminder_clear_type">You must %s this song!</string>

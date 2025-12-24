@@ -134,8 +134,10 @@ class TrialSessionViewModel(
                             currentExText = StringDesc.Raw(currentEx.toString())
                         ),
                         content = contentProvider.provideFinalScreen(session),
-                        buttonText = MR.strings.take_results_photo.desc(),
-                        buttonAction = TrialSessionInput.TakeResultsPhoto,
+                        footer = UITrialSession.Footer.Button(
+                            buttonText = MR.strings.take_results_photo.desc(),
+                            buttonAction = TrialSessionInput.TakeResultsPhoto,
+                        ),
                     )
                 } else {
                     current.copy(
@@ -145,8 +147,10 @@ class TrialSessionViewModel(
                             currentExText = StringDesc.Raw(currentEx.toString())
                         ),
                         content = contentProvider.provideMidSession(session, stage, targetRank.rank),
-                        buttonText = MR.strings.take_photo.desc(),
-                        buttonAction = TrialSessionInput.TakePhoto(stage),
+                        footer = UITrialSession.Footer.Button(
+                            buttonText = MR.strings.take_photo.desc(),
+                            buttonAction = TrialSessionInput.TakePhoto(stage),
+                        ),
                     )
                 }.toViewState()
             }.collect()
@@ -159,7 +163,9 @@ class TrialSessionViewModel(
         } else {
             val bestSession = trialRecordsManager.bestSessions.value
                 .firstOrNull { it.trialId == trialId }
-            val allowedRanks = trial.goals?.map { it.rank } ?: emptyList()
+            val allowedRanks = trial.goals?.map { it.rank }
+                ?: trial.scoringGroups?.flatten()
+                ?: emptyList()
             val rank = getStartingRank(
                 playerRank = userRankSettings.rank.value,
                 bestRank = bestSession?.goalRank,
@@ -189,8 +195,14 @@ class TrialSessionViewModel(
                         rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(rank)!!, trial),
                     ),
                     content = contentProvider.provideSummary(),
-                    buttonText = MR.strings.placement_start.desc(),
-                    buttonAction = TrialSessionInput.StartTrial(fromDialog = false),
+                    footer = when {
+                        trial.isEvent && !trial.isActiveEvent -> UITrialSession.Footer.Message(MR.strings.trial_warning_message_expired_event.desc())
+                        trial.isRetired -> UITrialSession.Footer.Message(MR.strings.trial_warning_message_retired.desc())
+                        else -> UITrialSession.Footer.Button(
+                            buttonText = MR.strings.placement_start.desc(),
+                            buttonAction = TrialSessionInput.StartTrial(fromDialog = false),
+                        )
+                    },
                 )
             )
             targetRank.value = rank
