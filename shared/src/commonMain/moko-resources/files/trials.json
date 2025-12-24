@@ -1,5 +1,5 @@
 {
-    "version": 1,
+    "version": 2,
     "major_version": 4,
     "trials": [
         {
@@ -37,6 +37,15 @@
                 {
                     "rank": "silver",
                     "score": [
+                        900000,
+                        900000,
+                        850000,
+                        850000
+                    ]
+                },
+                {
+                    "rank": "gold",
+                    "score": [
                         960000,
                         940000,
                         940000,
@@ -44,39 +53,39 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         995000,
                         990000,
-                        985000,
+                        990000,
                         985000
                     ]
                 },
                 {
-                    "rank": "platinum",
-                    "clear": [
-                        "pfc"
-                    ],
+                    "rank": "diamond",
                     "score": [
                         990000,
                         990000,
                         990000,
                         990000
                     ],
+                    "clear": [
+                        "perfect"
+                    ],
                     "ex_missing": 220
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 8,
                     "ex_missing": 160
                 },
                 {
-                    "rank": "cobalt",
-                    "judge": 5,
+                    "rank": "pearl",
+                    "judge": 4,
                     "ex_missing": 110
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 2,
                     "ex_missing": 80
                 },
@@ -91,6 +100,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 30
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 18
                 }
             ],
             "total_ex": 3702
@@ -229,6 +242,15 @@
                 {
                     "rank": "silver",
                     "score": [
+                        900000,
+                        900000,
+                        850000,
+                        850000
+                    ]
+                },
+                {
+                    "rank": "gold",
+                    "score": [
                         960000,
                         925000,
                         925000,
@@ -236,7 +258,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         990000,
                         990000,
@@ -245,30 +267,30 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
-                    "clear": [
-                        "pfc"
-                    ],
+                    "rank": "diamond",
                     "score": [
                         990000,
                         990000,
                         990000,
                         990000
                     ],
+                    "clear": [
+                        "perfect"
+                    ],
                     "ex_missing": 250
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 10,
                     "ex_missing": 180
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 5,
                     "ex_missing": 120
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 3,
                     "ex_missing": 90
                 },
@@ -283,6 +305,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 40
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 24
                 }
             ],
             "total_ex": 4569
@@ -322,6 +348,15 @@
                 {
                     "rank": "silver",
                     "score": [
+                        900000,
+                        900000,
+                        850000,
+                        850000
+                    ]
+                },
+                {
+                    "rank": "gold",
+                    "score": [
                         940000,
                         940000,
                         920000,
@@ -329,7 +364,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         985000,
                         985000,
@@ -338,7 +373,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         996000,
                         996000,
@@ -348,17 +383,17 @@
                     "ex_missing": 260
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 12,
                     "ex_missing": 200
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 6,
                     "ex_missing": 140
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 4,
                     "ex_missing": 110
                 },
@@ -368,10 +403,14 @@
                 },
                 {
                     "rank": "emerald",
-                    "ex_missing": 44
+                    "ex_missing": 66
                 },
                 {
                     "rank": "onyx",
+                    "ex_missing": 44
+                },
+                {
+                    "rank": "ruby",
                     "ex_missing": 26
                 }
             ],
@@ -411,6 +450,21 @@
             "goals": [
                 {
                     "rank": "silver",
+                    "clear_indexed": [
+                        "clear",
+                        "clear",
+                        "clear",
+                        "fail"
+                    ],
+                    "score_indexed": [
+                        0,
+                        0,
+                        0,
+                        300000
+                    ]
+                },
+                {
+                    "rank": "gold",
                     "score": [
                         890000,
                         890000,
@@ -419,7 +473,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         980000,
                         980000,
@@ -428,7 +482,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         990000,
                         990000,
@@ -438,17 +492,17 @@
                     "ex_missing": 270
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 15,
                     "ex_missing": 220
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 10,
                     "ex_missing": 160
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 6,
                     "ex_missing": 135
                 },
@@ -463,6 +517,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 52
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 30
                 }
             ],
             "total_ex": 5169
@@ -501,6 +559,21 @@
             "goals": [
                 {
                     "rank": "silver",
+                    "clear_indexed": [
+                        "clear",
+                        "clear",
+                        "clear",
+                        "fail"
+                    ],
+                    "score_indexed": [
+                        0,
+                        0,
+                        0,
+                        300000
+                    ]
+                },
+                {
+                    "rank": "gold",
                     "score": [
                         940000,
                         900000,
@@ -509,7 +582,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         975000,
                         975000,
@@ -518,7 +591,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         995000,
                         995000,
@@ -528,17 +601,17 @@
                     "ex_missing": 270
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 15,
                     "ex_missing": 220
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 10,
                     "ex_missing": 160
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 6,
                     "ex_missing": 135
                 },
@@ -553,6 +626,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 42
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 25
                 }
             ],
             "total_ex": 5280
@@ -591,6 +668,21 @@
             "goals": [
                 {
                     "rank": "silver",
+                    "clear_indexed": [
+                        "clear",
+                        "clear",
+                        "clear",
+                        "fail"
+                    ],
+                    "score_indexed": [
+                        0,
+                        0,
+                        0,
+                        300000
+                    ]
+                },
+                {
+                    "rank": "gold",
                     "score": [
                         910000,
                         910000,
@@ -599,7 +691,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         980000,
                         980000,
@@ -608,7 +700,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         990000,
                         990000,
@@ -618,17 +710,17 @@
                     "ex_missing": 260
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 15,
                     "ex_missing": 200
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 10,
                     "ex_missing": 150
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 6,
                     "ex_missing": 135
                 },
@@ -643,6 +735,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 55
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 32
                 }
             ],
             "total_ex": 4428
@@ -776,6 +872,21 @@
             "goals": [
                 {
                     "rank": "silver",
+                    "clear_indexed": [
+                        "clear",
+                        "clear",
+                        "clear",
+                        "fail"
+                    ],
+                    "score_indexed": [
+                        0,
+                        0,
+                        0,
+                        300000
+                    ]
+                },
+                {
+                    "rank": "gold",
                     "score": [
                         900000,
                         900000,
@@ -784,7 +895,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         980000,
                         980000,
@@ -793,7 +904,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         990000,
                         990000,
@@ -803,17 +914,17 @@
                     "ex_missing": 340
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 25,
                     "ex_missing": 290
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 15,
                     "ex_missing": 210
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 7,
                     "ex_missing": 180
                 },
@@ -828,6 +939,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 70
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 40
                 }
             ],
             "total_ex": 5073
@@ -867,6 +982,21 @@
             "goals": [
                 {
                     "rank": "silver",
+                    "clear_indexed": [
+                        "clear",
+                        "clear",
+                        "clear",
+                        "fail"
+                    ],
+                    "score_indexed": [
+                        0,
+                        0,
+                        0,
+                        300000
+                    ]
+                },
+                {
+                    "rank": "gold",
                     "score": [
                         900000,
                         900000,
@@ -875,7 +1005,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         980000,
                         980000,
@@ -884,7 +1014,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         990000,
                         990000,
@@ -894,17 +1024,17 @@
                     "ex_missing": 350
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 25,
                     "ex_missing": 290
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 16,
                     "ex_missing": 210
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 9,
                     "ex_missing": 180
                 },
@@ -919,6 +1049,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 80
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 45
                 }
             ],
             "total_ex": 4974
@@ -957,6 +1091,21 @@
             "goals": [
                 {
                     "rank": "silver",
+                    "clear_indexed": [
+                        "clear",
+                        "clear",
+                        "clear",
+                        "fail"
+                    ],
+                    "score_indexed": [
+                        0,
+                        0,
+                        0,
+                        300000
+                    ]
+                },
+                {
+                    "rank": "gold",
                     "score": [
                         900000,
                         900000,
@@ -965,7 +1114,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         980000,
                         980000,
@@ -974,7 +1123,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         990000,
                         990000,
@@ -984,17 +1133,17 @@
                     "ex_missing": 280
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 20,
                     "ex_missing": 220
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 12,
                     "ex_missing": 170
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 6,
                     "ex_missing": 150
                 },
@@ -1009,6 +1158,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 70
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 38
                 }
             ],
             "total_ex": 5361
@@ -1105,7 +1258,7 @@
             "difficulty": 14,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -1120,7 +1273,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         975000,
                         975000,
@@ -1130,7 +1283,7 @@
                     "miss": 10
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         990000,
                         990000,
@@ -1139,17 +1292,17 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 30,
                     "ex_missing": 250
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 18,
                     "ex_missing": 180
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 8,
                     "ex_missing": 145
                 },
@@ -1164,6 +1317,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 60
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 36
                 }
             ],
             "total_ex": 5463
@@ -1171,7 +1328,6 @@
         {
             "id": "upheaval",
             "name": "Upheaval",
-            "author": "plasmaaa",
             "type": "trial",
             "songs": [
                 {
@@ -1200,9 +1356,10 @@
                 }
             ],
             "difficulty": 14,
+            "author": "plasmaaa",
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -1217,7 +1374,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         975000,
                         975000,
@@ -1227,7 +1384,7 @@
                     "miss": 10
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         985000,
                         985000,
@@ -1236,17 +1393,17 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 30,
                     "ex_missing": 280
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 18,
                     "ex_missing": 200
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 9,
                     "ex_missing": 160
                 },
@@ -1261,6 +1418,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 70
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 40
                 }
             ],
             "total_ex": 5544
@@ -1298,7 +1459,7 @@
             "difficulty": 14,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -1313,7 +1474,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         960000,
                         960000,
@@ -1322,7 +1483,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         985000,
                         985000,
@@ -1331,17 +1492,17 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 30,
                     "ex_missing": 320
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 20,
                     "ex_missing": 220
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 10,
                     "ex_missing": 180
                 },
@@ -1356,6 +1517,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 80
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 45
                 }
             ],
             "total_ex": 5451
@@ -1493,7 +1658,7 @@
             "difficulty": 14,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -1508,7 +1673,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         975000,
                         975000,
@@ -1517,7 +1682,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         985000,
                         985000,
@@ -1526,17 +1691,17 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "judge": 30,
                     "ex_missing": 320
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "judge": 20,
                     "ex_missing": 230
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 10,
                     "ex_missing": 195
                 },
@@ -1551,6 +1716,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 80
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 45
                 }
             ],
             "total_ex": 6762
@@ -1588,7 +1757,7 @@
             "difficulty": 15,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -1603,7 +1772,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         970000,
                         950000,
@@ -1612,7 +1781,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         975000,
                         975000,
@@ -1621,7 +1790,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         990000,
                         990000,
@@ -1636,7 +1805,7 @@
                     "ex_missing": 375
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         990000,
                         990000,
@@ -1651,7 +1820,7 @@
                     "ex_missing": 260
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 12,
                     "ex_missing": 220
                 },
@@ -1666,6 +1835,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 90
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 55
                 }
             ],
             "total_ex": 6615
@@ -1703,7 +1876,7 @@
             "difficulty": 15,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -1718,7 +1891,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         950000,
                         950000,
@@ -1727,7 +1900,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         975000,
                         975000,
@@ -1736,7 +1909,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         990000,
                         990000,
@@ -1746,7 +1919,7 @@
                     "ex_missing": 375
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         990000,
                         990000,
@@ -1756,7 +1929,7 @@
                     "ex_missing": 260
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 12,
                     "ex_missing": 220
                 },
@@ -1771,6 +1944,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 95
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 58
                 }
             ],
             "total_ex": 6270
@@ -1808,7 +1985,7 @@
             "difficulty": 15,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -1823,7 +2000,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         925000,
                         925000,
@@ -1832,7 +2009,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         970000,
                         970000,
@@ -1841,7 +2018,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         990000,
                         990000,
@@ -1851,7 +2028,7 @@
                     "ex_missing": 420
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         990000,
                         990000,
@@ -1861,7 +2038,7 @@
                     "ex_missing": 280
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 12,
                     "ex_missing": 220
                 },
@@ -1876,6 +2053,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 75
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 42
                 }
             ],
             "total_ex": 6735
@@ -1913,7 +2094,7 @@
             "difficulty": 15,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -1928,7 +2109,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         925000,
                         925000,
@@ -1937,7 +2118,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         970000,
                         970000,
@@ -1946,7 +2127,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         985000,
                         985000,
@@ -1956,7 +2137,7 @@
                     "ex_missing": 420
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         985000,
                         985000,
@@ -1966,7 +2147,7 @@
                     "ex_missing": 280
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 12,
                     "ex_missing": 230
                 },
@@ -1981,6 +2162,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 85
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 48
                 }
             ],
             "total_ex": 7446
@@ -2018,7 +2203,7 @@
             "difficulty": 15,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -2033,7 +2218,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         960000,
                         860000,
@@ -2042,7 +2227,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         990000,
                         935000,
@@ -2051,7 +2236,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         955000,
                         955000,
@@ -2061,23 +2246,23 @@
                     "ex_missing": 450
                 },
                 {
-                    "rank": "cobalt",
-                    "clear": [
-                        "life4",
-                        "life4",
-                        "life4",
-                        "life4"
-                    ],
+                    "rank": "pearl",
                     "score": [
                         970000,
                         970000,
                         970000,
                         970000
                     ],
+                    "clear": [
+                        "life4",
+                        "life4",
+                        "life4",
+                        "life4"
+                    ],
                     "ex_missing": 320
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 15,
                     "ex_missing": 270
                 },
@@ -2092,6 +2277,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 120
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 70
                 }
             ],
             "total_ex": 6471
@@ -2129,7 +2318,7 @@
             "difficulty": 15,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -2144,7 +2333,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         900000,
                         900000,
@@ -2153,7 +2342,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         970000,
                         970000,
@@ -2162,7 +2351,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         980000,
                         980000,
@@ -2172,7 +2361,7 @@
                     "ex_missing": 375
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         985000,
                         985000,
@@ -2182,7 +2371,7 @@
                     "ex_missing": 260
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 14,
                     "ex_missing": 230
                 },
@@ -2197,6 +2386,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 110
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 65
                 }
             ],
             "total_ex": 6870
@@ -2234,7 +2427,7 @@
             "difficulty": 15,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -2249,7 +2442,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         900000,
                         900000,
@@ -2258,7 +2451,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         965000,
                         965000,
@@ -2267,7 +2460,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         975000,
                         975000,
@@ -2277,7 +2470,7 @@
                     "ex_missing": 450
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         980000,
                         980000,
@@ -2287,7 +2480,7 @@
                     "ex_missing": 320
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 16,
                     "ex_missing": 270
                 },
@@ -2302,6 +2495,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 120
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 70
                 }
             ],
             "total_ex": 7236
@@ -2340,7 +2537,7 @@
             "difficulty": 15,
             "goals": [
                 {
-                    "rank": "silver",
+                    "rank": "gold",
                     "clear_indexed": [
                         "clear",
                         "clear",
@@ -2349,7 +2546,7 @@
                     ]
                 },
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         890000,
                         890000,
@@ -2358,7 +2555,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         960000,
                         960000,
@@ -2367,7 +2564,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         980000,
                         980000,
@@ -2377,7 +2574,7 @@
                     "ex_missing": 550
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         980000,
                         980000,
@@ -2387,7 +2584,7 @@
                     "ex_missing": 380
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "judge": 20,
                     "ex_missing": 300
                 },
@@ -2402,6 +2599,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 130
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 80
                 }
             ],
             "total_ex": 6957
@@ -2440,7 +2641,7 @@
             "difficulty": 16,
             "goals": [
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         900000,
                         900000,
@@ -2449,7 +2650,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         970000,
                         970000,
@@ -2458,7 +2659,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         980000,
                         980000,
@@ -2468,7 +2669,7 @@
                     "miss": 12
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         980000,
                         980000,
@@ -2478,7 +2679,7 @@
                     "miss": 10
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         990000,
                         990000,
@@ -2498,6 +2699,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 100
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 60
                 }
             ],
             "total_ex": 7116
@@ -2535,7 +2740,7 @@
             "difficulty": 16,
             "goals": [
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         890000,
                         890000,
@@ -2544,7 +2749,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         960000,
                         960000,
@@ -2553,7 +2758,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         970000,
                         970000,
@@ -2563,7 +2768,7 @@
                     "miss": 12
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         975000,
                         975000,
@@ -2573,7 +2778,7 @@
                     "miss": 10
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         990000,
                         990000,
@@ -2593,6 +2798,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 130
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 80
                 }
             ],
             "total_ex": 7161
@@ -2630,7 +2839,7 @@
             "difficulty": 16,
             "goals": [
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         860000,
                         860000,
@@ -2639,7 +2848,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         935000,
                         935000,
@@ -2648,7 +2857,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         970000,
                         970000,
@@ -2658,7 +2867,7 @@
                     "miss": 12
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         980000,
                         980000,
@@ -2668,7 +2877,7 @@
                     "miss": 10
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         990000,
                         990000,
@@ -2688,6 +2897,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 130
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 80
                 }
             ],
             "total_ex": 6951
@@ -2726,7 +2939,7 @@
             "difficulty": 16,
             "goals": [
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         900000,
                         900000,
@@ -2735,7 +2948,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         970000,
                         970000,
@@ -2744,7 +2957,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         980000,
                         980000,
@@ -2753,7 +2966,7 @@
                     ]
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         980000,
                         980000,
@@ -2762,7 +2975,7 @@
                     ]
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         990000,
                         990000,
@@ -2782,6 +2995,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 150
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 90
                 }
             ],
             "total_ex": 6750
@@ -2819,7 +3036,7 @@
             "difficulty": 16,
             "goals": [
                 {
-                    "rank": "gold",
+                    "rank": "platinum",
                     "score": [
                         865000,
                         865000,
@@ -2828,7 +3045,7 @@
                     ]
                 },
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         920000,
                         920000,
@@ -2837,7 +3054,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         970000,
                         970000,
@@ -2847,7 +3064,7 @@
                     "miss": 15
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         975000,
                         975000,
@@ -2857,7 +3074,7 @@
                     "miss": 10
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         990000,
                         990000
@@ -2875,6 +3092,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 150
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 90
                 }
             ],
             "total_ex": 7311
@@ -2912,7 +3133,7 @@
             "difficulty": 17,
             "goals": [
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         850000,
                         850000,
@@ -2921,7 +3142,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         915000,
                         915000,
@@ -2930,7 +3151,7 @@
                     ]
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         940000,
                         940000,
@@ -2939,7 +3160,7 @@
                     ]
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         985000,
                         970000,
@@ -2961,6 +3182,10 @@
                 {
                     "rank": "onyx",
                     "ex_missing": 300
+                },
+                {
+                    "rank": "ruby",
+                    "ex_missing": 190
                 }
             ],
             "total_ex": 7749
@@ -2998,7 +3223,7 @@
             "difficulty": 17,
             "goals": [
                 {
-                    "rank": "platinum",
+                    "rank": "diamond",
                     "score": [
                         850000,
                         850000,
@@ -3007,7 +3232,7 @@
                     ]
                 },
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         910000,
                         910000,
@@ -3016,7 +3241,7 @@
                     ]
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         925000,
                         925000,
@@ -3025,27 +3250,31 @@
                     ]
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         985000,
                         960000,
                         960000,
                         960000
                     ],
-                    "ex_missing": 640
+                    "ex_missing": 750
                 },
                 {
                     "rank": "amethyst",
                     "judge": 30,
-                    "ex_missing": 400
+                    "ex_missing": 550
                 },
                 {
                     "rank": "emerald",
                     "judge": 20,
-                    "ex_missing": 270
+                    "ex_missing": 420
                 },
                 {
                     "rank": "onyx",
+                    "ex_missing": 280
+                },
+                {
+                    "rank": "ruby",
                     "ex_missing": 180
                 }
             ],
@@ -3084,7 +3313,7 @@
             "difficulty": 18,
             "goals": [
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         875000,
                         875000,
@@ -3093,7 +3322,7 @@
                     ]
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         925000,
                         925000,
@@ -3102,7 +3331,7 @@
                     ]
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         950000,
                         950000,
@@ -3118,7 +3347,7 @@
                         930000,
                         930000
                     ],
-                    "ex_missing": 725
+                    "ex_missing": 800
                 },
                 {
                     "rank": "emerald",
@@ -3128,17 +3357,27 @@
                         975000,
                         965000
                     ],
-                    "ex_missing": 425
+                    "ex_missing": 500
                 },
                 {
                     "rank": "onyx",
+                    "score": [
+                        980000,
+                        980000,
+                        980000,
+                        980000
+                    ],
+                    "ex_missing": 400
+                },
+                {
+                    "rank": "ruby",
                     "score": [
                         985000,
                         985000,
                         985000,
                         985000
                     ],
-                    "ex_missing": 280
+                    "ex_missing": 300
                 }
             ],
             "total_ex": 7980
@@ -3177,7 +3416,7 @@
             "difficulty": 18,
             "goals": [
                 {
-                    "rank": "diamond",
+                    "rank": "cobalt",
                     "score": [
                         875000,
                         875000,
@@ -3186,7 +3425,7 @@
                     ]
                 },
                 {
-                    "rank": "cobalt",
+                    "rank": "pearl",
                     "score": [
                         915000,
                         915000,
@@ -3195,7 +3434,7 @@
                     ]
                 },
                 {
-                    "rank": "pearl",
+                    "rank": "topaz",
                     "score": [
                         930000,
                         930000,
@@ -3211,7 +3450,7 @@
                         940000,
                         940000
                     ],
-                    "ex_missing": 700
+                    "ex_missing": 800
                 },
                 {
                     "rank": "emerald",
@@ -3221,17 +3460,27 @@
                         975000,
                         965000
                     ],
-                    "ex_missing": 400
+                    "ex_missing": 500
                 },
                 {
                     "rank": "onyx",
+                    "score": [
+                        980000,
+                        980000,
+                        980000,
+                        980000
+                    ],
+                    "ex_missing": 400
+                },
+                {
+                    "rank": "ruby",
                     "score": [
                         985000,
                         985000,
                         985000,
                         985000
                     ],
-                    "ex_missing": 270
+                    "ex_missing": 300
                 }
             ],
             "total_ex": 8817
