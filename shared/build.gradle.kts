@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -94,8 +95,23 @@ multiplatformResources {
 }
 
 tasks.register("generateSecretsFile") {
-    val sanbaiId = System.getenv("SANBAI_APP_ID") ?: "NO_ID_DEFINED".also { println(it) }
-    val sanbaiSecret = System.getenv("SANBAI_APP_SECRET") ?: "NO_SECRET_DEFINED".also { println(it) }
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+
+    val sanbaiId: String?
+    val sanbaiSecret: String?
+
+    if (localPropertiesFile.exists()) {
+        println("Reading local.properties")
+        localPropertiesFile.inputStream().use { properties.load(it) }
+        sanbaiId = properties.getProperty("sanbai.app.id")
+        sanbaiSecret = properties.getProperty("sanbai.app.secret")
+    } else {
+        sanbaiId = System.getenv("SANBAI_APP_ID")
+        sanbaiSecret = System.getenv("SANBAI_APP_SECRET")
+    }
+    if (sanbaiId == null) { println("SANBAI_ID is null") }
+    if (sanbaiSecret == null) { println("SANBAI_SECRET is null") }
 
     val outputFile = file("src/commonMain/kotlin/com/perrigogames/life4ddr/nextgen/feature/sanbai/api/SanbaiSecrets.kt")
     outputFile.parentFile.mkdirs()
@@ -104,8 +120,8 @@ tasks.register("generateSecretsFile") {
         package com.perrigogames.life4ddr.nextgen.feature.sanbai.api
 
         object SanbaiSecrets {
-            const val SANBAI_APP_ID = "$sanbaiId"
-            const val SANBAI_APP_SECRET = "$sanbaiSecret"
+            const val SANBAI_APP_ID = "${sanbaiId ?: "NO_ID"}"
+            const val SANBAI_APP_SECRET = "${sanbaiSecret ?: "NO_SECRET"}"
         }
         """.trimIndent()
     )
