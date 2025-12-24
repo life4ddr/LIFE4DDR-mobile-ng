@@ -7,6 +7,7 @@ import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.SettingsPage
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.SettingsPageModal
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
@@ -279,6 +280,11 @@ class SettingsPageProvider : BaseModel() {
                     key = "KEY_NAV_LOCKED_SONGS",
                     title = MR.strings.debug_locked_songs.desc(),
                     action = SettingsAction.Debug.SongLockPage
+                ),
+                UISettingsItem.Link(
+                    key = "KEY_SANBAI_VALID",
+                    title = "Sanbai Keys are ${if (SanbaiAPI.areKeysValid()) "valid" else "not valid!"}".desc(),
+                    action = SettingsAction.None
                 )
             )
         )

@@ -33,8 +33,9 @@ interface SanbaiAPI {
     suspend fun getPlayerId(): String
 
     companion object {
-        const val SANBAI_CLIENT_ID = "SECRET"
-        const val SANBAI_CLIENT_SECRET = "SECRET"
+        fun areKeysValid() =
+            !SanbaiSecrets.SANBAI_APP_ID.startsWith("NO") &&
+            !SanbaiSecrets.SANBAI_APP_SECRET.startsWith("NO")
     }
 }
 
