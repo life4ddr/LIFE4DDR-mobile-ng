@@ -42,7 +42,7 @@ jobs:
       - name: Android - Clean, lint, test, assemble
         run: |
           # Adjust tasks if your project uses different task names (ktlintCheck, detekt, etc.)
-          ./gradlew --no-daemon clean lint test assembleDebug
+          ./gradlew --no-daemon clean lint generateSecretsFile test assembleDebug
         env:
           JAVA_OPTS: -Xmx3g
 
