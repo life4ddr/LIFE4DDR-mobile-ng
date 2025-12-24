@@ -54,7 +54,7 @@ sealed class FirstRunStep(
 
         data class Completed(
             override val path: FirstRunPath,
-            val rankSelection: InitState,
+            val initStep: InitState,
         ) : PathStep(showNextButton = false)
     }
 }

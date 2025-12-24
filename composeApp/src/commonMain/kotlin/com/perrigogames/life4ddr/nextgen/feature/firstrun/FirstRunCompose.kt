@@ -64,15 +64,16 @@ fun FirstRunScreen(
         step = step,
         modifier = modifier,
         onInput = { viewModel.handleInput(it) },
+        onComplete = onComplete,
     )
 }
-
 
 @Composable
 fun FirstRunContent(
     step: FirstRunStep,
     modifier: Modifier = Modifier,
     onInput: (FirstRunInput) -> Unit = {},
+    onComplete: (InitState) -> Unit = {},
 ) {
     var completeHandled by remember { mutableStateOf(false) }
 
@@ -140,7 +141,7 @@ fun FirstRunContent(
                     }
                     is Completed -> {
                         if (!completeHandled) {
-                            onInput(FirstRunInput.RankMathodSelected(step.rankSelection))
+                            onComplete(step.initStep)
                             completeHandled = true
                         }
                     }
