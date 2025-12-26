@@ -135,9 +135,8 @@ abstract class GenerateSecretsFileTask : DefaultTask() {
 tasks.register<GenerateSecretsFileTask>("generateSecretsFile") {
     val localProps = rootProject.file("local.properties")
 
-    localPropertiesFile.set(localProps)
-
     if (localProps.exists()) {
+        localPropertiesFile.set(localProps)
         println("Using local.properties")
         val properties = Properties()
         localProps.inputStream().use { properties.load(it) }
