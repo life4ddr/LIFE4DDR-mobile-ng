@@ -57,7 +57,6 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderProgress
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewModel
 import com.perrigogames.life4ddr.nextgen.util.ViewState
-import com.perrigogames.life4ddr.nextgen.view.Life4Divider
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
@@ -271,7 +270,7 @@ fun LadderGoalItem(
                     exit = shrinkVertically(shrinkTowards = Alignment.Top),
                 ) {
                     Column {
-                        Life4Divider()
+                        HorizontalDivider()
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
