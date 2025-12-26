@@ -34,8 +34,8 @@ interface SanbaiAPI {
 
     companion object {
         fun areKeysValid() =
-            !SanbaiSecrets.SANBAI_APP_ID.startsWith("NO") &&
-            !SanbaiSecrets.SANBAI_APP_SECRET.startsWith("NO")
+            SanbaiSecrets.SANBAI_APP_ID.let { it.isNotEmpty() && !it.startsWith("NO") } &&
+            SanbaiSecrets.SANBAI_APP_SECRET.let { it.isNotEmpty() && !it.startsWith("NO") }
     }
 }
 
