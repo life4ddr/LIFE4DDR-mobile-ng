@@ -29,6 +29,7 @@ import com.perrigogames.life4ddr.nextgen.util.ViewState
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
+import dev.icerock.moko.resources.format
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -263,9 +264,21 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
             categories = categories.map { (level, goals) ->
                 val title = level?.let { StringDesc.ResourceFormatted(MR.strings.rank_goal_category_level, it) }
                     ?: MR.strings.other_goals.desc()
+
+                val goalCompletion = goals.countOverallGoalProgress(progress)
+                val goalText = if (!goalCompletion.isComplete) {
+                    StringDesc.ResourceFormatted(
+                        MR.strings.goal_progress_completed_format,
+                        goalCompletion.progress.toInt(),
+                        goalCompletion.max.toInt(),
+                    )
+                } else { null }
+                val goalIcon = if (goalCompletion.isComplete) { MR.images.check_circle_filled } else { null }
+
                 UILadderGoals.CategorizedList.Category(
                     title = title,
-                    goalIcon = if (goals.countIncompletedGoals(progress) == 0) { MR.images.check_circle_filled } else { null }
+                    goalText = goalText,
+                    goalIcon = goalIcon,
                 ) to goals
                     .filterCompletedGoals(mapperOptions.hideCompletedGoals, progress)
                     .map { goal ->
@@ -338,9 +351,12 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
         }
     }
 
-    private fun List<BaseRankGoal>.countIncompletedGoals(
+    private fun List<BaseRankGoal>.countOverallGoalProgress(
         progress: Map<BaseRankGoal, LadderGoalProgress?>
-    ) = count { progress[it]?.isComplete != true }
+    ) = LadderGoalProgress(
+        progress = count { progress[it]?.isComplete == true },
+        max = size,
+    )
 
     private fun List<BaseRankGoal>.filterCompletedGoals(
         shouldFilter: Boolean,

@@ -207,9 +207,9 @@ fun CategorizedList(
                         item.title?.localized()?.let {
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.titleSmall,
+                                style = MaterialTheme.typography.titleMedium,
                             )
-                            SizedSpacer(8.dp)
+                            SizedSpacer(16.dp)
                         }
                         item.goalText?.localized()?.let {
                             Text(
