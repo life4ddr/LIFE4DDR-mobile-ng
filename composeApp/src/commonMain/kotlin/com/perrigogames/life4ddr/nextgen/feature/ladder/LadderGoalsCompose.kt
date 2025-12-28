@@ -6,41 +6,15 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,15 +25,9 @@ import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderDetailItem
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoal
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoals
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderMocks
-import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderProgress
+import com.perrigogames.life4ddr.nextgen.feature.ladder.view.*
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewModel
-import com.perrigogames.life4ddr.nextgen.util.ViewState
 import com.perrigogames.life4ddr.nextgen.util.asSuccess
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
@@ -487,13 +455,13 @@ fun LadderGoalItemPreview() {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) { with(UILadderMocks) {
-            previewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's."))
-            previewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", completed = true,))
-            previewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", hidden = true,))
-            previewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", completed = true, hidden = true,))
-            previewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", progress = UILadderProgress(count = 2, max = 10)))
-            previewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", progress = UILadderProgress(progressPercent = 0.2f, progressText = "200 /\n1000")))
-            previewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", progress = UILadderProgress(count = 7, max = 10)))
+            PreviewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's."))
+            PreviewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", completed = true,))
+            PreviewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", hidden = true,))
+            PreviewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", completed = true, hidden = true,))
+            PreviewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", progress = UILadderProgress(count = 2, max = 10)))
+            PreviewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", progress = UILadderProgress(progressPercent = 0.2f, progressText = "200 /\n1000")))
+            PreviewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", progress = UILadderProgress(count = 7, max = 10)))
         } }
     }
 }
@@ -505,8 +473,8 @@ fun LadderGoalItemDetailPreview() {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) { with(UILadderMocks) {
-            previewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", detailItems = detailItems))
-            previewGoalItem(createUILadderGoal(
+            PreviewGoalItem(createUILadderGoal(goalText = "Clear any 10 L5's.", detailItems = detailItems))
+            PreviewGoalItem(createUILadderGoal(
                 goalText = "Clear any 10 L5's.",
                 detailItems = detailItems,
                 progress = UILadderProgress(count = 7, max = 10)
@@ -522,12 +490,12 @@ fun LadderGoalItemDetailVariantPreview() {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) { with(UILadderMocks) {
-            previewGoalItem(createUILadderGoal(
+            PreviewGoalItem(createUILadderGoal(
                 goalText = "Clear any 10 L5's.",
                 detailItems = detailItems,
                 hidden = true,
             ))
-            previewGoalItem(createUILadderGoal(
+            PreviewGoalItem(createUILadderGoal(
                 goalText = "Clear any 10 L5's.",
                 detailItems = detailItems.map {
                     it.copy(leftText = it.leftText.repeat(3))
@@ -552,7 +520,7 @@ val detailItems = with(UILadderMocks) { listOf(
 ) }
 
 @Composable
-private fun previewGoalItem(
+private fun PreviewGoalItem(
     goal: UILadderGoal,
     modifier: Modifier = Modifier.fillMaxWidth(),
 ) {
@@ -561,17 +529,7 @@ private fun previewGoalItem(
         useMonospaceFontForScore = false,
         modifier = modifier,
         expanded = goal.detailItems.isNotEmpty(),
-        onInput = {
-//            val text = when(it) {
-//                is GoalListInput.OnGoal.ToggleComplete -> "Completed changed: $it"
-//                is GoalListInput.OnGoal.ToggleExpanded -> "Expanded changed: $it"
-//                is GoalListInput.OnGoal.ToggleHidden -> "Hidden changed: $it"
-//                GoalListInput.ShowSubstitutions -> "Show substitutions"
-//            }
-//            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-        },
-        onShowDebug = {
-//            Toast.makeText(context, "Debug selected: $it", Toast.LENGTH_SHORT).show()
-        }
+        onInput = {},
+        onShowDebug = {},
     )
 }

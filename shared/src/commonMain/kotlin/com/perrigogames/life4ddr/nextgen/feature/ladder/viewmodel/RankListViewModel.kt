@@ -18,10 +18,12 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UIRankList
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import dev.icerock.moko.resources.desc.desc
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class RankListViewModel(
     isFirstRun: Boolean = false,
     private val firstRunSettingsManager: FirstRunSettings,
