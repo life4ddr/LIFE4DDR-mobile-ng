@@ -39,6 +39,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -49,6 +51,7 @@ import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
+import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderDetailItem
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderGoals
@@ -57,6 +60,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderProgress
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewModel
 import com.perrigogames.life4ddr.nextgen.util.ViewState
+import com.perrigogames.life4ddr.nextgen.util.asSuccess
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
@@ -72,9 +76,10 @@ fun LadderGoalsScreen(
     val viewModel = koinViewModel<GoalListViewModel>()
     val state by viewModel.state.collectAsState()
 
-    (state as? ViewState.Success)?.data?.let { data ->
+    state.asSuccess()?.let { data ->
         LadderGoalsContent(
             goals = data.goals,
+            hideCompletedToggle = data.hideCompleted,
             useMonospaceFontForScore = data.useMonospaceFontForScore,
             rankClass = targetRank?.group,
             onInput = { viewModel.handleInput(it) },
@@ -86,6 +91,7 @@ fun LadderGoalsScreen(
 @Composable
 fun LadderGoalsContent(
     goals: UILadderGoals,
+    hideCompletedToggle: UILadderData.HideCompletedToggle?,
     useMonospaceFontForScore: Boolean,
     rankClass: LadderRankClass? = null,
     onInput: (GoalListInput) -> Unit,
@@ -93,10 +99,10 @@ fun LadderGoalsContent(
 ) {
     if (rankClass != null) {
         LadderRankClassTheme(rankClass) {
-            LadderGoalsContent(goals, useMonospaceFontForScore, onInput, modifier)
+            LadderGoalsContent(goals, hideCompletedToggle, useMonospaceFontForScore, onInput, modifier)
         }
     } else {
-        LadderGoalsContent(goals, useMonospaceFontForScore, onInput, modifier)
+        LadderGoalsContent(goals, hideCompletedToggle, useMonospaceFontForScore, onInput, modifier)
     }
 }
 
@@ -104,30 +110,54 @@ fun LadderGoalsContent(
 @Composable
 fun LadderGoalsContent(
     goals: UILadderGoals,
+    hideCompletedToggle: UILadderData.HideCompletedToggle?,
     useMonospaceFontForScore: Boolean,
     onInput: (GoalListInput) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var debugDialog by remember { mutableStateOf<String?>(null) }
 
-    when (goals) {
-        is UILadderGoals.SingleList -> {
-            SingleGoalList(
-                goals = goals.items,
-                useMonospaceFontForScore = useMonospaceFontForScore,
-                onInput = onInput,
-                onShowDebug = { debugDialog = it },
-                modifier = modifier,
-            )
+    Column(
+        modifier = modifier,
+    ) {
+        if (hideCompletedToggle != null) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+            ) {
+                Text(
+                    text = hideCompletedToggle.text.localized(),
+                    style = MaterialTheme.typography.labelMedium,
+                )
+                SizedSpacer(8.dp)
+                Switch(
+                    checked = hideCompletedToggle.enabled,
+                    onCheckedChange = { onInput(hideCompletedToggle.toggleAction) },
+                )
+            }
         }
-        is UILadderGoals.CategorizedList -> {
-            CategorizedList(
-                goals = goals,
-                useMonospaceFontForScore = useMonospaceFontForScore,
-                onInput = onInput,
-                onShowDebug = { debugDialog = it },
-                modifier = modifier,
-            )
+        when (goals) {
+            is UILadderGoals.SingleList -> {
+                SingleGoalList(
+                    goals = goals.items,
+                    useMonospaceFontForScore = useMonospaceFontForScore,
+                    onInput = onInput,
+                    onShowDebug = { debugDialog = it },
+                    modifier = Modifier.weight(1f),
+                )
+            }
+            is UILadderGoals.CategorizedList -> {
+                CategorizedList(
+                    goals = goals,
+                    useMonospaceFontForScore = useMonospaceFontForScore,
+                    onInput = onInput,
+                    onShowDebug = { debugDialog = it },
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
     }
 
@@ -203,19 +233,30 @@ fun CategorizedList(
                     SizedSpacer(8.dp)
                     Row(
                         modifier = Modifier.fillParentMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         item.title?.localized()?.let {
                             Text(
                                 text = it,
                                 style = MaterialTheme.typography.titleSmall,
                             )
+                            SizedSpacer(8.dp)
                         }
                         item.goalText?.localized()?.let {
                             Text(
                                 text = it,
                                 style = MaterialTheme.typography.titleSmall,
                             )
+                            SizedSpacer(8.dp)
+                        }
+                        item.goalIcon?.let { icon ->
+                            Icon(
+                                painter = painterResource(icon),
+                                contentDescription = "completed",
+                                tint = Color.Green
+                            )
+                            SizedSpacer(8.dp)
                         }
                     }
                     SizedSpacer(8.dp)

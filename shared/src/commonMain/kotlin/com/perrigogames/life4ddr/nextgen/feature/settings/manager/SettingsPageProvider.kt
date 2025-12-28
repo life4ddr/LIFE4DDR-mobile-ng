@@ -158,8 +158,11 @@ class SettingsPageProvider : BaseModel() {
         songResultSettings.showRemovedSongs,
         filterSettings.filterFlags,
         maSettings.maConfig,
-        ladderSettings.useMonospaceScore,
-    ) { diffTierEnabled, showRemovedSongs, filterFlags, maConfig, useMonospaceScore ->
+        combine(
+            ladderSettings.useMonospaceScore,
+            ladderSettings.hideCompletedGoals
+        ) { a, b -> a to b }
+    ) { diffTierEnabled, showRemovedSongs, filterFlags, maConfig, (useMonospaceScore, hideCompletedGoals) ->
         UISettingsData(
             screenTitle = MR.strings.song_list_settings.desc(),
             settingsItems = listOf(
@@ -167,6 +170,11 @@ class SettingsPageProvider : BaseModel() {
                     key = SongResultSettings.KEY_ENABLE_DIFFICULTY_TIERS,
                     title = MR.strings.enable_difficulty_tiers.desc(),
                     toggled = diffTierEnabled
+                ),
+                UISettingsItem.Checkbox(
+                    key = LadderSettings.KEY_HIDE_COMPLETED_GOALS,
+                    title = MR.strings.action_profile_hide_completed.desc(),
+                    toggled = hideCompletedGoals
                 ),
                 UISettingsItem.Checkbox(
                     key = SongResultSettings.KEY_SHOW_REMOVED_SONGS,

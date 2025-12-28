@@ -1,10 +1,13 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.view
 
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
 import com.perrigogames.life4ddr.nextgen.util.toStringWithoutDecimal
 import dev.icerock.moko.resources.ColorResource
+import dev.icerock.moko.resources.ImageResource
 import dev.icerock.moko.resources.desc.StringDesc
+import dev.icerock.moko.resources.desc.desc
 
 typealias CategorizedUILadderGoals = List<Pair<UILadderGoals.CategorizedList.Category, List<UILadderGoal>>>
 
@@ -12,10 +15,17 @@ data class UILadderData(
     val targetRankClass: LadderRankClass,
     val goals: UILadderGoals,
     val substitutions: UILadderGoals? = null,
+    val hideCompleted: HideCompletedToggle?,
     val useMonospaceFontForScore: Boolean = false,
 ) {
 
     val hasSubstitutions get() = substitutions?.rawGoals?.isNotEmpty() == true
+
+    data class HideCompletedToggle(
+        val text: StringDesc = MR.strings.action_profile_hide_completed_short.desc(),
+        val enabled: Boolean,
+        val toggleAction: GoalListInput
+    )
 }
 
 sealed class UILadderGoals {
@@ -62,7 +72,8 @@ sealed class UILadderGoals {
 
         data class Category(
             val title: StringDesc? = null,
-            val goalText: StringDesc? = null
+            val goalText: StringDesc? = null,
+            val goalIcon: ImageResource? = null,
         )
     }
 }

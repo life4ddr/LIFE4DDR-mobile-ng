@@ -51,8 +51,8 @@ class RankListViewModel(
             GoalListViewModel(
                 GoalListConfig(
                     targetRank = rank,
-                    allowCompleting = true,
-                    allowHiding = false,
+                    allowCompletingGoalsManually = true,
+                    allowHidingIndividualGoals = false,
                 )
             )
         } else {

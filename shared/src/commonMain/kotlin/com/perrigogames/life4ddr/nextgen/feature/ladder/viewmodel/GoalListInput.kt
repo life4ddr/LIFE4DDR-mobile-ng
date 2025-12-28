@@ -10,4 +10,5 @@ sealed class GoalListInput {
     }
 
     data object ShowSubstitutions : GoalListInput()
+    data class ToggleShowCompleted(val showCompleted: Boolean) : GoalListInput()
 }

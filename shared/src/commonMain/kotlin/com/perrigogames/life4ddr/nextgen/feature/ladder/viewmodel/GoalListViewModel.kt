@@ -63,6 +63,15 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
     private val _state = MutableStateFlow<ViewState<UILadderData, String>>(ViewState.Loading)
     val state: StateFlow<ViewState<UILadderData, String>> = _state.asStateFlow()
 
+    private val options = combine(
+        maSettings.maConfig,
+        songResultSettings.enableDifficultyTiers,
+        ladderSettings.useMonospaceScore,
+        ladderSettings.hideCompletedGoals,
+    ) { maConfig, enableDifficultyTiers, useMonospaceScore, hideCompletedGoals ->
+        Options(maConfig, enableDifficultyTiers, useMonospaceScore, hideCompletedGoals)
+    }
+
     private val _showBottomSheet = MutableSharedFlow<Unit>()
     val showBottomSheet: SharedFlow<Unit> = _showBottomSheet.asSharedFlow()
 
@@ -82,13 +91,14 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                 },
                 _expandedItems,
 //                goalStateManager.updated,
-                combine(
-                    maSettings.maConfig,
-                    songResultSettings.enableDifficultyTiers,
-                    ladderSettings.useMonospaceScore,
-                ) { a, b, c -> Triple(a, b, c) },
-            ) { targetRank, requirements, progress, expanded, (maConfig, showDiffTiers, useMonospaceScore) ->
+                options
+            ) { targetRank, requirements, progress, expanded, options ->
                 logger.d { "Updating to $targetRank, requirements = $requirements, expanded = $expanded" }
+                val mapperOptions = LadderGoalMapper.Options(
+                    maConfig = options.maConfig,
+                    showDiffTiers = options.enableDifficultyTiers,
+                    hideCompletedGoals = options.hideCompletedGoals,
+                )
                 val substitutions = if (requirements?.substitutionGoals?.isNotEmpty() == true) {
                     val goalStates = goalStateManager.getGoalStateList(requirements.substitutionGoals)
                     UILadderGoals.CategorizedList(
@@ -101,14 +111,22 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                                     goalStatus = goalStates.firstOrNull { it.goalId == goal.id.toLong() }?.status
                                         ?: GoalStatus.INCOMPLETE,
                                     progress = progress[goal],
-                                    allowHiding = false,
-                                    allowCompleting = config.allowCompleting,
-                                    isExpanded = expanded.contains(goal.id.toLong()),
-                                    maConfig = maConfig,
-                                    showDiffTiers = showDiffTiers,
+                                    options = mapperOptions.copy (
+                                        allowHiding = false,
+                                        allowCompleting = config.allowCompletingGoalsManually,
+                                        isExpanded = expanded.contains(goal.id.toLong()),
+                                    ),
                                 )
                             }
                         )
+                    )
+                } else {
+                    null
+                }
+                val hideCompletedToggle = if (config.allowHidingCompletedGoals) {
+                    UILadderData.HideCompletedToggle(
+                        enabled = options.hideCompletedGoals,
+                        toggleAction = GoalListInput.ToggleShowCompleted(!options.hideCompletedGoals)
                     )
                 } else {
                     null
@@ -119,17 +137,19 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                     targetRank >= LadderRank.PLATINUM1 -> ViewState.Success(
                         UILadderData(
                             targetRankClass = targetRank.group,
-                            goals = generateDifficultyCategories(requirements, progress, expanded, maConfig, showDiffTiers),
+                            goals = generateDifficultyCategories(requirements, progress, expanded, mapperOptions),
                             substitutions = substitutions,
-                            useMonospaceFontForScore = useMonospaceScore,
+                            hideCompleted = hideCompletedToggle,
+                            useMonospaceFontForScore = options.useMonospaceScore,
                         )
                     )
                     else -> ViewState.Success(
                         UILadderData(
                             targetRankClass = targetRank.group,
-                            goals = generateCommonCategories(requirements, progress, expanded, maConfig, showDiffTiers),
+                            goals = generateCommonCategories(requirements, progress, expanded, mapperOptions),
                             substitutions = substitutions,
-                            useMonospaceFontForScore = useMonospaceScore,
+                            hideCompleted = hideCompletedToggle,
+                            useMonospaceFontForScore = options.useMonospaceScore,
                         )
                     )
                 }
@@ -141,8 +161,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
         requirements: RankEntry,
         progress: Map<BaseRankGoal, LadderGoalProgress?>,
         expanded: Set<Long>,
-        maConfig: MAConfig,
-        showDiffTiers: Boolean,
+        mapperOptions: LadderGoalMapper.Options,
     ) : UILadderGoals.CategorizedList {
         val goalStates = goalStateManager.getGoalStateList(requirements.allGoals)
         val finishedGoalCount = requirements.allGoals.count { goal ->
@@ -150,7 +169,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                     goalStates.firstOrNull { it.goalId == goal.id.toLong() }?.status == GoalStatus.COMPLETE
         }
         val neededGoals = requirements.requirementsOpt ?: 0
-        val canHide = config.allowHiding
+        val canHide = config.allowHidingIndividualGoals
                 && goalStates.count { it.status == GoalStatus.IGNORED } < requirements.allowedIgnores
         return UILadderGoals.CategorizedList(
             categories = listOf(
@@ -161,32 +180,36 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                         finishedGoalCount,
                         neededGoals
                     ),
-                ) to requirements.goals.map { goal ->
-                    ladderGoalMapper.toViewData(
-                        base = goal,
-                        progress = progress[goal],
-                        allowHiding = canHide,
-                        allowCompleting = config.allowCompleting,
-                        isExpanded = expanded.contains(goal.id.toLong()),
-                        maConfig = maConfig,
-                        showDiffTiers = showDiffTiers,
-                    )
-                },
+                ) to requirements.goals
+                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, progress)
+                    .map { goal ->
+                        ladderGoalMapper.toViewData(
+                            base = goal,
+                            progress = progress[goal],
+                            options = mapperOptions.copy(
+                                allowHiding = canHide,
+                                allowCompleting = config.allowCompletingGoalsManually,
+                                isExpanded = expanded.contains(goal.id.toLong()),
+                            ),
+                        )
+                    },
                 UILadderGoals.CategorizedList.Category(
                     title = MR.strings.mandatory_goals.desc()
-                ) to requirements.mandatoryGoals.map { goal ->
-                    ladderGoalMapper.toViewData(
-                        base = goal,
-                        goalStatus = goalStates.firstOrNull { it.goalId == goal.id.toLong() }?.status
-                            ?: GoalStatus.INCOMPLETE,
-                        progress = progress[goal],
-                        allowHiding = false,
-                        allowCompleting = config.allowCompleting,
-                        isExpanded = expanded.contains(goal.id.toLong()),
-                        maConfig = maConfig,
-                        showDiffTiers = showDiffTiers,
-                    )
-                }
+                ) to requirements.mandatoryGoals
+                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, progress)
+                    .map { goal ->
+                        ladderGoalMapper.toViewData(
+                            base = goal,
+                            goalStatus = goalStates.firstOrNull { it.goalId == goal.id.toLong() }?.status
+                                ?: GoalStatus.INCOMPLETE,
+                            progress = progress[goal],
+                            options = mapperOptions.copy(
+                                allowHiding = false,
+                                allowCompleting = config.allowCompletingGoalsManually,
+                                isExpanded = expanded.contains(goal.id.toLong()),
+                            ),
+                        )
+                    }
             )
                 .filterNot { it.second.isEmpty() }
         )
@@ -196,8 +219,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
         requirements: RankEntry,
         progress: Map<BaseRankGoal, LadderGoalProgress?>,
         expanded: Set<Long>,
-        maConfig: MAConfig,
-        showDiffTiers: Boolean,
+        mapperOptions: LadderGoalMapper.Options,
     ) : UILadderGoals.CategorizedList {
         val goalStates = goalStateManager.getGoalStateList(requirements.allGoals)
         val songsClearGoals = requirements.allGoals.filterIsInstance<SongsClearGoal>()
@@ -241,20 +263,25 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
             categories = categories.map { (level, goals) ->
                 val title = level?.let { StringDesc.ResourceFormatted(MR.strings.rank_goal_category_level, it) }
                     ?: MR.strings.other_goals.desc()
-                UILadderGoals.CategorizedList.Category(title) to goals.map { goal ->
-                    ladderGoalMapper.toViewData(
-                        base = goal,
-                        goalStatus = goalStates.firstOrNull { it.goalId == goal.id.toLong() }?.status
-                            ?: GoalStatus.INCOMPLETE,
-                        progress = progress[goal],
-                        allowHiding = !requirements.mandatoryGoalIds.contains(goal.id),
-                        allowCompleting = config.allowCompleting,
-                        isExpanded = expanded.contains(goal.id.toLong()),
-                        maConfig = maConfig,
-                        showDiffTiers = showDiffTiers,
-                    )
-                }
-            } + substitutionsItem(substitutionProgress),
+                UILadderGoals.CategorizedList.Category(
+                    title = title,
+                    goalIcon = if (goals.countIncompletedGoals(progress) == 0) { MR.images.check_circle_filled } else { null }
+                ) to goals
+                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, progress)
+                    .map { goal ->
+                        ladderGoalMapper.toViewData(
+                            base = goal,
+                            goalStatus = goalStates.firstOrNull { it.goalId == goal.id.toLong() }?.status
+                                ?: GoalStatus.INCOMPLETE,
+                            progress = progress[goal],
+                            options = mapperOptions.copy(
+                                allowHiding = !requirements.mandatoryGoalIds.contains(goal.id),
+                                allowCompleting = config.allowCompletingGoalsManually,
+                                isExpanded = expanded.contains(goal.id.toLong()),
+                            ),
+                        )
+                    }
+                } + substitutionsItem(substitutionProgress),
         )
     }
 
@@ -305,8 +332,27 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
             GoalListInput.ShowSubstitutions -> {
                 viewModelScope.launch { _showBottomSheet.emit(Unit) }
             }
+            is GoalListInput.ToggleShowCompleted -> {
+                ladderSettings.setHideCompletedGoals(action.showCompleted)
+            }
         }
     }
+
+    private fun List<BaseRankGoal>.countIncompletedGoals(
+        progress: Map<BaseRankGoal, LadderGoalProgress?>
+    ) = count { progress[it]?.isComplete != true }
+
+    private fun List<BaseRankGoal>.filterCompletedGoals(
+        shouldFilter: Boolean,
+        progress: Map<BaseRankGoal, LadderGoalProgress?>
+    ) = filterNot { shouldFilter && progress[it]?.isComplete == true }
+
+    data class Options(
+        val maConfig: MAConfig,
+        val enableDifficultyTiers: Boolean,
+        val useMonospaceScore: Boolean,
+        val hideCompletedGoals: Boolean,
+    )
 }
 
 val LadderRankClass.minDiscreteDifficultyCategory
@@ -325,27 +371,3 @@ val LadderRankClass.minDiscreteDifficultyCategory
         LadderRankClass.ONYX,
         LadderRankClass.RUBY-> 14
     }
-
-// Taken from old LadderGoalsViewModel
-//            val entry = ladderDataManager.findRankEntry(config.targetRank)
-//            if (config.targetRank == null || entry == null) {
-//                // TODO some kind of endgame/error handling text
-//                return@launch
-//            }
-//
-//            _stateFlow.value = _stateFlow.value.copy(
-//                goals = UILadderGoals.SingleList(
-//                    entry.allGoals.map {  goal ->
-//                        val goalState = goalStateManager.getGoalState(goal)
-//                        UILadderGoal(
-//                            id = goal.id.toLong(),
-//                            goalText = goal.goalString(platformStrings),
-//                            completed = goalState?.status == GoalStatus.COMPLETE,
-//                            hidden = goalState?.status == GoalStatus.IGNORED,
-//                            canHide = false, // FIXME
-//                            progress = null, // FIXME
-//                            detailItems = emptyList() // FIXME
-//                        )
-//                    }
-//                )
-//            )

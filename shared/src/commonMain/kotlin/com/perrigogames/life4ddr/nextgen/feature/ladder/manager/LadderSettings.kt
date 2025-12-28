@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.ladder.manager
 
 import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings.Companion.KEY_GAME_VERSION
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings.Companion.KEY_HIDE_COMPLETED_GOALS
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings.Companion.KEY_USE_MONOSPACE_SCORE
 import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsManager
 import com.russhwolf.settings.ExperimentalSettingsApi
@@ -16,11 +17,15 @@ interface LadderSettings {
     val selectedGameVersion: StateFlow<GameVersion>
     fun setSelectedGameVersion(version: GameVersion)
 
+    val hideCompletedGoals: StateFlow<Boolean>
+    fun setHideCompletedGoals(use: Boolean)
+
     val useMonospaceScore: StateFlow<Boolean>
     fun setUseMonospaceScore(use: Boolean)
 
     companion object {
         const val KEY_GAME_VERSION = "KEY_GAME_VERSION"
+        const val KEY_HIDE_COMPLETED_GOALS = "KEY_HIDE_COMPLETED_GOALS"
         const val KEY_USE_MONOSPACE_SCORE = "KEY_USE_MONOSPACE_SCORE"
     }
 }
@@ -35,6 +40,16 @@ class DefaultLadderSettings : SettingsManager(), LadderSettings {
     override fun setSelectedGameVersion(version: GameVersion) {
         mainScope.launch {
             settings.putString(KEY_GAME_VERSION, version.name)
+        }
+    }
+
+    override val hideCompletedGoals: StateFlow<Boolean> =
+        settings.getBooleanFlow(KEY_HIDE_COMPLETED_GOALS, false)
+            .stateIn(mainScope, SharingStarted.Lazily, false)
+
+    override fun setHideCompletedGoals(use: Boolean) {
+        mainScope.launch {
+            settings.putBoolean(KEY_HIDE_COMPLETED_GOALS, use)
         }
     }
 

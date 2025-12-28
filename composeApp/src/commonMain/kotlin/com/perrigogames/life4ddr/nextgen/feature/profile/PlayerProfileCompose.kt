@@ -103,6 +103,7 @@ fun PlayerProfileContent(
                 LadderGoalsContent(
                     goals = goalData.substitutions!!,
                     useMonospaceFontForScore = goalData.useMonospaceFontForScore,
+                    hideCompletedToggle = null,
                     rankClass = goalData.targetRankClass,
                     onInput = { onInput(PlayerProfileInput.GoalList(it)) },
                     modifier = Modifier
@@ -127,6 +128,7 @@ fun PlayerProfileContent(
             if (goalData != null) {
                 LadderGoalsContent(
                     goals = goalData.goals,
+                    hideCompletedToggle = goalData.hideCompleted,
                     useMonospaceFontForScore = goalData.useMonospaceFontForScore,
                     rankClass = goalData.targetRankClass,
                     onInput = { onInput(PlayerProfileInput.GoalList(it)) },

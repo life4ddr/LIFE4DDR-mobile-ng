@@ -7,3 +7,7 @@ sealed class ViewState<out V, out E> {
 }
 
 fun <V: Any> V.toViewState() = ViewState.Success(this)
+
+fun <V: Any> ViewState<V, *>.asSuccess(): V? = (this as? ViewState.Success)?.data
+
+fun <E: Any> ViewState<*, E>.asError(): E? = (this as? ViewState.Error)?.error

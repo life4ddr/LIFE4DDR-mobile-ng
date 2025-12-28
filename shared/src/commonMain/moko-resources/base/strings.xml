@@ -284,6 +284,8 @@
     <string name="action_clear_trial_data">Clear trial records</string>
     <string name="action_combine_mfc">Combine MFCs</string>
     <string name="action_combine_sdp">Combine SDPs</string>
+    <string name="action_profile_hide_completed">Hide completed goals in Profile</string>
+    <string name="action_profile_hide_completed_short">Hide completed</string>
     <string name="enable_difficulty_tiers">Enable difficulty tiers</string>
     <string name="show_removed_songs">Show removed songs</string>
     <string name="use_monospace_font">Use monospaced font for scores</string>

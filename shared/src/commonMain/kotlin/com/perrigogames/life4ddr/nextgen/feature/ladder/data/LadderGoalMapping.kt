@@ -30,18 +30,14 @@ class LadderGoalMapper : KoinComponent {
         base: BaseRankGoal,
         goalStatus: GoalStatus = goalStateManager.getOrCreateGoalState(base).status,
         progress: LadderGoalProgress?,
-        isExpanded: Boolean,
-        allowCompleting: Boolean,
-        allowHiding: Boolean,
-        showDiffTiers: Boolean,
-        maConfig: MAConfig,
+        options: Options,
     ): UILadderGoal {
         val isComplete = goalStatus == GoalStatus.COMPLETE || progress?.isComplete == true
         val isMFC = base is MAPointsGoal ||
                 (base is StackedRankGoalWrapper && base.mainGoal is MAPointsStackedGoal)
         val diffExtra = when {
             progress == null -> DiffExtra.NONE
-            showDiffTiers -> when (progress.diffTiersOnly) {
+            options.showDiffTiers -> when (progress.diffTiersOnly) {
                 true -> DiffExtra.TIER
                 false -> DiffExtra.DIFF_TIER
             }
@@ -101,16 +97,16 @@ class LadderGoalMapper : KoinComponent {
         }
 
         fun List<ChartResultPair>.formatResultList(diffExtra: DiffExtra) : List<UILadderDetailItem.Entry> {
-            return if (isMFC && (maConfig.combineMFCs || maConfig.combineSDPs)) {
+            return if (isMFC && (options.maConfig.combineMFCs || options.maConfig.combineSDPs)) {
                 val mfcs = this.filter { it.result?.clearType == ClearType.MARVELOUS_FULL_COMBO }
-                val mfcEntries = if (maConfig.combineMFCs) {
+                val mfcEntries = if (options.maConfig.combineMFCs) {
                     mfcs.formatCombinedMAPointsEntries(ClearType.MARVELOUS_FULL_COMBO)
                 } else {
                     mfcs.map { it.formatResultItem(diffExtra) }
                 }
 
                 val sdps = this.filter { it.result?.clearType == ClearType.SINGLE_DIGIT_PERFECTS }
-                val sdpEntries = if (maConfig.combineSDPs) {
+                val sdpEntries = if (options.maConfig.combineSDPs) {
                     sdps.formatCombinedMAPointsEntries(ClearType.SINGLE_DIGIT_PERFECTS)
                 } else {
                     sdps.map { it.formatResultItem(diffExtra) }
@@ -125,10 +121,10 @@ class LadderGoalMapper : KoinComponent {
             id = base.id.toLong(),
             goalText = base.goalString(),
             completed = isComplete,
-            canComplete = allowCompleting && progress == null, // if we can't illustrate progress, it has to be user-driven
+            canComplete = options.allowCompleting && progress == null, // if we can't illustrate progress, it has to be user-driven
             hidden = goalStatus == GoalStatus.IGNORED,
             canHide = !isComplete && // don't allow hiding completed goals
-                    (allowHiding || goalStatus == GoalStatus.IGNORED), // must be able to unhide
+                    (options.allowHiding || goalStatus == GoalStatus.IGNORED), // must be able to unhide
             showCheckbox = true,
             progress = progress?.toViewData(),
             expandAction = if (progress?.hasResults == true) {
@@ -136,7 +132,7 @@ class LadderGoalMapper : KoinComponent {
             } else {
                 null
             },
-            detailItems = if (isExpanded && progress != null) {
+            detailItems = if (options.isExpanded && progress != null) {
                 val resultItems = progress.results?.formatResultList(diffExtra) ?: emptyList()
                 val resultBottomItems = progress.resultsBottom?.formatResultList(diffExtra) ?: emptyList()
                 if (!resultItems.isEmpty() && !resultBottomItems.isEmpty()) {
@@ -147,7 +143,7 @@ class LadderGoalMapper : KoinComponent {
             } else {
                 emptyList()
             },
-            altDetailItems = if (isExpanded && progress != null) {
+            altDetailItems = if (options.isExpanded && progress != null) {
                 progress.altResults?.formatResultList(diffExtra) ?: emptyList()
             } else {
                 emptyList()
@@ -165,6 +161,15 @@ class LadderGoalMapper : KoinComponent {
             }, // FIXME don't show on release mode
         )
     }
+
+    data class Options(
+        val isExpanded: Boolean = false,
+        val allowCompleting: Boolean = false,
+        val allowHiding: Boolean = false,
+        val maConfig: MAConfig,
+        val showDiffTiers: Boolean,
+        val hideCompletedGoals: Boolean,
+    )
 }
 
 fun LadderGoalProgress.toViewData(): UILadderProgress? {
