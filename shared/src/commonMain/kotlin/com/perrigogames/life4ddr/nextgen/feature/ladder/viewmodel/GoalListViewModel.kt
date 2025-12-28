@@ -98,7 +98,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                 val mapperOptions = LadderGoalMapper.Options(
                     maConfig = options.maConfig,
                     showDiffTiers = options.enableDifficultyTiers,
-                    hideCompletedGoals = options.hideCompletedGoals,
+                    hideCompletedGoals = config.allowHidingCompletedGoals && options.hideCompletedGoals,
                 )
                 val substitutions = if (requirements?.substitutionGoals?.isNotEmpty() == true) {
                     val goalStates = goalStateManager.getGoalStateList(requirements.substitutionGoals)
