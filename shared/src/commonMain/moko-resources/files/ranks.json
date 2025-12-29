@@ -7441,7 +7441,7 @@
     }
   ],
   "game_versions": {
-    "A20": {
+    "A20_PLUS": {
       "rank_requirements": [
         {
           "play_style": "single",
