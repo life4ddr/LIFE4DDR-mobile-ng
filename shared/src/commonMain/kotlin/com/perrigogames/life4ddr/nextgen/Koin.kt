@@ -2,9 +2,6 @@
 
 package com.perrigogames.life4ddr.nextgen
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
@@ -83,10 +80,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSes
 import com.perrigogames.life4ddr.nextgen.model.MajorUpdateManager
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
-import com.russhwolf.settings.coroutines.FlowSettings
-import com.russhwolf.settings.datastore.DataStoreSettings
 import kotlinx.serialization.json.Json
-import okio.Path.Companion.toPath
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
@@ -102,11 +96,10 @@ typealias NativeInjectionFactory<T> = Scope.() -> T
 
 fun initKoin(
     appModule: Module,
-    extraAppModule: Module? = null,
     appDeclaration: KoinAppDeclaration = {}
 ) = startKoin {
     appDeclaration()
-    modules(listOfNotNull(appModule, extraAppModule, platformModule, coreModule))
+    modules(listOfNotNull(appModule, platformModule, coreModule))
 }.apply {
     koin.get<Logger> { parametersOf(null) }.also { kermit ->
         kermit.v { "App Id ${koin.get<AppInfo>().appId}" }
@@ -183,12 +176,12 @@ fun Scope.getLogger(tag: String? = null): Logger = get { parametersOf(tag) }
 expect val platformModule: Module
 
 fun platformSettingsModule(producePath: (String) -> String) = module {
-    single<DataStore<Preferences>> {
-        PreferenceDataStoreFactory.createWithPath(
-            produceFile = { producePath("life4.preferences_pb").toPath() }
-        )
-    }
-    single<FlowSettings> { DataStoreSettings(get()) }
+//    single<DataStore<Preferences>> {
+//        PreferenceDataStoreFactory.createWithPath(
+//            produceFile = { producePath("life4.preferences_pb").toPath() }
+//        )
+//    }
+//    single<FlowSettings> { DataStoreSettings(get()) }
 }
 
 fun makeNativeModule(

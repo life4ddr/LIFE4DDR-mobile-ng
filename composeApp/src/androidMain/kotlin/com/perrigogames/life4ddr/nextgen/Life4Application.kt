@@ -2,10 +2,16 @@ package com.perrigogames.life4ddr.nextgen
 
 import android.app.Application
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.MOTD_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE_NAME
+import com.russhwolf.settings.coroutines.FlowSettings
+import com.russhwolf.settings.datastore.DataStoreSettings
+import okio.Path.Companion.toPath
 import org.koin.core.component.KoinComponent
 
 class Life4Application: Application(), KoinComponent {
@@ -28,8 +34,13 @@ class Life4Application: Application(), KoinComponent {
                 trialsReader = AndroidDataReader(MR.files.trials_json, TRIALS_FILE_NAME),
             ) {
                 single<Context> { this@Life4Application }
+                    single<DataStore<Preferences>> {
+                        PreferenceDataStoreFactory.createWithPath(
+                            produceFile = { filesDir.resolve("life4.preferences_pb").absolutePath.toPath() }
+                        )
+                    }
+                    single<FlowSettings> { DataStoreSettings(get()) }
             },
-            extraAppModule = platformSettingsModule { filesDir.resolve(it).absolutePath }
         )
     }
 }

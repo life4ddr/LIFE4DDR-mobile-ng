@@ -9,8 +9,11 @@ import com.perrigogames.life4ddr.nextgen.api.base.LocalDataReader
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
 import dev.icerock.moko.resources.FileResource
 import platform.Foundation.NSFileManager
+import platform.Foundation.NSUserDefaults
 
-fun MainViewController() = ComposeUIViewController {
+fun MainViewController(
+    defaults: NSUserDefaults,
+) = ComposeUIViewController {
     initKoin(
         appModule = makeNativeModule(
             appInfo = object : AppInfo {
@@ -24,19 +27,7 @@ fun MainViewController() = ComposeUIViewController {
             songsReader = IosDataReader(MR.files.songs_json, SONGS_FILE_NAME),
             trialsReader = IosDataReader(MR.files.trials_json, TRIALS_FILE_NAME),
         ),
-        extraAppModule = platformSettingsModule {
-            val documentsDirectory = NSFileManager
-//            // Get the documents directory URL
-//            guard let documentsDirectory = NSFileManager.default.urls(for: .documentDirectory,
-//                in: .userDomainMask).first else {
-//            return
-//        }
-//
-//            // Create file URL
-//            let fileURL = documentsDirectory.appendingPathComponent("myFile.txt")
-            // FIXME accurately provide a file URI
-            "."
-            },
+        extraAppModule = makeIosExtraModule(defaults),
     )
     
     LIFE4App()

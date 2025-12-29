@@ -103,7 +103,14 @@ fun NavGraphBuilder.firstRunNavigation(
         val state = rememberWebViewState(
             url = url,
             extraSettings = {
-                androidWebSettings.textZoom = 50
+                androidWebSettings.apply {
+                    textZoom = 50
+                }
+                iOSWebSettings.apply {
+                    zoomLevel = 0.5
+                    bounces = false
+                    scrollEnabled = false
+                }
             }
         )
         val navigator = rememberWebViewNavigator(

@@ -18,14 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
 import com.multiplatform.webview.util.addTempDirectoryRemovalHook
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.MOTD_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE_NAME
+import com.russhwolf.settings.coroutines.FlowSettings
+import com.russhwolf.settings.datastore.DataStoreSettings
 import dev.datlag.kcef.KCEF
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okio.Path.Companion.toPath
 import java.io.File
 
 fun main() = application {
@@ -42,10 +48,16 @@ fun main() = application {
             ranksReader = JvmDataReader(MR.files.ranks_json.readText(), RANKS_FILE_NAME),
             songsReader = JvmDataReader(MR.files.songs_json.readText(), SONGS_FILE_NAME),
             trialsReader = JvmDataReader(MR.files.trials_json.readText(), TRIALS_FILE_NAME),
-        ),
-        extraAppModule = platformSettingsModule {
-            File(System.getProperty("java.io.tmpdir"), it).absolutePath
-        }
+        ) {
+            single<DataStore<Preferences>> {
+                PreferenceDataStoreFactory.createWithPath(
+                    produceFile = {
+                        File(System.getProperty("java.io.tmpdir"), "life4.preferences_pb").absolutePath.toPath()
+                    }
+                )
+            }
+            single<FlowSettings> { DataStoreSettings(get()) }
+        },
     )
 
     Window(
