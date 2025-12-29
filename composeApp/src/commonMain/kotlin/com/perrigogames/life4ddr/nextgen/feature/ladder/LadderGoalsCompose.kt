@@ -88,29 +88,11 @@ fun LadderGoalsContent(
     Column(
         modifier = modifier,
     ) {
-        if (hideCompletedToggle != null) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
-            ) {
-                Text(
-                    text = hideCompletedToggle.text.localized(),
-                    style = MaterialTheme.typography.labelMedium,
-                )
-                SizedSpacer(8.dp)
-                Switch(
-                    checked = hideCompletedToggle.enabled,
-                    onCheckedChange = { onInput(hideCompletedToggle.toggleAction) },
-                )
-            }
-        }
         when (goals) {
             is UILadderGoals.SingleList -> {
                 SingleGoalList(
                     goals = goals.items,
+                    hideCompletedToggle = hideCompletedToggle,
                     useMonospaceFontForScore = useMonospaceFontForScore,
                     onInput = onInput,
                     onShowDebug = { debugDialog = it },
@@ -120,6 +102,7 @@ fun LadderGoalsContent(
             is UILadderGoals.CategorizedList -> {
                 CategorizedList(
                     goals = goals,
+                    hideCompletedToggle = hideCompletedToggle,
                     useMonospaceFontForScore = useMonospaceFontForScore,
                     onInput = onInput,
                     onShowDebug = { debugDialog = it },
@@ -154,6 +137,7 @@ fun LadderGoalsContent(
 @Composable
 fun SingleGoalList(
     goals: List<UILadderGoal>,
+    hideCompletedToggle: UILadderData.HideCompletedToggle?,
     useMonospaceFontForScore: Boolean,
     onInput: (GoalListInput) -> Unit,
     onShowDebug: (String) -> Unit,
@@ -163,6 +147,17 @@ fun SingleGoalList(
         modifier = modifier,
         contentPadding = PaddingValues(all = 8.dp),
     ) {
+        item {
+            if (hideCompletedToggle != null) {
+                ShowAllGoalsToggle(
+                    data = hideCompletedToggle,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    onInput = onInput,
+                )
+            }
+        }
         itemsIndexed(goals) { idx, goal ->
             if (idx > 0) {
                 SizedSpacer(size = 4.dp)
@@ -181,6 +176,7 @@ fun SingleGoalList(
 @Composable
 fun CategorizedList(
     goals: UILadderGoals.CategorizedList,
+    hideCompletedToggle: UILadderData.HideCompletedToggle?,
     useMonospaceFontForScore: Boolean,
     onInput: (GoalListInput) -> Unit,
     onShowDebug: (String) -> Unit,
@@ -199,35 +195,15 @@ fun CategorizedList(
             when(item) {
                 is UILadderGoals.CategorizedList.Category -> {
                     SizedSpacer(8.dp)
-                    Row(
+                    LadderCategoryRow(
+                        item = item,
+                        hideCompletedToggle = hideCompletedToggle.takeIf { idx == 0 },
                         modifier = Modifier.fillParentMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        item.title?.localized()?.let {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.titleMedium,
-                            )
-                            SizedSpacer(16.dp)
-                        }
-                        item.goalText?.localized()?.let {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.titleSmall,
-                            )
-                            SizedSpacer(8.dp)
-                        }
-                        item.goalIcon?.let { icon ->
-                            Icon(
-                                painter = painterResource(icon),
-                                contentDescription = "completed",
-                                tint = Color.Green
-                            )
-                            SizedSpacer(8.dp)
-                        }
+                        onInput = onInput,
+                    )
+                    if (idx != 0 || hideCompletedToggle == null) {
+                        SizedSpacer(8.dp)
                     }
-                    SizedSpacer(8.dp)
                 }
                 is UILadderGoal -> {
                     LadderGoalItem(
@@ -240,6 +216,53 @@ fun CategorizedList(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun LadderCategoryRow(
+    item: UILadderGoals.CategorizedList.Category,
+    hideCompletedToggle: UILadderData.HideCompletedToggle?,
+    modifier: Modifier = Modifier,
+    onInput: (GoalListInput) -> Unit = {},
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        item.title?.localized()?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.titleMedium,
+            )
+            SizedSpacer(16.dp)
+        }
+        item.goalText?.localized()?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.titleSmall,
+            )
+            SizedSpacer(8.dp)
+        }
+        item.goalIcon?.let { icon ->
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = "completed",
+                tint = Color.Green
+            )
+            SizedSpacer(8.dp)
+        }
+
+        if (hideCompletedToggle != null) {
+            ShowAllGoalsToggle(
+                data = hideCompletedToggle,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                onInput = onInput,
+            )
         }
     }
 }
@@ -445,6 +468,29 @@ private fun LadderGoalDetailShade(
                 UILadderDetailItem.Spacer -> HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
             }
         }
+    }
+}
+
+@Composable
+fun ShowAllGoalsToggle(
+    data: UILadderData.HideCompletedToggle,
+    modifier: Modifier = Modifier,
+    onInput: (GoalListInput) -> Unit = {},
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End,
+    ) {
+        Text(
+            text = data.text.localized(),
+            style = MaterialTheme.typography.labelMedium,
+        )
+        SizedSpacer(8.dp)
+        Switch(
+            checked = data.enabled,
+            onCheckedChange = { onInput(data.toggleAction) },
+        )
     }
 }
 

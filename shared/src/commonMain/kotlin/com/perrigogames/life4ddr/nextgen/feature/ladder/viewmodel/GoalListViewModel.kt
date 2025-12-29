@@ -3,6 +3,7 @@ package com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.db.GoalState
 import com.perrigogames.life4ddr.nextgen.enums.GoalStatus
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
@@ -26,10 +27,10 @@ import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSetting
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.ViewState
+import com.perrigogames.life4ddr.nextgen.util.toViewState
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
-import dev.icerock.moko.resources.format
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -90,8 +91,10 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                     reqs?.let { ladderGoalProgressManager.getProgressMapFlow(it.allGoals + it.substitutionGoals, target) }
                         ?: flowOf(emptyMap())
                 },
-                _expandedItems,
-//                goalStateManager.updated,
+                combine(
+                    _expandedItems,
+                    goalStateManager.updated,
+                ) { a, _ -> a },
                 options
             ) { targetRank, requirements, progress, expanded, options ->
                 logger.d { "Updating to $targetRank, requirements = $requirements, expanded = $expanded" }
@@ -132,27 +135,24 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                 } else {
                     null
                 }
+
                 when {
                     targetRank == null -> ViewState.Error("No higher goals found...")
                     requirements == null -> ViewState.Error("No goals found for ${targetRank.name}")
-                    targetRank >= LadderRank.PLATINUM1 -> ViewState.Success(
-                        UILadderData(
-                            targetRankClass = targetRank.group,
-                            goals = generateDifficultyCategories(requirements, progress, expanded, mapperOptions),
-                            substitutions = substitutions,
-                            hideCompleted = hideCompletedToggle,
-                            useMonospaceFontForScore = options.useMonospaceScore,
-                        )
-                    )
-                    else -> ViewState.Success(
-                        UILadderData(
-                            targetRankClass = targetRank.group,
-                            goals = generateCommonCategories(requirements, progress, expanded, mapperOptions),
-                            substitutions = substitutions,
-                            hideCompleted = hideCompletedToggle,
-                            useMonospaceFontForScore = options.useMonospaceScore,
-                        )
-                    )
+                    targetRank >= LadderRank.PLATINUM1 -> UILadderData(
+                        targetRankClass = targetRank.group,
+                        goals = generateDifficultyCategories(requirements, progress, expanded, mapperOptions),
+                        substitutions = substitutions,
+                        hideCompleted = hideCompletedToggle,
+                        useMonospaceFontForScore = options.useMonospaceScore,
+                    ).toViewState()
+                    else -> UILadderData(
+                        targetRankClass = targetRank.group,
+                        goals = generateCommonCategories(requirements, progress, expanded, mapperOptions),
+                        substitutions = substitutions,
+                        hideCompleted = hideCompletedToggle,
+                        useMonospaceFontForScore = options.useMonospaceScore,
+                    ).toViewState()
                 }
             }.collect { _state.value = it }
         }
@@ -182,7 +182,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                         neededGoals
                     ),
                 ) to requirements.goals
-                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, progress)
+                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, goalStates, progress)
                     .map { goal ->
                         ladderGoalMapper.toViewData(
                             base = goal,
@@ -197,7 +197,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                 UILadderGoals.CategorizedList.Category(
                     title = MR.strings.mandatory_goals.desc()
                 ) to requirements.mandatoryGoals
-                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, progress)
+                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, goalStates, progress)
                     .map { goal ->
                         ladderGoalMapper.toViewData(
                             base = goal,
@@ -280,7 +280,7 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                     goalText = goalText,
                     goalIcon = goalIcon,
                 ) to goals
-                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, progress)
+                    .filterCompletedGoals(mapperOptions.hideCompletedGoals, goalStates, progress)
                     .map { goal ->
                         ladderGoalMapper.toViewData(
                             base = goal,
@@ -360,8 +360,16 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
 
     private fun List<BaseRankGoal>.filterCompletedGoals(
         shouldFilter: Boolean,
+        goalStates: List<GoalState>,
         progress: Map<BaseRankGoal, LadderGoalProgress?>
-    ) = filterNot { shouldFilter && progress[it]?.isComplete == true }
+    ) = filter { goal ->
+        when {
+            !shouldFilter -> true
+            progress[goal]?.isComplete == true -> false
+            goalStates.firstOrNull { it.goalId == goal.id.toLong() }?.status == GoalStatus.COMPLETE -> false
+            else -> true
+        }
+    }
 
     data class Options(
         val maConfig: MAConfig,
