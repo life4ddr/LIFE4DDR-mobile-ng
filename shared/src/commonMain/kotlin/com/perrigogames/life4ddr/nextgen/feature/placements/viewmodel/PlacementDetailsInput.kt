@@ -1,6 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel
 
 sealed class PlacementDetailsInput {
+    data object Back : PlacementDetailsInput()
 
     data object FinalizeClicked: PlacementDetailsInput()
 

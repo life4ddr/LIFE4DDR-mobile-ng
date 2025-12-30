@@ -2,11 +2,13 @@ package com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.FirstRunSettings
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementListScreen
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementSkipConfirmation
+import com.perrigogames.life4ddr.nextgen.util.Destination
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -38,27 +40,30 @@ class PlacementListViewModel(
 
     fun handleInput(input: PlacementListInput) = when(input) {
         is PlacementListInput.PlacementSelected -> {
-            viewModelScope.launch {
-                _events.emit(PlacementListEvent.NavigateToPlacementDetails(input.placementId))
-            }
+            emitNavigationEvent(
+                destination = FirstRunDestination.PlacementDetails(input.placementId),
+                popExisting = false
+            )
         }
         PlacementListInput.GoToRanksScreen -> {
             firstRunSettingsManager.setInitState(InitState.RANKS)
-            viewModelScope.launch {
-                _events.emit(PlacementListEvent.NavigateToRanks)
-            }
+            emitNavigationEvent(destination = FirstRunDestination.InitialRankList)
         }
         PlacementListInput.SkipPlacement -> {
             _screenData.value = _screenData.value.copy(skipConfirmation = UIPlacementSkipConfirmation())
         }
         PlacementListInput.SkipPlacementConfirm -> {
             firstRunSettingsManager.setInitState(InitState.DONE)
-            viewModelScope.launch {
-                _events.emit(PlacementListEvent.NavigateToMainScreen)
-            }
+            emitNavigationEvent(destination = FirstRunDestination.MainScreen)
         }
         PlacementListInput.SkipPlacementCancel -> {
             _screenData.value = _screenData.value.copy(skipConfirmation = null)
+        }
+    }
+
+    private fun emitNavigationEvent(destination: Destination, popExisting: Boolean = true) {
+        viewModelScope.launch {
+            _events.emit(PlacementListEvent.Navigate(destination, popExisting))
         }
     }
 }

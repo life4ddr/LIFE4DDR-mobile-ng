@@ -29,6 +29,7 @@ import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementL
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListInput
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialMocks
+import com.perrigogames.life4ddr.nextgen.util.Destination
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
@@ -44,7 +45,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun PlacementListScreen(
     modifier: Modifier = Modifier,
-    onEvent: (PlacementListEvent) -> Unit = {},
+    onNavigate: (Destination, Boolean) -> Unit = { _, _ -> },
 ) {
     val viewModel = koinViewModel<PlacementListViewModel>()
     val scope = rememberCoroutineScope()
@@ -61,7 +62,11 @@ fun PlacementListScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.events.collect { onEvent(it) }
+        viewModel.events.collect {
+            when (it) {
+                is PlacementListEvent.Navigate -> onNavigate(it.destination, it.popExisting)
+            }
+        }
     }
 
     val data by viewModel.screenData.collectAsState()

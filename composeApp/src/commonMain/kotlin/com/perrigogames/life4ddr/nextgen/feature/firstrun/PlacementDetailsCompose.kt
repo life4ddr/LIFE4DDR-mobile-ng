@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.firstrun
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -7,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
@@ -33,7 +35,9 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
+import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelInput
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsEvent
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsInput
@@ -46,6 +50,7 @@ import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -81,6 +86,9 @@ fun PlacementDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
+                PlacementDetailsEvent.Back -> {
+                    onBackPressed()
+                }
                 is PlacementDetailsEvent.NavigateToMainScreen -> {
                     onNavigateToMainScreen(event.submissionUrl)
                 }
@@ -126,7 +134,7 @@ fun PlacementDetailsScreen(
         PlacementDetailsContent(
             viewData = state.value,
             modifier = Modifier.fillMaxSize(),
-            onAction = viewModel::handleAction,
+            onInput = viewModel::handleAction,
         )
     }
 }
@@ -135,61 +143,76 @@ fun PlacementDetailsScreen(
 fun PlacementDetailsContent(
     viewData: UIPlacementDetails,
     modifier: Modifier = Modifier,
-    onAction: (PlacementDetailsInput) -> Unit,
+    onInput: (PlacementDetailsInput) -> Unit,
 ) {
     LadderRankClassTheme(ladderRankClass = viewData.rankIcon.group) {
-        Column(
+        Box(
             modifier = modifier
                 .background(color = MaterialTheme.colorScheme.primaryContainer)
-                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                modifier = Modifier.fillMaxWidth()
+            IconButton(
+                onClick = { onInput(PlacementDetailsInput.Back) },
+                modifier = Modifier.align(Alignment.TopStart)
             ) {
-                RankImage(
-                    rank = viewData.rankIcon,
-                    size = 64.dp,
-                )
-                Text(
-                    text = stringResource(viewData.rankIcon.group.nameRes),
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = colorResource(viewData.rankIcon.colorRes),
+                Image(
+                    painter = painterResource(MR.images.arrow_back),
+                    contentDescription = "Back"
                 )
             }
-            SizedSpacer(32.dp)
 
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
+                modifier = Modifier.matchParentSize()
+                    .padding(top = 16.dp)
             ) {
-                viewData.descriptionPoints.forEachIndexed { index, text ->
-                    if (index > 0) {
-                        SizedSpacer(8.dp)
-                    }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    RankImage(
+                        rank = viewData.rankIcon,
+                        size = 64.dp,
+                    )
                     Text(
-                        text = text.localized(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        text = stringResource(viewData.rankIcon.group.nameRes),
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = colorResource(viewData.rankIcon.colorRes),
                     )
                 }
                 SizedSpacer(32.dp)
 
-                viewData.songs.forEach { song ->
-                    PlacementDetailsSongItem(
-                        data = song,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    SizedSpacer(16.dp)
-                }
-            }
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    viewData.descriptionPoints.forEachIndexed { index, text ->
+                        if (index > 0) {
+                            SizedSpacer(8.dp)
+                        }
+                        Text(
+                            text = text.localized(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        )
+                    }
+                    SizedSpacer(32.dp)
 
-            LargeCTAButton(
-                text = viewData.ctaText.localized(),
-                onClick = { onAction(viewData.ctaAction) }
-            )
+                    viewData.songs.forEach { song ->
+                        PlacementDetailsSongItem(
+                            data = song,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        SizedSpacer(16.dp)
+                    }
+                }
+
+                LargeCTAButton(
+                    text = viewData.ctaText.localized(),
+                    onClick = { onInput(viewData.ctaAction) }
+                )
+            }
         }
     }
 }
@@ -207,8 +230,6 @@ fun PlacementDetailsSongItem(
         titleTextLines = 3,
         titleTextStyle = MaterialTheme.typography.titleLarge,
         mixTextStyle = MaterialTheme.typography.titleMedium,
-        difficultyClassTextStyle = MaterialTheme.typography.titleMedium,
-        difficultyNumberTextStyle = MaterialTheme.typography.titleLarge,
     )
 }
 
@@ -221,8 +242,6 @@ fun PlacementSongItem(
     titleTextLines: Int = 1,
     titleTextStyle: TextStyle = MaterialTheme.typography.titleMedium,
     mixTextStyle: TextStyle = MaterialTheme.typography.titleSmall,
-    difficultyClassTextStyle: TextStyle = MaterialTheme.typography.titleSmall,
-    difficultyNumberTextStyle: TextStyle = MaterialTheme.typography.titleMedium,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -265,25 +284,9 @@ fun PlacementSongItem(
             )
         }
         SizedSpacer(detailSpacing)
-        Surface(
-            shape = MaterialTheme.shapes.small,
-            color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier.width(50.dp),
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = data.chartString,
-                    style = difficultyClassTextStyle,
-                    color = colorResource(data.difficultyClass.colorRes)
-                )
-                Text(
-                    text = data.difficultyText,
-                    style = difficultyNumberTextStyle,
-                    color = colorResource(data.difficultyClass.colorRes)
-                )
-            }
-        }
+        PlacementDifficultySurface(
+            data = data,
+            modifier = Modifier.width(50.dp)
+        )
     }
 }

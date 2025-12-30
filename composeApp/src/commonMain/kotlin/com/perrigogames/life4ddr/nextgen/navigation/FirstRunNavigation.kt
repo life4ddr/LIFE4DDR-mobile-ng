@@ -49,18 +49,11 @@ fun NavGraphBuilder.firstRunNavigation(
 
     composable<FirstRunDestination.PlacementList> {
         PlacementListScreen(
-            onEvent = {
-                when(it) {
-                    is PlacementListEvent.NavigateToPlacementDetails -> {
-                        navController.navigate("placement_details/${it.placementId}")
-                    }
-                    PlacementListEvent.NavigateToRanks -> {
-                        navController.popAndNavigate(FirstRunDestination.InitialRankList)
-                    }
-                    PlacementListEvent.NavigateToMainScreen -> {
-                        navController.popAndNavigate(FirstRunDestination.MainScreen)
-                    }
+            onNavigate = { destination, popExisting ->
+                if (popExisting) {
+                    navController.popBackStack()
                 }
+                navController.navigate(destination)
             },
         )
     }
