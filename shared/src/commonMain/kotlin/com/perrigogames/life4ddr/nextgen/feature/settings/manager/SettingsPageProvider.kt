@@ -271,11 +271,11 @@ class SettingsPageProvider : BaseModel() {
                     title = MR.strings.action_clear_trial_data.desc(),
                     action = SettingsAction.ClearData.Trials
                 ),
-//                UISettingsItem.Link(
-//                    key = "KEY_CLEAR_ALL_DATA",
-//                    title = MR.strings.refresh_sanbai_library_data.desc(),
-//                    action = SettingsAction.Sanbai.RefreshLibrary
-//                ),
+                UISettingsItem.Link(
+                    key = "KEY_CLEAR_ALL_DATA",
+                    title = MR.strings.action_clear_all_data.desc(),
+                    action = SettingsAction.ClearData.All
+                ),
             )
         )
     )

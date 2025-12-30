@@ -282,6 +282,7 @@
     <string name="action_game_version">Select game version</string>
     <string name="action_clear_result_data">Clear song results</string>
     <string name="action_clear_trial_data">Clear trial records</string>
+    <string name="action_clear_all_data">Reset app to first run</string>
     <string name="action_combine_mfc">Combine MFCs</string>
     <string name="action_combine_sdp">Combine SDPs</string>
     <string name="action_profile_hide_completed">Hide completed goals in Profile</string>

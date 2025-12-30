@@ -3,6 +3,7 @@ package com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.AppInfo
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
@@ -92,11 +93,20 @@ class SettingsViewModel(
             is SettingsAction.Debug.SongLockPage -> viewModelScope.launch {
                 _events.emit(SettingsEvent.Navigate(SettingsDestination.SongLock))
             }
-            is SettingsAction.ClearData.Results -> {
+            SettingsAction.ClearData.Results -> {
                 resultsManager.clearAllResults()
             }
-            is SettingsAction.ClearData.Trials -> {
+            SettingsAction.ClearData.Trials -> {
                 trialRecordsManager.clearSessions()
+            }
+            SettingsAction.ClearData.All -> {
+                resultsManager.clearAllResults()
+                trialRecordsManager.clearSessions()
+                // TODO clear webview state
+                viewModelScope.launch {
+                    flowSettings.clear()
+                    _events.emit(SettingsEvent.Navigate(FirstRunDestination.FirstRun))
+                }
             }
         }
     }

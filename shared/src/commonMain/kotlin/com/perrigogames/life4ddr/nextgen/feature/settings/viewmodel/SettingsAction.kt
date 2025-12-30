@@ -25,6 +25,7 @@ sealed class SettingsAction {
     sealed class ClearData: SettingsAction() {
         data object Results: ClearData()
         data object Trials: ClearData()
+        data object All: ClearData()
     }
     sealed class Debug: SettingsAction() {
         data object SongLockPage: Debug()
