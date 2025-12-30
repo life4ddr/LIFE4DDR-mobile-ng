@@ -17,7 +17,7 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 composeApp/cache
-composeApp/kcef-bundle
+desktopData
 node_modules/
 /shared/src/commonMain/kotlin/com/perrigogames/life4ddr/nextgen/feature/sanbai/api/SanbaiSecrets.kt
 /composeApp/release/

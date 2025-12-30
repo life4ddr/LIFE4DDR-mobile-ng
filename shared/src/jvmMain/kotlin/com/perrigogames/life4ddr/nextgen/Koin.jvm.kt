@@ -11,6 +11,6 @@ import java.util.*
 @OptIn(ExperimentalSettingsApi::class)
 actual val platformModule = module {
     single<Properties> { Properties() }
-    single<SqlDriver> { JdbcSqliteDriver("jdbc:sqlite:test.db", get(), Life4Db.Schema) }
+    single<SqlDriver> { JdbcSqliteDriver("jdbc:sqlite:../desktopData/sqlite.db", get(), Life4Db.Schema) }
     single<Settings> { PropertiesSettings(get()) }
 }

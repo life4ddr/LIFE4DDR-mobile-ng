@@ -12,15 +12,16 @@ open class JvmUncachedDataReader(protected val internalData: String):
     override fun loadInternalString(): String = internalData
 }
 
-class JvmDataReader(rawPath: String, private val cachedPath: String): JvmUncachedDataReader(rawPath), LocalDataReader {
+class JvmDataReader(rawPath: String, private val cachedPath: File): JvmUncachedDataReader(rawPath), LocalDataReader {
 
-    override fun loadCachedString(): String? = File(cachedPath).let {
+    override fun loadCachedString(): String? = cachedPath.let {
         if (it.exists()) it.readText() else null
     }
 
     override fun saveNewCache(data: String): Boolean {
-        File(cachedPath).writeText(data)
-        return true
+        val dirResult = File(cachedPath.parent).mkdirs()
+        cachedPath.writeText(data)
+        return dirResult
     }
 
     override fun deleteCache() = false

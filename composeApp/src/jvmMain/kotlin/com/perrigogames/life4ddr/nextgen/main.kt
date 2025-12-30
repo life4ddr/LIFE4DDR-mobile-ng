@@ -43,16 +43,16 @@ fun main() = application {
                 override val isDebug: Boolean get() = true
                 override val version: String get() = "0.1"
             },
-            motdReader = JvmDataReader(MR.files.motd_json.readText(), MOTD_FILE_NAME),
+            motdReader = JvmDataReader(MR.files.motd_json.readText(), File("../desktopData/$MOTD_FILE_NAME")),
             placementsReader = JvmUncachedDataReader(MR.files.placements_json.readText()),
-            ranksReader = JvmDataReader(MR.files.ranks_json.readText(), RANKS_FILE_NAME),
-            songsReader = JvmDataReader(MR.files.songs_json.readText(), SONGS_FILE_NAME),
-            trialsReader = JvmDataReader(MR.files.trials_json.readText(), TRIALS_FILE_NAME),
+            ranksReader = JvmDataReader(MR.files.ranks_json.readText(), File("../desktopData/$RANKS_FILE_NAME")),
+            songsReader = JvmDataReader(MR.files.songs_json.readText(), File("../desktopData/$SONGS_FILE_NAME")),
+            trialsReader = JvmDataReader(MR.files.trials_json.readText(), File("../desktopData/$TRIALS_FILE_NAME")),
         ) {
             single<DataStore<Preferences>> {
                 PreferenceDataStoreFactory.createWithPath(
                     produceFile = {
-                        File(System.getProperty("java.io.tmpdir"), "life4.preferences_pb").absolutePath.toPath()
+                        File("../desktopData", "life4.preferences_pb").absolutePath.toPath()
                     }
                 )
             }
@@ -67,7 +67,7 @@ fun main() = application {
         var restartRequired by remember { mutableStateOf(false) }
         var initialized by remember { mutableStateOf(false) }
         var downloadProgress by remember { mutableStateOf(-1F) }
-        val bundleLocation = System.getProperty("compose.application.resources.dir")?.let { File(it) } ?: File(".")
+        val bundleLocation = File("../desktopData")
 
         LaunchedEffect(Unit) {
             withContext(Dispatchers.IO) { // IO scope recommended but not required
