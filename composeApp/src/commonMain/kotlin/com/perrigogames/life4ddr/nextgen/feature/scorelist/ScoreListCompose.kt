@@ -32,6 +32,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ScoreListScreen(
+    fabExpanded: Boolean,
     modifier: Modifier = Modifier,
     onBackPressed: () -> Unit,
     showSanbaiLogin: (String) -> Unit = {},
@@ -66,6 +67,7 @@ fun ScoreListScreen(
     }
 
     ScoreListContent(
+        fabExpanded = fabExpanded,
         scope = scope,
         state = state,
         scaffoldState = scaffoldState,
@@ -106,12 +108,12 @@ fun ScoreListEmptyContent(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ScoreListContent(
+    fabExpanded: Boolean,
     scope: CoroutineScope,
     state: UIScoreList,
     scaffoldState: BottomSheetScaffoldState,
     modifier: Modifier = Modifier,
     onInput: (ScoreListInput) -> Unit = {},
-    showSanbaiLogin: (String) -> Unit = {},
 ) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -131,6 +133,7 @@ fun ScoreListContent(
             modifier = Modifier.padding(outerPadding),
             floatingActionButton = {
                 SongListFloatingActionButtons(
+                    fabExpanded = fabExpanded,
                     onFilterPressed = {
                         scope.launch {
                             scaffoldState.bottomSheetState.expand()
@@ -170,10 +173,11 @@ fun ScoreListContent(
 
 @Composable
 private fun SongListFloatingActionButtons(
+    fabExpanded: Boolean,
     onFilterPressed: () -> Unit,
     onSyncScoresPressed: () -> Unit,
 ) {
-    var isFabExpanded by remember { mutableStateOf(false) }
+    var isFabExpanded by remember { mutableStateOf(fabExpanded) }
 
     Column(
         horizontalAlignment = Alignment.End,

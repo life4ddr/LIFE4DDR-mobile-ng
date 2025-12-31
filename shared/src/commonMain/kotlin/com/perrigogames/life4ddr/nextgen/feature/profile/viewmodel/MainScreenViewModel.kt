@@ -20,5 +20,5 @@ class MainScreenViewModel : ViewModel(), KoinComponent {
 }
 
 data class MainScreenState(
-    val tabs: List<ProfileDestination> = listOf(Profile, Scores, Trials, Settings)
+    val tabs: List<ProfileDestination> = listOf(Profile, Scores(), Trials, Settings)
 )

@@ -44,12 +44,12 @@ fun MainScreen(
                         icon = {
                             when (screen) {
                                 ProfileDestination.Profile -> Icon(painterResource(MR.images.home), contentDescription = null)
-                                ProfileDestination.Scores -> Icon(painterResource(MR.images.list), contentDescription = null)
+                                is ProfileDestination.Scores -> Icon(painterResource(MR.images.list), contentDescription = null)
                                 ProfileDestination.Settings -> Icon(painterResource(MR.images.settings), contentDescription = null)
                                 ProfileDestination.Trials -> Icon(painterResource(MR.images.trophy), contentDescription = null)
                             }
                         },
-                        label = { Text(screen.title.localized()) },
+                        label = { Text(screen.title) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             profileNavController.navigate(screen) {

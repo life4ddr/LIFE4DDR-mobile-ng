@@ -13,8 +13,10 @@ import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import dev.icerock.moko.mvvm.flow.CStateFlow
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import kotlin.random.Random
@@ -31,6 +33,7 @@ class SongResultsManager: BaseModel() {
     private val results = MutableStateFlow<List<ChartResult>>(emptyList()).cMutableStateFlow()
     private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList()).cMutableStateFlow()
     val library: CStateFlow<List<ChartResultPair>> = _library.cStateFlow()
+    val hasResults: Flow<Boolean> = results.map { it.isNotEmpty() }
 
     init {
         mainScope.launch {

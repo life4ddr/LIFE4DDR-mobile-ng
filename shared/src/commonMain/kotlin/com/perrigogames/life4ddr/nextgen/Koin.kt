@@ -153,7 +153,7 @@ val coreModule = module {
     viewModel { params -> PlacementDetailsViewModel(placementId = params.get(), get(), getLogger("PlacementDetailsViewModel")) }
     viewModel { params -> RankListViewModel(isFirstRun = params.get(), get(), get(), get()) }
     viewModel { MainScreenViewModel() }
-    viewModel { PlayerProfileViewModel(get(), get(), get()) }
+    viewModel { PlayerProfileViewModel(get(), get(), get(), get()) }
     viewModel { ScoreListViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TrialListViewModel(get(), get(), get(), get()) }

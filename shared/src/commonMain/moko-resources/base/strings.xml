@@ -247,6 +247,12 @@
     <string name="ladder_submit_photos">Submit your photos to LIFE4 to rank up.</string>
     <!-- endregion -->
 
+    <!-- region Profile -->
+    <string name="profile_sanbai_reminder_title">Got Sanbai?</string>
+    <string name="profile_sanbai_reminder_subtitle">Sync your Sanbai scores from the Scores tab.</string>
+    <string name="profile_sanbai_reminder_cta">Take me there</string>
+    <!-- endregion -->
+
     <!-- region Score List -->
     <string name="score_list_empty_title">No songs selected</string>
     <string name="score_list_empty_subtitle">Check your selected filters</string>

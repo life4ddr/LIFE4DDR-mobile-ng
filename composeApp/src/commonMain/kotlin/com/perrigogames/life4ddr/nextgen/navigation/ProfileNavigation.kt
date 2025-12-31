@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderDestination
 import com.perrigogames.life4ddr.nextgen.feature.profile.PlayerProfileScreen
@@ -26,6 +27,9 @@ fun NavGraphBuilder.profileNavigation(
             onBackPressed = { mainNavController.popBackStack() },
             onAction = { action ->
                 when (action) {
+                    PlayerProfileEvent.NavigateToScores -> {
+                        profileNavController.navigate(ProfileDestination.Scores(expandFAB = true))
+                    }
                     PlayerProfileEvent.NavigateToChangeRank -> {
                         mainNavController.navigate(LadderDestination.RankList)
                     }
@@ -34,8 +38,9 @@ fun NavGraphBuilder.profileNavigation(
         )
     }
 
-    composable<ProfileDestination.Scores> {
+    composable<ProfileDestination.Scores> { backStackEntry ->
         ScoreListScreen(
+            fabExpanded = backStackEntry.toRoute<ProfileDestination.Scores>().expandFAB,
             showSanbaiLogin = { url ->
                 mainNavController.navigate(FirstRunDestination.SanbaiImport(url))
             },

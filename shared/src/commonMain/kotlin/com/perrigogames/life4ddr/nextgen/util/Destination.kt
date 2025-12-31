@@ -22,5 +22,5 @@ interface Destination {
     /**
      * The title to be displayed in the navigation bar.
      */
-    val title: StringDesc? get() = null
+    val title: String? get() = null
 }

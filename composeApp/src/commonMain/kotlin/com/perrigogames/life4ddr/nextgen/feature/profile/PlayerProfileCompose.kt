@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.profile
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import com.perrigogames.life4ddr.nextgen.enums.nameRes
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.ladder.LadderGoalsContent
 import com.perrigogames.life4ddr.nextgen.feature.ladder.view.UILadderData
+import com.perrigogames.life4ddr.nextgen.feature.profile.data.ProfileHeader
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerInfoViewState
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileEvent
 import com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel.PlayerProfileInput
@@ -31,6 +33,7 @@ import com.perrigogames.life4ddr.nextgen.util.ViewState
 import com.perrigogames.life4ddr.nextgen.view.RankImage
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -46,6 +49,7 @@ fun PlayerProfileScreen(
     val viewModel = koinViewModel<PlayerProfileViewModel>()
 
     val playerInfoViewState by viewModel.playerInfoViewState.collectAsState()
+    val headerViewState by viewModel.headerViewState.collectAsState()
     val goalListViewState by viewModel.goalListViewModel.state.collectAsState()
     val density = LocalDensity.current
     val bottomSheetState = remember {
@@ -77,6 +81,7 @@ fun PlayerProfileScreen(
 
     PlayerProfileContent(
         playerInfoViewState = playerInfoViewState,
+        headerViewState = headerViewState,
         goalListViewState = goalListViewState,
         bottomSheetState = bottomSheetState,
         onInput = { viewModel.handleInput(it) },
@@ -87,6 +92,7 @@ fun PlayerProfileScreen(
 @Composable
 fun PlayerProfileContent(
     playerInfoViewState: PlayerInfoViewState,
+    headerViewState: ProfileHeader?,
     goalListViewState: ViewState<UILadderData, String>,
     bottomSheetState: SheetState,
     onInput: (PlayerProfileInput) -> Unit = {},
@@ -124,6 +130,43 @@ fun PlayerProfileContent(
                 onRankClicked = { onInput(PlayerProfileInput.ChangeRankClicked) }
             )
             BannerContainer(playerInfoViewState.banner)
+
+            if (headerViewState != null) {
+                Surface(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = MaterialTheme.shapes.large,
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text(
+                                text = headerViewState.title.localized(),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.titleLarge,
+                            )
+                            Text(
+                                text = headerViewState.subtitle.localized(),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                        Button(
+                            onClick = { onInput(headerViewState.buttonAction) }
+                        ) {
+                            Text(
+                                text = headerViewState.buttonText.localized(),
+                            )
+                        }
+                    }
+                }
+            }
 
             if (goalData != null) {
                 LadderGoalsContent(
