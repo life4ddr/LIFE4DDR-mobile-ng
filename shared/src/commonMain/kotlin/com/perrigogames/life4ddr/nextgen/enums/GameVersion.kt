@@ -49,7 +49,6 @@ enum class GameVersion(
                 versionName.lowercase().replace(" ", "_") == it.name.lowercase()
             }
         }
-        val defaultVersion = entries.last()
     }
 }
 

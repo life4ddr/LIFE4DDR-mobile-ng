@@ -11,4 +11,5 @@ object GameConstants {
     const val AAA_SCORE = 990_000
 
     val SUPPORTED_VERSIONS = listOf(GameVersion.WORLD, GameVersion.A20_PLUS)
+    val DEFAULT_VERSION = GameVersion.WORLD
 }

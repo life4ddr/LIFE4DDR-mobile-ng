@@ -152,7 +152,13 @@ class SettingsPageProvider : BaseModel() {
                 UISettingsItem.Text( // Rival code
                     key = UserInfoSettings.KEY_INFO_RIVAL_CODE,
                     title = MR.strings.action_rival_code.desc(),
-                    subtitle = rivalCode.formatRivalCode().desc(),
+                    subtitle = rivalCode.formatRivalCode().let { formatted ->
+                        if (formatted.isEmpty()) {
+                            MR.strings.not_set.desc()
+                        } else {
+                            formatted.desc()
+                        }
+                    },
                     initialValue = rivalCode,
                     transform = { it.formatRivalCode() }
                 ),

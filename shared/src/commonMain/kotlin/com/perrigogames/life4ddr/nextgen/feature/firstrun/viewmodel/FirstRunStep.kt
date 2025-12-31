@@ -1,6 +1,8 @@
 package com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel
 
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
+import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
 import dev.icerock.moko.resources.desc.Resource
 import dev.icerock.moko.resources.desc.ResourceStringDesc
@@ -46,6 +48,15 @@ sealed class FirstRunStep(
         ) : PathStep()
 
         data class SocialHandles(override val path: FirstRunPath) : PathStep()
+
+        data class SelectGameVersion(
+            override val path: FirstRunPath,
+            val header: StringDesc = MR.strings.first_run_version_header.desc(),
+            val description: StringDesc = MR.strings.first_run_version_description.desc(),
+            val versions: List<GameVersion> = GameConstants.SUPPORTED_VERSIONS,
+            val selectedGameVersion: GameVersion,
+            val footer: StringDesc = MR.strings.first_run_version_footer.desc(),
+        ) : PathStep()
 
         data class InitialRankSelection(
             override val path: FirstRunPath,

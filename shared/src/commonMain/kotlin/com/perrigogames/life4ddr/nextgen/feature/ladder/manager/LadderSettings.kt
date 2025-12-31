@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.manager
 
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings.Companion.KEY_GAME_VERSION
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings.Companion.KEY_HIDE_COMPLETED_GOALS
@@ -34,8 +35,8 @@ interface LadderSettings {
 class DefaultLadderSettings : SettingsManager(), LadderSettings {
     override val selectedGameVersion: StateFlow<GameVersion> =
         settings.getStringFlow(KEY_GAME_VERSION, "")
-            .map { GameVersion.parse(it) ?: GameVersion.defaultVersion }
-            .stateIn(mainScope, SharingStarted.Lazily, GameVersion.defaultVersion)
+            .map { GameVersion.parse(it) ?: GameConstants.DEFAULT_VERSION }
+            .stateIn(mainScope, SharingStarted.Lazily, GameConstants.DEFAULT_VERSION)
 
     override fun setSelectedGameVersion(version: GameVersion) {
         mainScope.launch {

@@ -3,12 +3,14 @@ package com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.FirstRunSettings
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState.*
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunError.UsernameError
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.*
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.PathStep.*
+import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import kotlinx.coroutines.flow.Flow
@@ -26,12 +28,14 @@ import kotlin.reflect.KClass
 class FirstRunInfoViewModel(
     private val infoSettings: UserInfoSettings,
     private val firstRunSettings: FirstRunSettings,
+    private val ladderSettings: LadderSettings,
     private val logger: Logger,
 ) : ViewModel(), KoinComponent {
 
     val username = MutableStateFlow("")
     val password = MutableStateFlow("")
     val rivalCode = MutableStateFlow("")
+    val gameVersion = MutableStateFlow(GameConstants.DEFAULT_VERSION)
     val socialNetworks = MutableStateFlow<MutableMap<SocialNetwork, String>>(mutableMapOf())
 
     private val _stateStack = MutableStateFlow<List<FirstRunStep>>(listOf(Landing))
@@ -75,6 +79,7 @@ class FirstRunInfoViewModel(
             is FirstRunInput.RankMathodSelected -> rankMethodSelected(input.method)
             is FirstRunInput.UsernameUpdated -> username.value = input.name
             is FirstRunInput.RivalCodeUpdated -> rivalCode.value = input.rivalCode
+            is FirstRunInput.GameVersionUpdated -> gameVersion.value = input.version
         }
     }
 
@@ -94,11 +99,12 @@ class FirstRunInfoViewModel(
     ) : FirstRunStep {
         rankMethod?.let { firstRunSettings.setInitState(it) }
         return when (clazz) {
-            Username::class -> Username(path)
+            Username::class -> Username(path, username = username.value)
             Password::class -> Password(path)
             UsernamePassword::class -> UsernamePassword(path)
-            RivalCode::class -> RivalCode(path)
+            RivalCode::class -> RivalCode(path, rivalCode = rivalCode.value)
             SocialHandles::class -> SocialHandles(path)
+            SelectGameVersion::class -> SelectGameVersion(path, selectedGameVersion = gameVersion.value)
             InitialRankSelection::class -> InitialRankSelection(path)
             Completed::class -> Completed(path, rankMethod!!)
             else -> error("Invalid class ${clazz.simpleName}")
@@ -111,6 +117,7 @@ class FirstRunInfoViewModel(
             rivalCode = rivalCode.value,
             socialNetworks = socialNetworks.value,
         )
+        ladderSettings.setSelectedGameVersion(gameVersion.value)
         firstRunSettings.setInitState(DONE)
         _stateStack.value += createStateClass(rankMethod = method, clazz = nextStep)
     }

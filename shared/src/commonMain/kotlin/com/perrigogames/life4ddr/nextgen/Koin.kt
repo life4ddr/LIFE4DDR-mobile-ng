@@ -148,7 +148,7 @@ val coreModule = module {
     single<BannerManager> { DefaultBannerManager() }
 
     viewModel { LaunchViewModel(get()) }
-    viewModel { FirstRunInfoViewModel(get(), get(), getLogger("FirstRunInfoViewModel")) }
+    viewModel { FirstRunInfoViewModel(get(), get(), get(), getLogger("FirstRunInfoViewModel")) }
     viewModel { PlacementListViewModel(get(), get()) }
     viewModel { params -> PlacementDetailsViewModel(placementId = params.get(), get(), getLogger("PlacementDetailsViewModel")) }
     viewModel { params -> RankListViewModel(isFirstRun = params.get(), get(), get(), get()) }

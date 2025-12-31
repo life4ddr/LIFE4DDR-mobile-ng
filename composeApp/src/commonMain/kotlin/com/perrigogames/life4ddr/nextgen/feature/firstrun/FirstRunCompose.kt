@@ -3,25 +3,19 @@ package com.perrigogames.life4ddr.nextgen.feature.firstrun
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -32,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.primaryButtonColors
+import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunInfoViewModel
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunInput
@@ -41,6 +36,7 @@ import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.PathStep.*
 import com.perrigogames.life4ddr.nextgen.util.numeralRegex
 import com.perrigogames.life4ddr.nextgen.view.ErrorText
+import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
@@ -102,53 +98,20 @@ fun FirstRunContent(
                 label = "First run content transitions",
             ) { step ->
                 when (step) {
-                    Landing -> {
-                        FirstRunNewUser(
-                            onInput = onInput,
-                            modifier = contentModifier,
-                        )
-                    }
-                    is Username -> {
-                        FirstRunUsername(
-                            step = step,
-                            onInput = onInput,
-                            modifier = contentModifier,
-                        )
-                    }
-                    is UsernamePassword -> {
-                        FirstRunUsernamePassword(
-                            step = step,
-                            onInput = onInput,
-                            modifier = contentModifier,
-                        )
-                    }
-                    is RivalCode -> {
-                        FirstRunRivalCode(
-                            step = step,
-                            onInput = onInput,
-                            modifier = contentModifier,
-                        )
-                    }
-                    is SocialHandles -> {
-                        FirstRunSocials(
-                            onInput = onInput,
-                            modifier = contentModifier,
-                        )
-                    }
-                    is InitialRankSelection -> {
-                        FirstRunRankMethod(
-                            step = step,
-                            onInput = onInput,
-                            modifier = contentModifier,
-                        )
-                    }
+                    Landing -> FirstRunNewUser(contentModifier, onInput)
+                    is Username -> FirstRunUsername(step, contentModifier, onInput)
+                    is UsernamePassword -> FirstRunUsernamePassword(step, contentModifier, onInput)
+                    is Password -> TODO("Unsupported step Password")
+                    is RivalCode -> FirstRunRivalCode(step, contentModifier, onInput)
+                    is SocialHandles -> FirstRunSocials(contentModifier, onInput)
+                    is SelectGameVersion -> FirstRunGameVersion(step, contentModifier, onInput)
+                    is InitialRankSelection -> FirstRunRankMethod(step, contentModifier, onInput)
                     is Completed -> {
                         if (!completeHandled) {
                             onComplete(step.initStep)
                             completeHandled = true
                         }
                     }
-                    else -> error("Unsupported step $step")
                 }
             }
         }
@@ -209,7 +172,7 @@ fun FirstRunNewUser(
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        SizedSpacer(16.dp)
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
@@ -222,7 +185,7 @@ fun FirstRunNewUser(
                 ) },
                 modifier = Modifier.weight(1f, false)
             )
-            Spacer(modifier = Modifier.size(8.dp))
+            SizedSpacer(8.dp)
             Button(
                 onClick = { onInput(FirstRunInput.NewUserSelected(isNewUser = false)) },
                 colors = primaryButtonColors(),
@@ -250,18 +213,14 @@ fun FirstRunUsername(
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.headlineMedium,
         )
-        Spacer(
-            modifier = Modifier.size(16.dp)
-        )
+        SizedSpacer(16.dp)
         step.descriptionText?.let { description ->
             Text(
                 text = description.localized(),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Spacer(
-                modifier = Modifier.size(16.dp)
-            )
+            SizedSpacer(16.dp)
         }
         OutlinedTextField(
             value = usernameText,
@@ -371,13 +330,13 @@ fun FirstRunRivalCode(
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.headlineMedium,
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        SizedSpacer(16.dp)
         Text(
             text = stringResource(MR.strings.first_run_rival_code_description_1),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.bodyMedium,
         )
-        Spacer(modifier = Modifier.size(8.dp))
+        SizedSpacer(8.dp)
         Text(
             text = stringResource(MR.strings.first_run_rival_code_description_2),
             color = MaterialTheme.colorScheme.onSurface,
@@ -518,6 +477,58 @@ fun FirstRunSocials(
 }
 
 @Composable
+fun FirstRunGameVersion(
+    step: SelectGameVersion,
+    modifier: Modifier = Modifier,
+    onInput: (FirstRunInput) -> Unit = {},
+) {
+    var currentlySelected by remember { mutableStateOf(step.selectedGameVersion) }
+    Column(modifier = modifier) {
+        Text(
+            text = step.header.localized(),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.headlineMedium,
+        )
+        SizedSpacer(16.dp)
+        Text(
+            text = step.description.localized(),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        SizedSpacer(16.dp)
+
+        fun onItemClicked(version: GameVersion) {
+            currentlySelected = version
+            onInput(FirstRunInput.GameVersionUpdated(version))
+        }
+
+        step.versions.forEach { version ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onItemClicked(version) },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = currentlySelected == version,
+                    onClick = { onItemClicked(version) }
+                )
+                Text(
+                    text = version.uiString.localized(),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
+        SizedSpacer(16.dp)
+        Text(
+            text = step.footer.localized(),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodySmall,
+        )
+    }
+}
+
+@Composable
 fun FirstRunRankMethod(
     step: InitialRankSelection,
     modifier: Modifier = Modifier,
@@ -545,12 +556,12 @@ fun FirstRunRankMethod(
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        SizedSpacer(16.dp)
 
         step.path.allowedRankSelectionTypes().forEach {
             OptionButton(it)
         }
-        Spacer(modifier = Modifier.size(16.dp))
+        SizedSpacer(16.dp)
         Text(
             text = stringResource(MR.strings.first_run_rank_selection_footer),
             textAlign = TextAlign.Center,
