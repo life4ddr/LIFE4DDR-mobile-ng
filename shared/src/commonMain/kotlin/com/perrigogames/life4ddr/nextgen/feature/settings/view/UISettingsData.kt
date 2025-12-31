@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.settings.view
 
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsAction
+import dev.icerock.moko.resources.ImageResource
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.Resource
 import dev.icerock.moko.resources.desc.StringDesc
@@ -43,6 +44,7 @@ sealed class UISettingsItem {
         override val key: String,
         val title: StringDesc,
         val subtitle: StringDesc? = null,
+        val icon: ImageResource? = null,
         val action: SettingsAction,
         val enabled: Boolean = true,
     ) : UISettingsItem()
@@ -125,11 +127,4 @@ enum class SettingsPage(val nameDesc: StringDesc) {
     SANBAI_SETTINGS(StringDesc.Resource(MR.strings.sanbai_settings)),
     CLEAR_DATA(StringDesc.Resource(MR.strings.clear_data)),
     DEBUG(StringDesc.Raw("Debug"))
-}
-
-sealed class SettingsPageModal {
-    data class Text(val key: String) : SettingsPageModal()
-    data object RivalCode : SettingsPageModal()
-    data object GameVersion : SettingsPageModal()
-    data object AppVersion : SettingsPageModal()
 }

@@ -4,14 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,7 +13,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.text.AnnotatedString
-import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
@@ -31,13 +23,7 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsView
 import com.perrigogames.life4ddr.nextgen.util.Destination
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
-import me.zhanghai.compose.preference.CheckboxPreference
-import me.zhanghai.compose.preference.ListPreference
-import me.zhanghai.compose.preference.ListPreferenceType
-import me.zhanghai.compose.preference.Preference
-import me.zhanghai.compose.preference.PreferenceCategory
-import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import me.zhanghai.compose.preference.TextFieldPreference
+import me.zhanghai.compose.preference.*
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -45,7 +31,6 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     onClose: () -> Unit,
     onNavigate: (Destination) -> Unit,
-    logger: Logger,
 ) {
     val viewModel = koinViewModel<SettingsViewModel>()
 
@@ -60,25 +45,8 @@ fun SettingsScreen(
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when(event) {
-                SettingsEvent.Close -> {
-                    onClose()
-                }
-                is SettingsEvent.Navigate -> {
-                    onNavigate(event.destination)
-                }
-                is SettingsEvent.NavigateToWebLink -> {
-                    logger.v { "Opening web link ${event.url}" }
-                    TODO()
-//                    val intent = Intent(Intent.ACTION_VIEW, event.url.toUri())
-//                    context.startActivity(intent)
-                }
-                is SettingsEvent.NavigateToEmail -> {
-                    logger.v { "Opening email client to ${event.email}" }
-                    TODO()
-//                    val emailUri = "mailto:${event.email}".toUri()
-//                    val intent = Intent(Intent.ACTION_SENDTO, emailUri)
-//                    context.startActivity(intent)
-                }
+                SettingsEvent.Close -> onClose()
+                is SettingsEvent.Navigate -> onNavigate(event.destination)
             }
         }
     }
@@ -145,6 +113,7 @@ fun SettingsScreenContent(
                         is UISettingsItem.Link -> {
                             Preference(
                                 title = { Text(item.title.localized()) },
+                                icon = { item.icon?.let { Icon(painterResource(it), contentDescription = null) } },
                                 summary = { item.subtitle?.let { Text(it.localized()) } },
                                 enabled = item.enabled,
                                 onClick = { onAction(item.action) }

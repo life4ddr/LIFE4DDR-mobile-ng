@@ -9,7 +9,6 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.MASettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.SettingsPage
-import com.perrigogames.life4ddr.nextgen.feature.settings.view.SettingsPageModal
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
 import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsItem
 import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsAction
@@ -46,32 +45,38 @@ class SettingsPageProvider : BaseModel() {
                 UISettingsItem.Link(
                     key = KEY_NAV_USER_INFO,
                     title = MR.strings.edit_user_info.desc(),
+                    icon = MR.images.person,
                     action = SettingsAction.Navigate(SettingsPage.EDIT_USER_INFO)
                 ),
                 UISettingsItem.Link(
                     key = KEY_NAV_SONG_LIST,
                     title = MR.strings.song_list_settings.desc(),
+                    icon = MR.images.list,
                     action = SettingsAction.Navigate(SettingsPage.SONG_LIST_SETTINGS)
                 ),
                 UISettingsItem.Link(
                     key = KEY_NAV_TRIALS,
                     title = MR.strings.trial_settings.desc(),
+                    icon = MR.images.trophy,
                     action = SettingsAction.Navigate(SettingsPage.TRIAL_SETTINGS)
                 ),
                 UISettingsItem.Link(
                     key = KEY_NAV_SANBAI,
                     title = MR.strings.sanbai_settings.desc(),
+                    icon = MR.images.icecream,
                     action = SettingsAction.Navigate(SettingsPage.SANBAI_SETTINGS)
                 ),
                 UISettingsItem.Link(
                     key = KEY_NAV_CLEAR_DATA,
                     title = MR.strings.clear_data.desc(),
+                    icon = MR.images.delete,
                     action = SettingsAction.Navigate(SettingsPage.CLEAR_DATA)
                 ),
                 if (isDebug) {
                     UISettingsItem.Link(
                         key = KEY_NAV_DEBUG,
                         title = StringDesc.Raw("Debug Options"),
+                        icon = MR.images.terminal,
                         action = SettingsAction.Navigate(SettingsPage.DEBUG)
                     )
                 } else {
@@ -86,35 +91,46 @@ class SettingsPageProvider : BaseModel() {
                     key = "KEY_LINK_SHOP_LIFE4",
                     title = MR.strings.action_shop_life4.desc(),
                     subtitle = MR.strings.description_shop_life4.desc(),
+                    icon = MR.images.shopping_cart,
                     action = SettingsAction.WebLink(URL_SHOP_LIFE4)
                 ),
                 UISettingsItem.Link(
                     key = "KEY_LINK_SHOP_DANGERSHARK",
                     title = MR.strings.action_shop_dangershark.desc(),
                     subtitle = MR.strings.description_shop_dangershark.desc(),
+                    icon = MR.images.shopping_cart,
                     action = SettingsAction.WebLink(URL_SHOP_DANGERSHARK)
                 ),
                 UISettingsItem.Link(
                     key = "KEY_LINK_DISCORD",
                     title = MR.strings.join_discord.desc(),
+                    icon = MR.images.brand_discord,
                     action = SettingsAction.WebLink(URL_JOIN_DISCORD)
                 ),
                 UISettingsItem.Link(
                     key = "KEY_LINK_X",
                     title = MR.strings.find_us_on_x.desc(),
+                    icon = MR.images.brand_x,
                     action = SettingsAction.WebLink(URL_FIND_US_ON_X)
                 ),
+                // NOSHIP Credits are required for full app launch
+//                UISettingsItem.Link(
+//                    key = "KEY_LINK_CREDITS",
+//                    title = MR.strings.credits.desc(),
+//                    icon = MR.images.info,
+//                    action = SettingsAction.ShowCredits
+//                ),
                 UISettingsItem.Link(
-                    key = "KEY_LINK_CREDITS",
-                    title = MR.strings.credits.desc(),
-                    action = SettingsAction.ShowCredits
+                    key = "KEY_EMAIL_SUPPORT",
+                    title = MR.strings.action_email_support.desc(),
+                    icon = MR.images.help,
+                    action = SettingsAction.Email(EMAIL_SUPPORT)
                 ),
                 UISettingsItem.Link(
                     key = "KEY_LINK_VERSIONS",
                     title = StringDesc.Raw("Version ${appInfo.version}"),
-                    action = SettingsAction.Modal(SettingsPageModal.AppVersion)
-                ),
-                // TODO support link
+                    action = SettingsAction.None
+                )
             )
         )
     )
@@ -168,7 +184,12 @@ class SettingsPageProvider : BaseModel() {
             settingsItems = listOf(
                 UISettingsItem.Checkbox(
                     key = SongResultSettings.KEY_ENABLE_DIFFICULTY_TIERS,
-                    title = MR.strings.enable_difficulty_tiers.desc(),
+                    title = MR.strings.action_enable_difficulty_tiers.desc(),
+                    subtitle = if (diffTierEnabled) {
+                        MR.strings.action_enable_difficulty_tiers_subtitle_enabled.desc()
+                    } else {
+                        MR.strings.action_enable_difficulty_tiers_subtitle_disabled.desc()
+                    },
                     toggled = diffTierEnabled
                 ),
                 UISettingsItem.Checkbox(
@@ -176,11 +197,12 @@ class SettingsPageProvider : BaseModel() {
                     title = MR.strings.action_profile_hide_completed.desc(),
                     toggled = hideCompletedGoals
                 ),
-                UISettingsItem.Checkbox(
-                    key = SongResultSettings.KEY_SHOW_REMOVED_SONGS,
-                    title = MR.strings.show_removed_songs.desc(),
-                    toggled = showRemovedSongs
-                ),
+                // TODO this isn't currently used anywhere
+//                UISettingsItem.Checkbox(
+//                    key = SongResultSettings.KEY_SHOW_REMOVED_SONGS,
+//                    title = MR.strings.show_removed_songs.desc(),
+//                    toggled = showRemovedSongs
+//                ),
                 UISettingsItem.Checkbox(
                     key = LadderSettings.KEY_USE_MONOSPACE_SCORE,
                     title = MR.strings.use_monospace_font.desc(),
@@ -207,11 +229,21 @@ class SettingsPageProvider : BaseModel() {
                 UISettingsItem.Checkbox(
                     key = MASettings.KEY_COMBINE_MFCS_GOALLIST,
                     title = MR.strings.action_combine_mfc.desc(),
+                    subtitle = if (maConfig.combineMFCs) {
+                        MR.strings.action_combine_mfc_subtitle_enabled.desc()
+                    } else {
+                        MR.strings.action_combine_mfc_subtitle_disabled.desc()
+                    },
                     toggled = maConfig.combineMFCs,
                 ),
                 UISettingsItem.Checkbox(
                     key = MASettings.KEY_COMBINE_SDPS_GOALLIST,
                     title = MR.strings.action_combine_sdp.desc(),
+                    subtitle = if (maConfig.combineSDPs) {
+                        MR.strings.action_combine_sdp_subtitle_enabled.desc()
+                    } else {
+                        MR.strings.action_combine_sdp_subtitle_disabled.desc()
+                    },
                     toggled = maConfig.combineSDPs,
                 ),
             )
@@ -245,12 +277,14 @@ class SettingsPageProvider : BaseModel() {
             settingsItems = listOf(
                 UISettingsItem.Link(
                     key = "KEY_REFRESH_SANBAI_LIBRARY",
-                    title = MR.strings.refresh_sanbai_library_data.desc(),
+                    title = MR.strings.action_refresh_sanbai_library_data.desc(),
+                    subtitle = MR.strings.action_refresh_sanbai_library_data_subtitle.desc(),
                     action = SettingsAction.Sanbai.RefreshLibrary
                 ),
                 UISettingsItem.Link(
                     key = "KEY_REFRESH_SANBAI_SCORES",
-                    title = MR.strings.refresh_sanbai_user_scores.desc(),
+                    title = MR.strings.action_refresh_sanbai_user_scores.desc(),
+                    subtitle = MR.strings.action_refresh_sanbai_user_scores_subtitle.desc(),
                     action = SettingsAction.Sanbai.RefreshUserScores
                 )
             )
@@ -274,6 +308,7 @@ class SettingsPageProvider : BaseModel() {
                 UISettingsItem.Link(
                     key = "KEY_CLEAR_ALL_DATA",
                     title = MR.strings.action_clear_all_data.desc(),
+                    subtitle = MR.strings.action_clear_all_data_subtitle.desc(),
                     action = SettingsAction.ClearData.All
                 ),
             )
@@ -310,5 +345,6 @@ class SettingsPageProvider : BaseModel() {
         private const val URL_SHOP_DANGERSHARK = "https://www.etsy.com/shop/DangerShark/"
         private const val URL_FIND_US_ON_X = "https://x.com/life4ddr/"
         private const val URL_JOIN_DISCORD = "https://discord.gg/sTYjWNn"
+        private const val EMAIL_SUPPORT = "cperrigolife4@gmail.com"
     }
 }

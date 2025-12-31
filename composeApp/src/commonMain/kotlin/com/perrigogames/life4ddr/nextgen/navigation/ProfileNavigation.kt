@@ -62,7 +62,6 @@ fun NavGraphBuilder.profileNavigation(
             onNavigate = { destination ->
                 mainNavController.navigate(destination)
             },
-            logger = koinInject { parametersOf("Settings") }
         )
     }
 }

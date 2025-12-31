@@ -14,6 +14,7 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
+import com.perrigogames.life4ddr.nextgen.util.ExternalActions
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.FlowSettings
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,6 +33,7 @@ class SettingsViewModel(
     private val flowSettings: FlowSettings,
     private val userInfoSettings: UserInfoSettings,
     private val ladderSettings: LadderSettings,
+    private val externalActions: ExternalActions,
 ) : ViewModel(), KoinComponent {
 
     private val pageStackState = MutableStateFlow(listOf(SettingsPage.ROOT))
@@ -45,7 +47,6 @@ class SettingsViewModel(
     fun handleAction(action: SettingsAction) {
         when (action) {
             SettingsAction.None -> {}
-            is SettingsAction.Modal -> TODO()
             is SettingsAction.Navigate -> pushPage(action.page)
             is SettingsAction.NavigateBack -> {
                 if (pageStackState.value.size > 1) {
@@ -72,14 +73,10 @@ class SettingsViewModel(
                 }
             }
             is SettingsAction.Email -> {
-                viewModelScope.launch {
-                    _events.emit(SettingsEvent.NavigateToEmail(action.email))
-                }
+                externalActions.openEmail(action.email)
             }
             is SettingsAction.WebLink -> {
-                viewModelScope.launch {
-                    _events.emit(SettingsEvent.NavigateToWebLink(action.url))
-                }
+                externalActions.openWeblink(action.url)
             }
             is SettingsAction.ShowCredits -> viewModelScope.launch {
                 _events.emit(SettingsEvent.Navigate(SettingsDestination.Credits))

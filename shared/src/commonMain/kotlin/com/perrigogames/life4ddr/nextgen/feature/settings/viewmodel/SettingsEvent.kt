@@ -9,6 +9,4 @@ import com.perrigogames.life4ddr.nextgen.util.Destination
 sealed class SettingsEvent {
     data object Close : SettingsEvent()
     data class Navigate(val destination: Destination) : SettingsEvent()
-    data class NavigateToEmail(val email: String) : SettingsEvent()
-    data class NavigateToWebLink(val url: String) : SettingsEvent()
 }
