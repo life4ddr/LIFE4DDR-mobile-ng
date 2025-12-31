@@ -18,6 +18,8 @@ fun Double.toStringWithoutDecimal(): String {
 
 fun Int.toInclusiveRange() = this..this
 
+val numeralRegex = Regex("\\d")
+
 /**
  * For a list of integers, checks to see if another set of integers fits in the cascade of values.
  * Both lists are sorted in descending order, and the values from `other` are lined up with the

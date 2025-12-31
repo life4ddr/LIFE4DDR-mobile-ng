@@ -3,6 +3,7 @@ package com.perrigogames.life4ddr.nextgen.feature.firstrun
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -37,6 +39,7 @@ import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunPath
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.Landing
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep.PathStep.*
+import com.perrigogames.life4ddr.nextgen.util.numeralRegex
 import com.perrigogames.life4ddr.nextgen.view.ErrorText
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
@@ -404,66 +407,62 @@ fun RivalCodeEntry(
 
     BasicTextField(
         value = rivalCodeText,
-        onValueChange = {
-            if (it.length <= 8) {
-                rivalCodeText = it
-                onInput(FirstRunInput.RivalCodeUpdated(it))
-                if (it.length == 8) {
-                    focusManager.clearFocus()
-                }
+        onValueChange = { newValue ->
+            val safeValue = newValue
+                .filter { numeralRegex.matches(it.toString()) }
+                .take(8)
+            rivalCodeText = safeValue
+            onInput(FirstRunInput.RivalCodeUpdated(safeValue))
+            if (safeValue.length == 8) {
+                focusManager.clearFocus()
             }
         },
         textStyle = MaterialTheme.typography.labelMedium,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
         ),
-        decorationBox = {
+        decorationBox = { innerTextField ->
             Row(
                 modifier = modifier,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                @Composable
-                fun Cell(text: String) {
-                    Text(
-                        text = text,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.headlineSmall,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .aspectRatio(0.75f)
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                    )
-                }
-
-                repeat(4) { idx ->
-                    val char = when {
-                        idx >= rivalCodeText.length -> ""
-                        else -> rivalCodeText[idx].toString()
-                    }
-                    Cell(char)
-                    Spacer(modifier = Modifier.size(6.dp))
-                }
+                RivalCodeCell(rivalCodeText.getOrNull(0))
+                RivalCodeCell(rivalCodeText.getOrNull(1))
+                RivalCodeCell(rivalCodeText.getOrNull(2))
+                RivalCodeCell(rivalCodeText.getOrNull(3))
                 Text(
                     text = "-",
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.headlineMedium,
                 )
-                repeat(4) { idx ->
-                    val char = when {
-                        idx + 4 >= rivalCodeText.length -> ""
-                        else -> rivalCodeText[idx + 4].toString()
-                    }
-                    Spacer(modifier = Modifier.size(6.dp))
-                    Cell(char)
-                }
+                RivalCodeCell(rivalCodeText.getOrNull(4))
+                RivalCodeCell(rivalCodeText.getOrNull(5))
+                RivalCodeCell(rivalCodeText.getOrNull(6))
+                RivalCodeCell(rivalCodeText.getOrNull(7))
+            }
+            Box(modifier = Modifier.size(0.dp)) {
+                innerTextField()
             }
         }
+    )
+}
+
+@Composable
+fun RowScope.RivalCodeCell(text: Char?) {
+    Text(
+        text = text?.toString() ?: "",
+        color = MaterialTheme.colorScheme.onSurface,
+        style = MaterialTheme.typography.headlineSmall,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .weight(1f)
+            .aspectRatio(0.75f)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onSurface,
+                shape = RoundedCornerShape(8.dp)
+            ),
     )
 }
 
