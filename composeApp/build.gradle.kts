@@ -11,6 +11,9 @@ plugins {
     alias(libs.plugins.mokoResources)
 }
 
+private val VERSION_CODE = 3
+private val VERSION_NAME = "0.2.0"
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -99,8 +102,8 @@ android {
         applicationId = "com.perrigogames.life4ddr.nextgen"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "0.1"
+        versionCode = VERSION_CODE
+        versionName = VERSION_NAME
     }
     packaging {
         resources {
@@ -136,7 +139,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.perrigogames.life4ddr.nextgen"
-            packageVersion = "1.0.0"
+            packageVersion = "1.0.0" // NOSHIP change to shared value after release
         }
     }
 }
