@@ -51,6 +51,9 @@ jobs:
   ios:
     name: iOS - Build and Test default scheme using any available iPhone simulator
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./iosApp 
 
     steps:
       - name: Checkout
