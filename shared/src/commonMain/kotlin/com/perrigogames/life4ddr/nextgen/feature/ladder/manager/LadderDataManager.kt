@@ -48,7 +48,4 @@ class LadderDataManager(
         _ladderDataForGameVersion.map {
             it?.rankRequirements?.firstOrNull { reqs -> reqs.rank == rank }
         }
-
-    val unlockRequirement: Flow<LadderRank?> =
-        _ladderDataForGameVersion.map { it?.unlockRequirement }
 }
