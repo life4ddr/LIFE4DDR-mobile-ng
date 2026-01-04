@@ -70,7 +70,7 @@ class DefaultGithubDataAPI: GithubDataAPI, KoinComponent {
         accept(contentType)
         url {
             takeFrom("https://raw.githubusercontent.com/")
-            encodedPath = "life4ddr/Life4DDR/refs/heads/$githubTarget/json/$filename"
+            encodedPath = "life4ddr/LIFE4DDR-mobile-ng/refs/heads/$githubTarget/shared/src/commonMain/moko-resources/files/$filename"
         }
     }
 }
