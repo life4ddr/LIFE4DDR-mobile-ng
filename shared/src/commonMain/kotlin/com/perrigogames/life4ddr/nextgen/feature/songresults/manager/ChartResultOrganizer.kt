@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.manager
 
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
@@ -7,22 +8,16 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.BaseRankGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.MAPointsGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.MAPointsStackedGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.SongsClearGoal
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartFilterState
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.IgnoreFilterType
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
-import com.perrigogames.life4ddr.nextgen.injectLogger
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.*
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer.Companion.BASIC_LOCKS
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer.Companion.EXPANDED_LOCKS
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.split
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import kotlin.getValue
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -31,13 +26,67 @@ typealias DifficultyClassMap = Map<DifficultyClass, DifficultyNumberMap>
 typealias DifficultyNumberMap = Map<Int, List<ChartResultPair>>
 
 @OptIn(ExperimentalTime::class)
-class ChartResultOrganizer: BaseModel(), KoinComponent {
+interface ChartResultOrganizer {
 
-    private val songResultsManager: SongResultsManager by inject()
-    private val songResultSettings: SongResultSettings by inject()
-    private val logger by injectLogger("ChartResultOrganizer")
+    fun chartsForConfig(config: ChartFilterState) : Flow<List<ChartResultPair>>
 
-    private val basicOrganizer = MutableStateFlow<OrganizerBase>(emptyMap()).cMutableStateFlow()
+    fun resultsForConfig(
+        base: BaseRankGoal?,
+        config: FilterState,
+        enableDifficultyTiers: Boolean
+    ): Flow<ResultsBundle>
+
+    companion object {
+        const val ASIA_EXCLUSIVE = 10
+        const val GOLD_CAB = 20
+        const val GRAND_PRIX = 190
+        const val BEMANI_PRO_LEAGUE = 240
+        const val FLARE_LOCKED = 250
+        const val TIME_EVENT_LOCKED = 260
+        const val GOLDEN_LEAGUE = 270
+        const val EXTRA_SAVIOR = 280
+        const val GALAXY_BRAVE = 290
+        const val PLATINUM_PASS = 300
+
+        val EXPANDED_LOCKS = listOf(
+            ASIA_EXCLUSIVE,
+            GOLD_CAB,
+            GRAND_PRIX,
+            TIME_EVENT_LOCKED,
+            GALAXY_BRAVE,
+            GOLDEN_LEAGUE,
+            PLATINUM_PASS,
+            BEMANI_PRO_LEAGUE
+        )
+
+        val BASIC_LOCKS = EXPANDED_LOCKS + listOf(
+            FLARE_LOCKED,
+            EXTRA_SAVIOR,
+        )
+
+        fun lockTypeName(lockType: Int?) = when(lockType) {
+            ASIA_EXCLUSIVE -> "Asia Exclusive ($lockType)"
+            BEMANI_PRO_LEAGUE -> "BEMANI Pro League ($lockType)"
+            EXTRA_SAVIOR -> "Extra Savior ($lockType)"
+            FLARE_LOCKED -> "Flare Locked ($lockType)"
+            GALAXY_BRAVE -> "Galaxy Brave ($lockType)"
+            GOLD_CAB -> "Gold Cab ($lockType)"
+            GOLDEN_LEAGUE -> "Golden League ($lockType)"
+            GRAND_PRIX -> "Grand Prix ($lockType)"
+            PLATINUM_PASS -> "DDR Platinum Pass ($lockType)"
+            TIME_EVENT_LOCKED -> "Time Event Locked ($lockType)"
+            else -> "Unspecified reason ($lockType)"
+        }
+    }
+}
+
+@OptIn(ExperimentalTime::class)
+class DefaultChartResultOrganizer(
+    private val songResultsManager: SongResultsManager,
+    private val logger: Logger,
+): BaseModel(), KoinComponent, ChartResultOrganizer {
+
+    private val basicOrganizer = MutableStateFlow<OrganizerBase>(emptyMap())
 
     private val chartListCache = mutableMapOf<ChartFilterState, Flow<List<ChartResultPair>>>()
 
@@ -54,7 +103,7 @@ class ChartResultOrganizer: BaseModel(), KoinComponent {
         }
     }
 
-    fun chartsForConfig(config: ChartFilterState) : Flow<List<ChartResultPair>> {
+    override fun chartsForConfig(config: ChartFilterState) : Flow<List<ChartResultPair>> {
         return if (config in chartListCache) {
             chartListCache[config]!!
         } else {
@@ -84,7 +133,7 @@ class ChartResultOrganizer: BaseModel(), KoinComponent {
         }
     }
 
-    fun resultsForConfig(
+    override fun resultsForConfig(
         base: BaseRankGoal?,
         config: FilterState,
         enableDifficultyTiers: Boolean
@@ -166,7 +215,7 @@ class ChartResultOrganizer: BaseModel(), KoinComponent {
     ): List<ChartResultPair> = sortedWith { a, b ->
         if (base is MAPointsGoal || base is MAPointsStackedGoal) {
             // First, MA points, descending
-            val maCompare = ((b.maPointsThousandths() - a.maPointsThousandths()) * 100).toInt()
+            val maCompare = ((b.maPointsThousandths() - a.maPointsThousandths()) * 100)
             if (maCompare != 0) {
                 return@sortedWith maCompare
             }
@@ -190,49 +239,6 @@ class ChartResultOrganizer: BaseModel(), KoinComponent {
 
         // Otherwise, by name, ascending
         return@sortedWith a.chart.song.title.compareTo(b.chart.song.title)
-    }
-
-    companion object {
-        const val ASIA_EXCLUSIVE = 10
-        const val GOLD_CAB = 20
-        const val GRAND_PRIX = 190
-        const val BEMANI_PRO_LEAGUE = 240
-        const val FLARE_LOCKED = 250
-        const val TIME_EVENT_LOCKED = 260
-        const val GOLDEN_LEAGUE = 270
-        const val EXTRA_SAVIOR = 280
-        const val GALAXY_BRAVE = 290
-        const val PLATINUM_PASS = 300
-
-        val EXPANDED_LOCKS = listOf(
-            ASIA_EXCLUSIVE,
-            GOLD_CAB,
-            GRAND_PRIX,
-            TIME_EVENT_LOCKED,
-            GALAXY_BRAVE,
-            GOLDEN_LEAGUE,
-            PLATINUM_PASS,
-            BEMANI_PRO_LEAGUE
-        )
-
-        val BASIC_LOCKS = EXPANDED_LOCKS + listOf(
-            FLARE_LOCKED,
-            EXTRA_SAVIOR,
-        )
-
-        fun lockTypeName(lockType: Int?) = when(lockType) {
-            ASIA_EXCLUSIVE -> "Asia Exclusive ($lockType)"
-            BEMANI_PRO_LEAGUE -> "BEMANI Pro League ($lockType)"
-            EXTRA_SAVIOR -> "Extra Savior ($lockType)"
-            FLARE_LOCKED -> "Flare Locked ($lockType)"
-            GALAXY_BRAVE -> "Galaxy Brave ($lockType)"
-            GOLD_CAB -> "Gold Cab ($lockType)"
-            GOLDEN_LEAGUE -> "Golden League ($lockType)"
-            GRAND_PRIX -> "Grand Prix ($lockType)"
-            PLATINUM_PASS -> "DDR Platinum Pass ($lockType)"
-            TIME_EVENT_LOCKED -> "Time Event Locked ($lockType)"
-            else -> "Unspecified reason ($lockType)"
-        }
     }
 }
 

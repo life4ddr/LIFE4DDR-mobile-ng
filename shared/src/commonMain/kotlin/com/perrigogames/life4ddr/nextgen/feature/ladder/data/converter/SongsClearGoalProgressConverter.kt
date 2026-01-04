@@ -1,37 +1,26 @@
 package com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter
 
-import com.perrigogames.life4ddr.nextgen.data.GameConstants
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
-import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderGoalProgress
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.SongsClearGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.SongsClearStackedGoal
-import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDataManager
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartFilterState
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState.Companion.DEFAULT_DIFFICULTY_NUMBER_RANGE
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.IgnoreFilterType
-import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.groupByDifficultyNumber
-import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.safeScore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import kotlin.math.min
 import kotlin.math.roundToLong
 
-class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, KoinComponent {
-
-    private val ladderDataManager: LadderDataManager by inject()
-    private val chartResultOrganizer: ChartResultOrganizer by inject()
-    private val logger by injectLogger("SongsClearGoalProgressConverter")
+class SongsClearGoalProgressConverter(
+    private val chartResultOrganizer: ChartResultOrganizer,
+    private val logger: Logger,
+) : GoalProgressConverter<SongsClearGoal>, KoinComponent {
 
     override fun getGoalProgress(
         goal: SongsClearGoal,

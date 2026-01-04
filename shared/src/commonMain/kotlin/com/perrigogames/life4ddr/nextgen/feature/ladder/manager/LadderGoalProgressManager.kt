@@ -15,6 +15,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter.MAPointSt
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter.SongsClearGoalProgressConverter
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter.TrialGoalProgressConverter
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.converter.TrialStackGoalProgressConverter
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.flow.Flow
@@ -24,14 +25,17 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.component.KoinComponent
 import kotlin.reflect.KClass
 
-class LadderGoalProgressManager : BaseModel(), KoinComponent {
+class LadderGoalProgressManager(
+    chartResultOrganizer: ChartResultOrganizer,
+) : BaseModel(), KoinComponent {
 
     private val logger by injectLogger("LadderGoalProgressManager")
+    private val songsClearLogger by injectLogger("SongsClearGoalProgressConverter")
 
     private val converters: Map<KClass<out BaseRankGoal>, GoalProgressConverter<out BaseRankGoal>> = mapOf(
         MAPointsGoal::class to MAPointGoalProgressConverter(),
         MAPointsStackedGoal::class to MAPointStackedGoalProgressConverter(),
-        SongsClearGoal::class to SongsClearGoalProgressConverter(),
+        SongsClearGoal::class to SongsClearGoalProgressConverter(chartResultOrganizer, songsClearLogger),
         TrialGoal::class to TrialGoalProgressConverter(),
         TrialStackedGoal::class to TrialStackGoalProgressConverter(),
     )
