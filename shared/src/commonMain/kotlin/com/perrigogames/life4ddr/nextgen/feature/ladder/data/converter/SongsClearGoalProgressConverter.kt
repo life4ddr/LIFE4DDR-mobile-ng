@@ -37,24 +37,11 @@ class SongsClearGoalProgressConverter : GoalProgressConverter<SongsClearGoal>, K
         goal: SongsClearGoal,
         ladderRank: LadderRank?,
     ): Flow<LadderGoalProgress?> {
-        val config = FilterState(
-            chartFilter = ChartFilterState(
-                selectedPlayStyle = goal.playStyle,
-                difficultyClassSelection = goal.diffClassSet?.set ?: DifficultyClass.entries,
-                difficultyNumberRange = goal.diffNumRange ?: DEFAULT_DIFFICULTY_NUMBER_RANGE,
-                ignoreFilterType = when {
-                    goal.songCount != null -> IgnoreFilterType.ALL // working up, allow all songs
-                    ladderRank == null -> IgnoreFilterType.BASIC
-                    else -> IgnoreFilterType.BASIC
-                }
-            ),
-            resultFilter = ResultFilterState(
-                clearTypeRange = goal.clearType.ordinal..ClearType.entries.size,
-                scoreRange = ((goal.score ?: 0)..GameConstants.MAX_SCORE),
-                filterIgnored = true
-            )
+        return chartResultOrganizer.resultsForConfig(
+            base = goal,
+            config = goal.filterState,
+            enableDifficultyTiers = false
         )
-        return chartResultOrganizer.resultsForConfig(goal, config, enableDifficultyTiers = false)
             .map { (match, partMatch, noMatch) ->
                 if (goal.diffNum != null) {
                     when {

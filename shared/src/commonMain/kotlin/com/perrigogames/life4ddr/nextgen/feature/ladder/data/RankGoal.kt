@@ -11,15 +11,22 @@ package com.perrigogames.life4ddr.nextgen.feature.ladder.data
 
 import com.perrigogames.life4ddr.nextgen.data.DifficultyClassSet
 import com.perrigogames.life4ddr.nextgen.data.DifficultyClassSetSerializer
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.data.GameConstants.HIGHEST_DIFFICULTY
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.ClearTypeSerializer
+import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.GameVersion
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankSerializer
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyleSerializer
 import com.perrigogames.life4ddr.nextgen.feature.ladder.enum.RankGoalUserType
 import com.perrigogames.life4ddr.nextgen.feature.ladder.enum.RankGoalUserTypeSerializer
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartFilterState
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState.Companion.DEFAULT_DIFFICULTY_NUMBER_RANGE
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.IgnoreFilterType
+import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRankSerializer
 import com.perrigogames.life4ddr.nextgen.injectLogger
@@ -282,6 +289,25 @@ data class SongsClearGoal(
 
     inline fun forEachDiffNum(block: (Int) -> Unit) {
         diffNumRange?.forEachIndexed { _, diff -> block(diff) }
+    }
+
+    val filterState: FilterState by lazy {
+        FilterState(
+            chartFilter = ChartFilterState(
+                selectedPlayStyle = playStyle,
+                difficultyClassSelection = diffClassSet?.set ?: DifficultyClass.entries,
+                difficultyNumberRange = diffNumRange ?: DEFAULT_DIFFICULTY_NUMBER_RANGE,
+                ignoreFilterType = when {
+                    songCount != null -> IgnoreFilterType.ALL // working up, allow all songs
+                    else -> IgnoreFilterType.BASIC
+                }
+            ),
+            resultFilter = ResultFilterState(
+                clearTypeRange = clearType.ordinal..ClearType.entries.size,
+                scoreRange = ((score ?: 0)..GameConstants.MAX_SCORE),
+                filterIgnored = true
+            )
+        )
     }
 
     override fun goalString(): StringDesc = when {
