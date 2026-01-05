@@ -181,15 +181,11 @@ class DefaultChartResultOrganizer(
                 val songClearGoal = goal as? SongsClearGoal
                 return@map if (songClearGoal?.hasExceptions == true) {
                     // If there's an exception floor, eliminate items that don't already fit that
-                    val (exceptionDone, exceptionNotDone) =
-                        songClearGoal.exceptionFilterState?.let { exceptionFilter ->
-                            resultsForConfig(
-                                results = notDone,
-                                config = exceptionFilter,
-                                presentation = presentation,
-                            )
-                        }
-                            ?: (notDone to mutableListOf<ChartResultPair>())
+                    val (exceptionDone, exceptionNotDone) = resultsForConfig(
+                        results = notDone,
+                        config = songClearGoal.exceptionFilterState,
+                        presentation = presentation,
+                    )
 
                     // Process the exceptions depending on which variety is needed
                     when {

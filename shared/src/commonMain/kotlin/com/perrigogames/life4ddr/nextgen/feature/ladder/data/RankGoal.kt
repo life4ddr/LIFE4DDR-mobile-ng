@@ -302,20 +302,18 @@ data class SongsClearGoal(
             ),
             resultFilter = ResultFilterState(
                 clearTypeRange = clearType.ordinal..ClearType.entries.size,
-                scoreRange = ((score ?: 0)..GameConstants.MAX_SCORE),
+                scoreRange = ((score ?: averageScore ?: 0)..GameConstants.MAX_SCORE),
                 filterIgnored = true
             )
         )
     }
 
-    val exceptionFilterState: ResultFilterState? by lazy {
-        exceptionScore?.let { exceptionScore ->
-            ResultFilterState(
-                clearTypeRange = clearType.ordinal..ClearType.entries.size,
-                scoreRange = exceptionScore..GameConstants.MAX_SCORE,
-                filterIgnored = true
-            )
-        }
+    val exceptionFilterState: ResultFilterState by lazy {
+        ResultFilterState(
+            clearTypeRange = clearType.ordinal..ClearType.entries.size,
+            scoreRange = (exceptionScore ?: 0)..GameConstants.MAX_SCORE,
+            filterIgnored = true
+        )
     }
 
     override fun goalString(): StringDesc = when {
