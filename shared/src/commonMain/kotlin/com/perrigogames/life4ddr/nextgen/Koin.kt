@@ -101,7 +101,7 @@ fun initKoin(
     appDeclaration: KoinAppDeclaration = {}
 ) = startKoin {
     appDeclaration()
-    modules(listOfNotNull(appModule, platformModule, coreModule))
+    modules(listOfNotNull(appModule, platformModule, coreModule, loggerModule))
 }.apply {
     koin.get<Logger> { parametersOf(null) }.also { kermit ->
         kermit.v { "App Id ${koin.get<AppInfo>().appId}" }
@@ -131,7 +131,7 @@ val coreModule = module {
     single<TrialDataManager> { DefaultTrialDataManager(get(), get(), get(), get(), getLogger("TrialDataManager")) }
     single<TrialRecordsManager> { DefaultTrialRecordsManager() }
     single<SongDataManager> { DefaultSongDataManager() }
-    single<ChartResultOrganizer> { DefaultChartResultOrganizer(get(), getLogger("ChartResultOrganizer")) }
+    single<ChartResultOrganizer> { DefaultChartResultOrganizer(get()) }
     single<FilterPanelSettings> { DefaultFilterPanelSettings() }
     single<FirstRunSettings> { DefaultFirstRunSettings() }
     single<LadderSettings> { DefaultLadderSettings() }
@@ -161,7 +161,9 @@ val coreModule = module {
     viewModel { TrialListViewModel(get(), get(), get(), get()) }
     viewModel { params -> TrialSessionViewModel(trialId = params.get(), get(), get(), get(), getLogger("TrialSessionViewModel")) }
     viewModel { VersionsDialogViewModel() }
+}
 
+val loggerModule = module {
     // platformLogWriter() is a relatively simple config option, useful for local debugging. For production
     // uses you *may* want to have a more robust configuration from the native platform. In KaMP Kit,
     // that would likely go into platformModule expect/actual.

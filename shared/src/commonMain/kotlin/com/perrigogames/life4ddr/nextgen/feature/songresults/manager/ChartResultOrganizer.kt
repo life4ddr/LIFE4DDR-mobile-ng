@@ -12,6 +12,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.data.*
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer.Companion.BASIC_LOCKS
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer.Companion.EXPANDED_LOCKS
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ResultPresentation.*
+import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.split
 import kotlinx.coroutines.flow.Flow
@@ -38,7 +39,7 @@ interface ChartResultOrganizer {
 
     fun resultsForGoal(
         goal: SongsClearGoal,
-        enableDifficultyTiers: Boolean
+        enableDifficultyTiers: Boolean = false,
     ) = resultsForGoal(
         goal = goal,
         config = goal.filterState,
@@ -48,7 +49,7 @@ interface ChartResultOrganizer {
     fun resultsForGoal(
         goal: BaseRankGoal?,
         config: FilterState,
-        enableDifficultyTiers: Boolean,
+        enableDifficultyTiers: Boolean = false,
     ): Flow<ResultsBundle>
 
     companion object {
@@ -98,25 +99,19 @@ interface ChartResultOrganizer {
 @OptIn(ExperimentalTime::class)
 class DefaultChartResultOrganizer(
     private val songResultsManager: SongResultsManager,
-    private val logger: Logger,
-): BaseModel(), KoinComponent, ChartResultOrganizer {
+): BaseModel(), ChartResultOrganizer {
 
-    private val basicOrganizer = MutableStateFlow<OrganizerBase>(emptyMap())
+    private val logger by injectLogger("ChartResultOrganizer")
 
-    private val chartListCache = mutableMapOf<ChartFilterState, Flow<List<ChartResultPair>>>()
-
-    init {
-        mainScope.launch {
-            songResultsManager.library.map { base ->
-                base.groupByPlayStyle().mapValues { (_, l1) ->
-                    l1.groupByDifficultyClass().mapValues { (_, l2) ->
-                        l2.groupByDifficultyNumber()
-                    }
-                }
+    private val basicOrganizer = songResultsManager.library.map { base ->
+        base.groupByPlayStyle().mapValues { (_, l1) ->
+            l1.groupByDifficultyClass().mapValues { (_, l2) ->
+                l2.groupByDifficultyNumber()
             }
-            .collect(basicOrganizer)
         }
     }
+
+    private val chartListCache = mutableMapOf<ChartFilterState, Flow<List<ChartResultPair>>>()
 
     override fun chartsForConfig(config: ChartFilterState) : Flow<List<ChartResultPair>> {
         return if (config in chartListCache) {

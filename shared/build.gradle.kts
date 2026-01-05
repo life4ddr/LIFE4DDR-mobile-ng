@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.mokoResources)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.mockmp)
 }
 
 kotlin {
@@ -55,6 +57,10 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.kotest)
+            implementation(libs.koin.test)
+            implementation(libs.turbine)
             api(libs.moko.resources.test)
         }
         androidMain.dependencies {
@@ -92,6 +98,12 @@ sqldelight {
 
 multiplatformResources {
     resourcesPackage.set("com.perrigogames.life4ddr.nextgen")
+}
+
+mockmp {
+    onTest {
+        withHelper()
+    }
 }
 
 @CacheableTask
