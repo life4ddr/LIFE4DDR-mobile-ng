@@ -26,8 +26,8 @@ class SongsClearGoalProgressConverter(
         goal: SongsClearGoal,
         ladderRank: LadderRank?,
     ): Flow<LadderGoalProgress?> {
-        return chartResultOrganizer.resultsForConfig(
-            base = goal,
+        return chartResultOrganizer.resultsForGoal(
+            goal = goal,
             config = goal.filterState,
             enableDifficultyTiers = false
         )

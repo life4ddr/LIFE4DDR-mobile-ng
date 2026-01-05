@@ -61,7 +61,7 @@ class ScoreListViewModel(
                     songResultSettings.showRemovedSongs,
                 ) { a, b, c -> Triple(a, b, c) }
                     .flatMapLatest { (config, enableDifficultyTiers, showRemovedSongs) ->
-                        resultOrganizer.resultsForConfig(null, config.copy(
+                        resultOrganizer.resultsForGoal(null, config.copy(
                             chartFilter = config.chartFilter.copy(
                                 ignoreFilterType = if (showRemovedSongs) {
                                     IgnoreFilterType.ALL

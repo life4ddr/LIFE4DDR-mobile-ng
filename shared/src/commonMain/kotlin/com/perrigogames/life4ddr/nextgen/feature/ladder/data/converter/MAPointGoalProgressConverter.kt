@@ -25,7 +25,7 @@ class MAPointGoalProgressConverter : GoalProgressConverter<MAPointsGoal>, KoinCo
             selectedPlayStyle = goal.playStyle,
             clearTypeRange = ClearType.SINGLE_DIGIT_PERFECTS.ordinal..ClearType.MARVELOUS_FULL_COMBO.ordinal,
         )
-        return chartResultOrganizer.resultsForConfig(goal, config, enableDifficultyTiers = false).map { (match, _) ->
+        return chartResultOrganizer.resultsForGoal(goal, config, enableDifficultyTiers = false).map { (match, _) ->
             val maPointsThousandths = match.sumOf { it.maPointsThousandths() }
             LadderGoalProgress(
                 progress = maPointsThousandths.toMAPointsDouble(),
@@ -51,7 +51,7 @@ class MAPointStackedGoalProgressConverter : StackedGoalProgressConverter<MAPoint
             clearTypeRange = ClearType.SINGLE_DIGIT_PERFECTS.ordinal .. ClearType.MARVELOUS_FULL_COMBO.ordinal,
         )
         val targetPoints = goal.getDoubleValue(stackIndex, MAPointsStackedGoal.KEY_MA_POINTS)!!
-        return chartResultOrganizer.resultsForConfig(goal, config, enableDifficultyTiers = false).map { (match, _) ->
+        return chartResultOrganizer.resultsForGoal(goal, config, enableDifficultyTiers = false).map { (match, _) ->
             val maPointsThousandths = match.sumOf { it.maPointsThousandths() }
             LadderGoalProgress(
                 progress = maPointsThousandths.toMAPointsDouble(),

@@ -1,6 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.manager
 
 import co.touchlab.kermit.Logger
+import com.perrigogames.life4ddr.nextgen.db.ChartResult
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
@@ -11,6 +12,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.SongsClearGoal
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.*
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer.Companion.BASIC_LOCKS
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer.Companion.EXPANDED_LOCKS
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ResultPresentation.*
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.split
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 typealias OrganizerBase = Map<PlayStyle, DifficultyClassMap>
@@ -31,9 +32,15 @@ interface ChartResultOrganizer {
     fun chartsForConfig(config: ChartFilterState) : Flow<List<ChartResultPair>>
 
     fun resultsForConfig(
-        base: BaseRankGoal?,
+        results: List<ChartResultPair>,
+        config: ResultFilterState,
+        presentation: ResultPresentation,
+    ): Pair<List<ChartResultPair>, List<ChartResultPair>>
+
+    fun resultsForGoal(
+        goal: BaseRankGoal?,
         config: FilterState,
-        enableDifficultyTiers: Boolean
+        enableDifficultyTiers: Boolean,
     ): Flow<ResultsBundle>
 
     companion object {
@@ -134,86 +141,95 @@ class DefaultChartResultOrganizer(
     }
 
     override fun resultsForConfig(
-        base: BaseRankGoal?,
-        config: FilterState,
-        enableDifficultyTiers: Boolean
-    ): Flow<ResultsBundle> {
-        return chartsForConfig(config.chartFilter)
-            .map { ChartFilterer(it) }
-            .map { filterer ->
-                val start = Clock.System.now()
-                var results = filterer.filtered(config.resultFilter)
-                val filterEnd = Clock.System.now()
-
-                (base as? SongsClearGoal)?.let { songClearGoal ->
-                    results = processExceptions(songClearGoal, results)
-                }
-                results.copy(
-                    resultsDone = results.resultsDone.specialSorted(base, enableDifficultyTiers),
-                    resultsPartlyDone = results.resultsPartlyDone.specialSorted(base, enableDifficultyTiers),
-                    resultsNotDone = results.resultsNotDone.specialSorted(base, enableDifficultyTiers)
-                ).also {
-                    val sortEnd = Clock.System.now()
-                    val filterMillis = (filterEnd - start).inWholeMilliseconds
-                    val sortMillis = (sortEnd - filterEnd).inWholeMilliseconds
-                    val totalMillis = filterMillis + sortMillis
-                    logger.d { "Filter time: ${filterMillis}ms, Sort time: ${sortMillis}ms, Total time: ${totalMillis}ms" }
-                }
-            }
+        results: List<ChartResultPair>,
+        config: ResultFilterState,
+        presentation: ResultPresentation,
+    ): Pair<MutableList<ChartResultPair>, MutableList<ChartResultPair>> {
+        return results.split { chart ->
+            config.clearTypeRange.contains(chart.result?.clearType?.ordinal ?: 0)
+                    && config.scoreRange.contains(chart.result?.score ?: 0)
+        }.let { it.first.toMutableList() to it.second.toMutableList() }
     }
 
-    private fun processExceptions(
-        goal: SongsClearGoal,
-        results: ResultsBundle
-    ): ResultsBundle {
-        return when {
-            goal.exceptionScore == null -> results
-            goal.exceptions != null -> {
-                var floorAchieved = mutableListOf<ChartResultPair>()
-                val floorNotAchieved = mutableListOf<ChartResultPair>()
-                results.resultsNotDone.forEach { pair ->
-                    if ((pair.result?.score ?: 0) >= goal.exceptionScore) {
-                        floorAchieved.add(pair)
-                    } else {
-                        floorNotAchieved.add(pair)
-                    }
+    override fun resultsForGoal(
+        goal: BaseRankGoal?,
+        config: FilterState,
+        enableDifficultyTiers: Boolean,
+    ): Flow<ResultsBundle> {
+        return chartsForConfig(config.chartFilter)
+            .map { results ->
+                val presentation = when {
+                    goal is MAPointsGoal || goal is MAPointsStackedGoal -> MA_POINTS
+                    enableDifficultyTiers -> DIFFICULTY_TIERS
+                    else -> NORMAL
                 }
-                floorAchieved = floorAchieved.sortedByDescending { it.result?.score ?: 0 }.toMutableList()
-                while(floorAchieved.size > goal.exceptions) {
-                    floorNotAchieved.add(floorAchieved.removeAt(floorAchieved.lastIndex))
+
+                // Calculate the primary goal completion
+                val (done, notDone) = resultsForConfig(
+                    results = results,
+                    config = config.resultFilter,
+                    presentation = presentation,
+                ).let {
+                    // Done items will not be modified, so sort them now
+                    it.first.specialSorted(presentation) to it.second
                 }
-                ResultsBundle(
-                    resultsDone = results.resultsDone,
-                    resultsPartlyDone = floorAchieved,
-                    resultsNotDone = floorNotAchieved
-                )
-            }
-            goal.songExceptions != null -> {
-                val floorAchieved = mutableListOf<ChartResultPair>()
-                val floorNotAchieved = mutableListOf<ChartResultPair>()
-                results.resultsNotDone.forEach { pair ->
-                    val isException = pair.chart.song.title in goal.songExceptions
+
+                // If exceptions are allowed, calculate the exception completion
+                val songClearGoal = goal as? SongsClearGoal
+                return@map if (songClearGoal?.hasExceptions == true) {
+                    // If there's an exception floor, eliminate items that don't already fit that
+                    val (exceptionDone, exceptionNotDone) =
+                        songClearGoal.exceptionFilterState?.let { exceptionFilter ->
+                            resultsForConfig(
+                                results = notDone,
+                                config = exceptionFilter,
+                                presentation = presentation,
+                            )
+                        }
+                            ?: (notDone to mutableListOf<ChartResultPair>())
+
+                    // Process the exceptions depending on which variety is needed
                     when {
-                        !isException -> { floorNotAchieved.add(pair) }
-                        (pair.result?.score ?: 0) >= goal.exceptionScore -> { floorAchieved.add(pair) }
-                        else -> { floorNotAchieved.add(pair) }
+                        songClearGoal.exceptions != null -> {
+                            // Sort by score and take just the first X songs
+                            exceptionDone.sortBy { it.result?.score ?: 0 }
+                            while (exceptionDone.size > songClearGoal.exceptions) {
+                                exceptionNotDone.add(0, exceptionDone.removeLast())
+                            }
+                        }
+                        songClearGoal.songExceptions != null -> {
+                            // Remove all songs not specified in the list
+                            val inProgress = exceptionDone.toMutableList()
+                            exceptionDone.clear()
+                            while (inProgress.isNotEmpty()) {
+                                val item = inProgress.removeLast()
+                                val isException = item.chart.song.title in goal.songExceptions!!
+                                if (isException) {
+                                    exceptionNotDone.add(0, item)
+                                } else {
+                                    exceptionDone.add(0, item)
+                                }
+                            }
+                        }
+                        else -> error("Unaccounted exception found for goal ${goal.id}")
                     }
-                }
-                ResultsBundle(
-                    resultsDone = results.resultsDone,
-                    resultsPartlyDone = floorAchieved,
-                    resultsNotDone = floorNotAchieved
+
+                    ResultsBundle(
+                        resultsDone = done,
+                        resultsPartlyDone = exceptionDone.specialSorted(presentation),
+                        resultsNotDone = exceptionNotDone.specialSorted(presentation),
+                    )
+                } else ResultsBundle(
+                    resultsDone = done,
+                    resultsNotDone = notDone.specialSorted(presentation),
                 )
             }
-            else -> results
-        }
     }
 
     private fun List<ChartResultPair>.specialSorted(
-        base: BaseRankGoal?,
-        enableDifficultyTiers: Boolean
+        presentation: ResultPresentation
     ): List<ChartResultPair> = sortedWith { a, b ->
-        if (base is MAPointsGoal || base is MAPointsStackedGoal) {
+        if (presentation == MA_POINTS) {
             // First, MA points, descending
             val maCompare = ((b.maPointsThousandths() - a.maPointsThousandths()) * 100)
             if (maCompare != 0) {
@@ -221,7 +237,7 @@ class DefaultChartResultOrganizer(
             }
         } else {
             // First, difficulty number, ascending
-            val diffCompare = if (enableDifficultyTiers) {
+            val diffCompare = if (presentation == DIFFICULTY_TIERS) {
                 ((a.chart.combinedDifficultyNumber - b.chart.combinedDifficultyNumber) * 1000).toInt()
             } else {
                 a.chart.difficultyNumber - b.chart.difficultyNumber
@@ -242,24 +258,8 @@ class DefaultChartResultOrganizer(
     }
 }
 
-class ChartFilterer(
-    private val chartResults: List<ChartResultPair>
-) {
-
-    fun all(): List<ChartResultPair> = chartResults
-
-    fun filtered(config: ResultFilterState): ResultsBundle {
-        // TODO search cache for more simple versions of the search
-        val (done, notDone) = chartResults.split { chart ->
-            config.clearTypeRange.contains(chart.result?.clearType?.ordinal ?: 0)
-                    && config.scoreRange.contains(chart.result?.score ?: 0)
-        }
-        // TODO implement some caching
-        return ResultsBundle(
-            resultsDone = done,
-            resultsNotDone = notDone
-        )
-    }
+enum class ResultPresentation {
+    NORMAL, DIFFICULTY_TIERS, MA_POINTS
 }
 
 data class ResultsBundle(

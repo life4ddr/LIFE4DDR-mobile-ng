@@ -257,6 +257,8 @@ data class SongsClearGoal(
     val clearType: ClearType
         get() = mClearType ?: ClearType.CLEAR
 
+    val hasExceptions = exceptions != null || songExceptions?.isEmpty() == false
+
     fun validate(): String? {
         if (averageScore != null && allowsHigherDiffNum) {
             return "averages only supported for a single difficulty"
@@ -267,10 +269,6 @@ data class SongsClearGoal(
         if (exceptions != null && songExceptions?.isEmpty() == false) {
             return "cannot combine exceptions and songExceptions"
         }
-        if (exceptionScore != null && (exceptions == null && songExceptions?.isEmpty() != false)) {
-            return "exceptionScore requires exceptions or songExceptions to be specified"
-        }
-        val hasExceptions = exceptions != null || songExceptions?.isEmpty() == false
         if (!hasExceptions && exceptionScore != null) {
             return "must specify exceptions or songExceptions with exceptionScore"
         }
@@ -308,6 +306,16 @@ data class SongsClearGoal(
                 filterIgnored = true
             )
         )
+    }
+
+    val exceptionFilterState: ResultFilterState? by lazy {
+        exceptionScore?.let { exceptionScore ->
+            ResultFilterState(
+                clearTypeRange = clearType.ordinal..ClearType.entries.size,
+                scoreRange = exceptionScore..GameConstants.MAX_SCORE,
+                filterIgnored = true
+            )
+        }
     }
 
     override fun goalString(): StringDesc = when {
