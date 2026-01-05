@@ -10,11 +10,10 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.data.matches
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
-import dev.icerock.moko.mvvm.flow.CStateFlow
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.flow.cStateFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -30,9 +29,9 @@ class SongResultsManager: BaseModel() {
     private val songDataManager: SongDataManager by inject()
     private val resultDbHelper: ResultDatabaseHelper by inject()
 
-    private val results = MutableStateFlow<List<ChartResult>>(emptyList()).cMutableStateFlow()
-    private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList()).cMutableStateFlow()
-    val library: CStateFlow<List<ChartResultPair>> = _library.cStateFlow()
+    private val results = MutableStateFlow<List<ChartResult>>(emptyList())
+    private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList())
+    val library: StateFlow<List<ChartResultPair>> = _library.asStateFlow()
     val hasResults: Flow<Boolean> = results.map { it.isNotEmpty() }
 
     init {
