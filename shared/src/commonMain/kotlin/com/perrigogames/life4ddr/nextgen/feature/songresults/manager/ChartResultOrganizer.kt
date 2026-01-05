@@ -1,7 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.manager
 
 import co.touchlab.kermit.Logger
-import com.perrigogames.life4ddr.nextgen.db.ChartResult
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
@@ -36,6 +35,15 @@ interface ChartResultOrganizer {
         config: ResultFilterState,
         presentation: ResultPresentation,
     ): Pair<List<ChartResultPair>, List<ChartResultPair>>
+
+    fun resultsForGoal(
+        goal: SongsClearGoal,
+        enableDifficultyTiers: Boolean
+    ) = resultsForGoal(
+        goal = goal,
+        config = goal.filterState,
+        enableDifficultyTiers = enableDifficultyTiers,
+    )
 
     fun resultsForGoal(
         goal: BaseRankGoal?,
