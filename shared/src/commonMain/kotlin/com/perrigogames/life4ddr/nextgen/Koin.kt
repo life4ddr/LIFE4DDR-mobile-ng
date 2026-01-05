@@ -64,6 +64,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResult
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultChartResultOrganizer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultFilterPanelSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultSongResultSettings
+import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.DefaultSongResultsManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.FilterPanelSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
@@ -125,7 +126,7 @@ val coreModule = module {
     single { MajorUpdateManager() }
     single<MotdManager> { DefaultMotdManager() }
     single { LadderDataManager(get(), get()) }
-    single { SongResultsManager() }
+    single<SongResultsManager> { DefaultSongResultsManager(get(), get(), getLogger("SongResultsManager")) }
     single { LadderGoalProgressManager(get()) }
     single<TrialDataManager> { DefaultTrialDataManager(get(), get(), get(), get(), getLogger("TrialDataManager")) }
     single<TrialRecordsManager> { DefaultTrialRecordsManager() }

@@ -1,38 +1,44 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.manager
 
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.db.ChartResult
-import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongLibrary
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.matches
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
-import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
-import kotlin.random.Random
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
-class SongResultsManager: BaseModel() {
+interface SongResultsManager {
 
-    private val logger by injectLogger("SongResultsManager")
-    private val songDataManager: SongDataManager by inject()
-    private val resultDbHelper: ResultDatabaseHelper by inject()
+    val library: Flow<List<ChartResultPair>>
+
+    val hasResults: Flow<Boolean>
+
+    fun refresh()
+
+    fun addScores(scores: List<ChartResult>)
+
+    fun clearAllResults()
+}
+
+class DefaultSongResultsManager(
+    private val songDataManager: SongDataManager,
+    private val resultDbHelper: ResultDatabaseHelper,
+    private val logger: Logger,
+): BaseModel(), SongResultsManager {
 
     private val results = MutableStateFlow<List<ChartResult>>(emptyList())
     private val _library = MutableStateFlow<List<ChartResultPair>>(emptyList())
-    val library: StateFlow<List<ChartResultPair>> = _library.asStateFlow()
-    val hasResults: Flow<Boolean> = results.map { it.isNotEmpty() }
+    override val library: Flow<List<ChartResultPair>> = _library.asStateFlow()
+    override val hasResults: Flow<Boolean> = results.map { it.isNotEmpty() }
 
     init {
         mainScope.launch {
@@ -48,46 +54,21 @@ class SongResultsManager: BaseModel() {
         refresh()
     }
 
-    fun refresh() {
+    override fun refresh() {
         logger.d("Refreshing song results")
         mainScope.launch {
             results.emit(resultDbHelper.selectAll())
         }
     }
 
-    fun addScores(scores: List<ChartResult>) {
+    override fun addScores(scores: List<ChartResult>) {
         mainScope.launch {
             resultDbHelper.insertResults(scores)
             results.emit(resultDbHelper.selectAll())
         }
     }
 
-    fun createDebugScores() {
-        logger.d("Adding debug scores")
-        mainScope.launch {
-            val random = Random(Clock.System.now().toEpochMilliseconds())
-            val charts = songDataManager.libraryFlow.value.charts
-            results.emit(
-                List(50) { random.nextInt(0, charts.size) }
-                    .toSet()
-                    .map { index -> charts[index] }
-                    .map { chart ->
-                        ChartResult(
-                            skillId = chart.song.skillId,
-                            difficultyClass = chart.difficultyClass,
-                            playStyle = chart.playStyle,
-                            clearType = ClearType.CLEAR,
-                            score = 1_000_000L - (1_000 * random.nextInt(0, 100)),
-                            exScore = 1_000L - random.nextInt(0, 100),
-                            flare = random.nextLong(0, 10).takeIf { it >= 1 },
-                            flareSkill = random.nextLong(100, 500)
-                        )
-                    }
-            )
-        }
-    }
-
-    internal fun clearAllResults() {
+    override fun clearAllResults() {
         logger.w("Clearing all saved song results")
         mainScope.launch {
             resultDbHelper.deleteAll()
