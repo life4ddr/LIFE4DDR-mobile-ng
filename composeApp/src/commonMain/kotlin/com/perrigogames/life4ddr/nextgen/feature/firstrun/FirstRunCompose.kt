@@ -19,8 +19,10 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.MR
@@ -362,19 +364,32 @@ fun RivalCodeEntry(
     onInput: (FirstRunInput) -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
-    var rivalCodeText by remember { mutableStateOf(rivalCode) }
+    var rivalCodeValue by remember {
+        mutableStateOf(TextFieldValue(
+            text = rivalCode,
+            selection = TextRange(index = rivalCode.length)
+        ))
+    }
+
+    LaunchedEffect(rivalCodeValue.text.length) {
+        val length = rivalCodeValue.text.length
+        if (length == 0 || length == 8) {
+            focusManager.clearFocus()
+        }
+    }
 
     BasicTextField(
-        value = rivalCodeText,
+        value = rivalCodeValue,
         onValueChange = { newValue ->
             val safeValue = newValue
+                .text
                 .filter { numeralRegex.matches(it.toString()) }
                 .take(8)
-            rivalCodeText = safeValue
+            rivalCodeValue = TextFieldValue(
+                text = safeValue,
+                selection = TextRange(index = safeValue.length)
+            )
             onInput(FirstRunInput.RivalCodeUpdated(safeValue))
-            if (safeValue.length == 8) {
-                focusManager.clearFocus()
-            }
         },
         textStyle = MaterialTheme.typography.labelMedium,
         keyboardOptions = KeyboardOptions(
@@ -386,19 +401,20 @@ fun RivalCodeEntry(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                RivalCodeCell(rivalCodeText.getOrNull(0))
-                RivalCodeCell(rivalCodeText.getOrNull(1))
-                RivalCodeCell(rivalCodeText.getOrNull(2))
-                RivalCodeCell(rivalCodeText.getOrNull(3))
+                val text = rivalCodeValue.text
+                RivalCodeCell(text.getOrNull(0))
+                RivalCodeCell(text.getOrNull(1))
+                RivalCodeCell(text.getOrNull(2))
+                RivalCodeCell(text.getOrNull(3))
                 Text(
                     text = "-",
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.headlineMedium,
                 )
-                RivalCodeCell(rivalCodeText.getOrNull(4))
-                RivalCodeCell(rivalCodeText.getOrNull(5))
-                RivalCodeCell(rivalCodeText.getOrNull(6))
-                RivalCodeCell(rivalCodeText.getOrNull(7))
+                RivalCodeCell(text.getOrNull(4))
+                RivalCodeCell(text.getOrNull(5))
+                RivalCodeCell(text.getOrNull(6))
+                RivalCodeCell(text.getOrNull(7))
             }
             Box(modifier = Modifier.size(0.dp)) {
                 innerTextField()
