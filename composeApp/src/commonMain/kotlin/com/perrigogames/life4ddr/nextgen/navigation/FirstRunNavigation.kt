@@ -33,11 +33,16 @@ fun NavGraphBuilder.firstRunNavigation(
     deeplinkManager: DeeplinkManager,
     onExit: () -> Unit,
 ) {
+    val fullScreenModifier = Modifier
+        .fillMaxSize()
+        .navigationBarsPadding()
+        .systemBarsPadding()
+
     composable<FirstRunDestination.Landing> {}
 
     composable<FirstRunDestination.FirstRun> {
         FirstRunScreen(
-            modifier = Modifier.fillMaxSize(),
+            modifier = fullScreenModifier,
             onComplete = { when (it) {
                 InitState.PLACEMENTS -> navController.popAndNavigate(FirstRunDestination.PlacementList)
                 InitState.RANKS -> navController.popAndNavigate(FirstRunDestination.InitialRankList)
@@ -49,6 +54,7 @@ fun NavGraphBuilder.firstRunNavigation(
 
     composable<FirstRunDestination.PlacementList> {
         PlacementListScreen(
+            modifier = fullScreenModifier,
             onNavigate = { destination, popExisting ->
                 if (popExisting) {
                     navController.popBackStack()
@@ -61,6 +67,7 @@ fun NavGraphBuilder.firstRunNavigation(
     composable<FirstRunDestination.PlacementDetails> { backStackEntry ->
     val placementId = backStackEntry.toRoute<FirstRunDestination.PlacementDetails>().placementId
         PlacementDetailsScreen(
+            modifier = fullScreenModifier,
             placementId = placementId,
             onBackPressed = { navController.popBackStack() },
             onNavigateToMainScreen = { url ->
@@ -76,7 +83,10 @@ fun NavGraphBuilder.firstRunNavigation(
     }
 
     composable<FirstRunDestination.InitialRankList> {
-        RankListScreen(isFirstRun = true) { action ->
+        RankListScreen(
+            modifier = fullScreenModifier,
+            isFirstRun = true
+        ) { action ->
             when(action) {
                 RankListViewModelEvent.NavigateToPlacements -> navController.popAndNavigate(FirstRunDestination.PlacementList)
                 RankListViewModelEvent.NavigateToMainScreen -> navController.popAndNavigate(FirstRunDestination.MainScreen)

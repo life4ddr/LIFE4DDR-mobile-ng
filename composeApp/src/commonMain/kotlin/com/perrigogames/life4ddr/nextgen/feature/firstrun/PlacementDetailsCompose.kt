@@ -59,6 +59,7 @@ import org.koin.core.parameter.parametersOf
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PlacementDetailsScreen(
+    modifier: Modifier = Modifier,
     placementId: String,
     onBackPressed: () -> Unit = {},
     onNavigateToMainScreen: (String?) -> Unit = {},
@@ -117,6 +118,7 @@ fun PlacementDetailsScreen(
     }
 
     BottomSheetScaffold(
+        modifier = modifier,
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
         sheetContent = {

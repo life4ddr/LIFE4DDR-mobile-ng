@@ -52,6 +52,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RankListScreen(
+    modifier: Modifier = Modifier,
     isFirstRun: Boolean = false,
     onAction: (RankListViewModelEvent) -> Unit = {},
 ) {
@@ -62,6 +63,7 @@ fun RankListScreen(
         viewModel.actions.collect(onAction)
     }
     RankListContent(
+        modifier = modifier,
         state = state,
         onInput = { viewModel.onInputAction(it) },
     )
@@ -70,10 +72,12 @@ fun RankListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RankListContent(
+    modifier: Modifier = Modifier,
     state: UIRankList,
     onInput: (RankListViewModelInput) -> Unit = {},
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
