@@ -10,6 +10,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Song
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
 import com.perrigogames.life4ddr.nextgen.test.BaseTest
+import com.perrigogames.life4ddr.nextgen.util.safeScore
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -209,6 +210,32 @@ class DefaultChartResultOrganizerTest : BaseTest() {
             goal = pfcGoal.copy(exceptions = 2, exceptionScore = 999_700),
             done = 3, partlyDone = 1, notDone = 1
         )
+    }
+
+    @Test
+    fun `validate that exception count takes the best available songs for partial match`() = runTest {
+        setUpBasicScores()
+        val goal = SongsClearGoal(
+            id = 1,
+            score = 1_000_000,
+            exceptions = 2
+        )
+
+        subject.resultsForGoal(goal).test {
+            awaitItem().let {
+                it.resultsDone.apply {
+                    size shouldBe 1
+                    get(0).result.safeScore shouldBe 1_000_000
+                }
+
+                it.resultsPartlyDone.apply {
+                    size shouldBe 2
+                    get(0).result.safeScore shouldBe 950_000
+                    get(1).result.safeScore shouldBe 900_000
+                }
+            }
+            awaitComplete()
+        }
     }
 
     private fun TestScope.setUpScores(vararg scores: Long) =

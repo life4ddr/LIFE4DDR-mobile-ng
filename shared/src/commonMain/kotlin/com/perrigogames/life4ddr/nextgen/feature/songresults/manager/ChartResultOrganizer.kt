@@ -1,6 +1,5 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.manager
 
-import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
@@ -16,13 +15,9 @@ import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.split
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
 import kotlin.time.ExperimentalTime
 
-typealias OrganizerBase = Map<PlayStyle, DifficultyClassMap>
 typealias DifficultyClassMap = Map<DifficultyClass, DifficultyNumberMap>
 typealias DifficultyNumberMap = Map<Int, List<ChartResultPair>>
 
@@ -191,7 +186,7 @@ class DefaultChartResultOrganizer(
                     when {
                         songClearGoal.exceptions != null -> {
                             // Sort by score and take just the first X songs
-                            exceptionDone.sortBy { it.result?.score ?: 0 }
+                            exceptionDone.sortByDescending { it.result?.score ?: 0 }
                             while (exceptionDone.size > songClearGoal.exceptions) {
                                 exceptionNotDone.add(0, exceptionDone.removeLast())
                             }
