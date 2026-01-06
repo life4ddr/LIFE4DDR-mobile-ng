@@ -97,7 +97,9 @@ class GoalListViewModel(private val config: GoalListConfig) : ViewModel(), KoinC
                 ) { a, _ -> a },
                 options
             ) { targetRank, requirements, progress, expanded, options ->
-                logger.d { "Updating to $targetRank, requirements = $requirements, expanded = $expanded" }
+                logger.d { "Updating to $targetRank, requirements = $requirements, expanded = $expanded, options = $options" }
+                logger.d { "\tProgress = $progress" }
+                logger.v { "targetRank = ${targetRank.hashCode()}, requirements = ${requirements.hashCode()}, progress = ${progress.hashCode()}, expanded = ${expanded.hashCode()}, options = ${options.hashCode()}" }
                 val mapperOptions = LadderGoalMapper.Options(
                     maConfig = options.maConfig,
                     showDiffTiers = options.enableDifficultyTiers,
