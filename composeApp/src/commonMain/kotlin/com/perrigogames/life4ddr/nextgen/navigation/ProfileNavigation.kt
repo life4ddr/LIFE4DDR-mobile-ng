@@ -28,6 +28,7 @@ fun NavGraphBuilder.profileNavigation(
             onAction = { action ->
                 when (action) {
                     PlayerProfileEvent.NavigateToScores -> {
+                        profileNavController.popBackStack()
                         profileNavController.navigate(ProfileDestination.Scores(expandFAB = true))
                     }
                     PlayerProfileEvent.NavigateToChangeRank -> {
