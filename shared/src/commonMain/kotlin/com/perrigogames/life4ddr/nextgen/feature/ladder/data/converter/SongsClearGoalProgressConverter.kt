@@ -9,6 +9,7 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.SongsClearStackedGo
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartResultPair
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.groupByDifficultyNumber
+import com.perrigogames.life4ddr.nextgen.util.safeClear
 import com.perrigogames.life4ddr.nextgen.util.safeScore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -159,14 +160,29 @@ class SongsClearGoalProgressConverter(
         partMatch: List<ChartResultPair>,
         noMatch: List<ChartResultPair>
     ): LadderGoalProgress {
-        val averageScore = (match + partMatch + noMatch).averageScore()
-        return LadderGoalProgress(
-            progress = averageScore.toInt(),
-            max = goal.averageScore!!,
-            showMax = false,
-            results = noMatch,
-            altResults = match,
-        )
+        val clearTypeUnderCount = noMatch.count { it.result.safeClear.ordinal < goal.clearType.ordinal }
+        if (clearTypeUnderCount > 0) {
+            // Some items lack the required clear type, show numerical completion based on clear type
+            val fullSongCount = match.size + partMatch.size + noMatch.size
+            return LadderGoalProgress(
+                progress = fullSongCount - clearTypeUnderCount,
+                max = fullSongCount,
+                results = partMatch,
+                resultsBottom = noMatch,
+                altResults = match,
+            )
+        } else {
+            // All items have correct clear type, show average value
+            val averageScore = (match + partMatch + noMatch).averageScore()
+            return LadderGoalProgress(
+                progress = averageScore.toInt(),
+                max = goal.averageScore!!,
+                showMax = false,
+                results = partMatch,
+                resultsBottom = noMatch,
+                altResults = match,
+            )
+        }
     }
 
     /**
