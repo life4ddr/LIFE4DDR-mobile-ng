@@ -62,28 +62,16 @@ class SongsClearGoalProgressConverter(
         partMatch: List<ChartResultPair>,
         noMatch: List<ChartResultPair>,
     ): LadderGoalProgress {
-        var completed = 0
-        var topScore = 0L
-        val sortedMatches = match.groupByDifficultyNumber()
-
-        fun List<ChartResultPair>.recordTopScore() {
-            firstOrNull()?.result?.let {
-                if (it.safeScore > topScore) {
-                    topScore = it.safeScore
+        return if (goal.songCount == 1) {
+            // Single song, represent progress as the top score
+            val topScore = (match + partMatch + noMatch).let { allResults ->
+                if (allResults.isNotEmpty()) {
+                    allResults.maxOf { it.result.safeScore }
+                } else {
+                    0L
                 }
             }
-        }
 
-        goal.forEachDiffNum { diff ->
-            val diffMatch = sortedMatches[diff] ?: emptyList()
-            diffMatch.recordTopScore()
-            completed += diffMatch.size
-        }
-
-        partMatch.recordTopScore()
-        noMatch.recordTopScore()
-
-        return if (goal.songCount == 1) {
             LadderGoalProgress(
                 progress = topScore.toInt(),
                 max = goal.score!!,
@@ -94,13 +82,13 @@ class SongsClearGoalProgressConverter(
                 altResults = match,
             )
         } else {
+            // Multiple songs, represent progress as song count
             LadderGoalProgress(
-                progress = completed,
+                progress = match.size + partMatch.size,
                 max = goal.songCount!!,
                 showMax = true,
-                results = noMatch
-                    .sortedByDescending { it.result.safeScore }
-                    .clampIf { goal.hasMultipleDiffs },
+                results = partMatch.clampIf { goal.hasMultipleDiffs },
+                resultsBottom = noMatch.clampIf { goal.hasMultipleDiffs },
                 altResults = match,
             )
         }
