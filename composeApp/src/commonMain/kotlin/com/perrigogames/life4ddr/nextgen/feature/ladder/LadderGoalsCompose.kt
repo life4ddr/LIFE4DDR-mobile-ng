@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
@@ -29,11 +30,13 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.view.*
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListInput
 import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.GoalListViewModel
 import com.perrigogames.life4ddr.nextgen.util.asSuccess
+import com.perrigogames.life4ddr.nextgen.util.split
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -306,12 +309,26 @@ fun LadderGoalItem(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Spacer(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(Paddings.LadderGoals.VERTICAL_PADDING)
-                            )
                             if (showAltSwitch) {
+                                val appInfo: AppInfo = koinInject()
+                                if (appInfo.isDebug) {
+                                    val dividerIndex = detailItems.indexOfFirst { it is UILadderDetailItem.Spacer }
+                                    val text = if (dividerIndex == -1) {
+                                        "[${detailItems.size} items]"
+                                    } else {
+                                        "[${dividerIndex} / ${detailItems.size - dividerIndex - 1} items]"
+                                    }
+                                    Text(
+                                        text = text,
+                                        modifier = Modifier.padding(horizontal = 8.dp)
+                                    )
+                                }
+
+                                Spacer(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(Paddings.LadderGoals.VERTICAL_PADDING)
+                                )
                                 Text(
                                     text = "Show done", // FIXME
                                     style = MaterialTheme.typography.labelLarge,
