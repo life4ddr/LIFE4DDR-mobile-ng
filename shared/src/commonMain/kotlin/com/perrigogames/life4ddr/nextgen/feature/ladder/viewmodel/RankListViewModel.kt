@@ -139,6 +139,9 @@ class RankListViewModel(
                 userRankSettings.setRank(null)
                 _actions.emit(RankListViewModelEvent.NavigateToMainScreen)
             }
+            RankListViewModelInput.Back -> {
+                _actions.emit(RankListViewModelEvent.NavigateToMainScreen)
+            }
             is RankListViewModelInput.GoalList -> {
                 goalListViewModel.value!!.handleInput(input.input)
             }
