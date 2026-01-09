@@ -166,3 +166,7 @@ tasks.register<GenerateSecretsFileTask>("generateSecretsFile") {
 tasks.named("preBuild") {
     dependsOn("generateSecretsFile")
 }
+
+tasks.named("compileKotlinJvm") {
+    dependsOn("generateSecretsFile")
+}
