@@ -144,8 +144,11 @@ class DefaultChartResultOrganizer(
         presentation: ResultPresentation,
     ): Pair<MutableList<ChartResultPair>, MutableList<ChartResultPair>> {
         return results.split { chart ->
-            config.clearTypeRange.contains(chart.result?.clearType?.ordinal ?: 0)
-                    && config.scoreRange.contains(chart.result?.score ?: 0)
+            (
+                config.clearTypeRange.contains(chart.result?.clearType?.ordinal ?: 0)
+                || (config.clearTypeRange.first == ClearType.LIFE4_CLEAR.ordinal && (chart.result?.flare ?: 0) >= 8)
+            )
+            && config.scoreRange.contains(chart.result?.score ?: 0)
         }.let { it.first.toMutableList() to it.second.toMutableList() }
     }
 

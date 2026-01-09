@@ -90,7 +90,7 @@ fun RankListContent(
                 navigationIcon = {
                     if (state.showBackButton) {
                         IconButton(
-                            onClick = { onInput(RankListViewModelInput.RankRejected) }
+                            onClick = { onInput(RankListViewModelInput.Back) }
                         ) {
                             Image(
                                 painter = painterResource(MR.images.arrow_back),
