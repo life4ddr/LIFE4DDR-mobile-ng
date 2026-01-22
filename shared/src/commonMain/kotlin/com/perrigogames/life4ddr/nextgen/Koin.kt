@@ -163,7 +163,7 @@ val coreModule = module {
     viewModel { MainScreenViewModel() }
     viewModel { PlayerProfileViewModel(get(), get(), get(), get()) }
     viewModel { ScoreListViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TrialListViewModel(get(), get(), get(), get()) }
     viewModel { params -> TrialSessionViewModel(trialId = params.get(), get(), get(), get(), getLogger("TrialSessionViewModel")) }
     viewModel { VersionsDialogViewModel() }

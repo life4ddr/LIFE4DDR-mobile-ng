@@ -334,7 +334,12 @@ class SettingsPageProvider : BaseModel() {
                     key = "KEY_SANBAI_VALID",
                     title = "Sanbai Keys are ${if (SanbaiAPI.areKeysValid()) "valid" else "not valid!"}".desc(),
                     action = SettingsAction.None
-                )
+                ),
+                UISettingsItem.Link(
+                    key = "KEY_LIFE4_FLARE_ALERT",
+                    title = "Show LIFE4 Flare Alert".desc(),
+                    action = SettingsAction.Debug.Life4FlareAlert,
+                ),
             )
         )
     )
