@@ -6,7 +6,10 @@ import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPI
 import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBannerTemplates
+import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.AlertManager
+import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.AlertType
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.api.SanbaiAPISettings
+import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.SanbaiImportFlags
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.data.toChartResult
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
@@ -30,6 +33,7 @@ class DefaultSanbaiManager : BaseModel(), SanbaiManager {
     private val sanbaiAPISettings: SanbaiAPISettings by inject()
     private val songResultsManager: SongResultsManager by inject()
     private val bannersManager: BannerManager by inject()
+    private val alertManager: AlertManager by inject()
 
     override fun requiresAuthorization(): Boolean {
         return sanbaiAPISettings.refreshExpires < Clock.System.now()
@@ -53,7 +57,14 @@ class DefaultSanbaiManager : BaseModel(), SanbaiManager {
         bannersManager.setBanner(BANNER_LOADING, BannerLocation.PROFILE, BannerLocation.SCORES)
         try {
             sanbaiAPI.getScores()?.let { scores ->
-                songResultsManager.addScores(scores.map { it.toChartResult() })
+                songResultsManager.addScores(
+                    scores.map {
+                        it.toChartResult().let { (result, flags) ->
+                            processSanbaiFlags(flags)
+                            result
+                        }
+                    }
+                )
             }
         } catch (e: Exception) {
             bannersManager.setBanner(BANNER_ERROR, BannerLocation.PROFILE, BannerLocation.SCORES, durationSeconds = 3)
@@ -61,6 +72,12 @@ class DefaultSanbaiManager : BaseModel(), SanbaiManager {
         }
         bannersManager.setBanner(BANNER_SUCCESS, BannerLocation.PROFILE, BannerLocation.SCORES, durationSeconds = 3)
         return true
+    }
+
+    private fun processSanbaiFlags(flags: SanbaiImportFlags) {
+        if (flags.wasLife4GivenWithFlare) {
+            alertManager.sendAlert(AlertType.LIFE4FlarePromo)
+        }
     }
 
     companion object {

@@ -21,7 +21,7 @@ data class SanbaiScoreResult(
     @SerialName("time_played") val timePlayed: Long?
 )
 
-fun SanbaiScoreResult.toChartResult(): ChartResult {
+fun SanbaiScoreResult.toChartResult(): Pair<ChartResult, SanbaiImportFlags> {
     val (playStyle, difficultyClass) = when (difficulty) {
         0 -> PlayStyle.SINGLE to DifficultyClass.BEGINNER
         1 -> PlayStyle.SINGLE to DifficultyClass.BASIC
@@ -34,26 +34,44 @@ fun SanbaiScoreResult.toChartResult(): ChartResult {
         8 -> PlayStyle.DOUBLE to DifficultyClass.CHALLENGE
         else -> throw IllegalArgumentException("Invalid difficulty value: $difficulty")
     }
+
+    val flare = flare?.toLong()
+    var wasLife4GivenWithFlare = false
+    val clearType = when(lamp) {
+        0 -> ClearType.FAIL
+        1 -> {
+            if ((flare ?: 0) >= 8) {
+                wasLife4GivenWithFlare = true
+                ClearType.LIFE4_CLEAR
+            } else {
+                ClearType.CLEAR
+            }
+        }
+        2 -> ClearType.LIFE4_CLEAR
+        3 -> ClearType.GOOD_FULL_COMBO
+        4 -> ClearType.GREAT_FULL_COMBO
+        5 -> when {
+            score >= 999_910 -> ClearType.SINGLE_DIGIT_PERFECTS
+            else -> ClearType.PERFECT_FULL_COMBO
+        }
+        6 -> ClearType.MARVELOUS_FULL_COMBO
+        else -> ClearType.NO_PLAY
+    }
+
     return ChartResult(
         skillId = songId,
         difficultyClass = difficultyClass,
         playStyle = playStyle,
-        clearType = when(lamp) {
-            0 -> ClearType.FAIL
-            1 -> ClearType.CLEAR
-            2 -> ClearType.LIFE4_CLEAR
-            3 -> ClearType.GOOD_FULL_COMBO
-            4 -> ClearType.GREAT_FULL_COMBO
-            5 -> when {
-                score >= 999_910 -> ClearType.SINGLE_DIGIT_PERFECTS
-                else -> ClearType.PERFECT_FULL_COMBO
-            }
-            6 -> ClearType.MARVELOUS_FULL_COMBO
-            else -> ClearType.NO_PLAY
-        },
+        clearType = clearType,
         score = score.toLong(),
         exScore = null,
-        flare = flare?.toLong(),
+        flare = flare,
         flareSkill = flareSkill?.toLong()
+    ) to SanbaiImportFlags(
+        wasLife4GivenWithFlare = wasLife4GivenWithFlare
     )
 }
+
+data class SanbaiImportFlags(
+    val wasLife4GivenWithFlare : Boolean
+)
