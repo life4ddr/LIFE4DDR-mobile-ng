@@ -13,13 +13,6 @@ object UITrialSessionMocks {
         trialTitle = "Sidequest".desc(),
         trialLevel = "LV 14".desc(),
         backgroundImage = ImageDescUrl("https://raw.githubusercontent.com/life4ddr/Life4DDR/develop/androidApp/src/main/res/drawable-xxhdpi/sidequest.webp"),
-        exScoreBar = UIEXScoreBar(
-            labelText = "EX".desc(),
-            currentEx = 0,
-            maxEx = 6762,
-            currentExText = "0".desc(),
-            maxExText = "/ 6762".desc(),
-        ),
         targetRank = UITargetRank.InProgress(
             rank = TrialRank.COBALT,
             title = "COBALT".desc(),
@@ -61,5 +54,14 @@ object UITrialSessionMocks {
             buttonText = "Start Trial".desc(),
             buttonAction = TrialSessionInput.StartTrial(fromDialog = true),
         ),
+    )
+
+    val exScoreBar = UIEXScoreBar(
+        labelText = "EX".desc(),
+        currentEx = 0,
+        maxEx = 6762,
+        currentExText = "0".desc(),
+        maxExText = "/ 6762".desc(),
+        exTextClickAction = TrialSessionInput.ToggleExLost(false),
     )
 }

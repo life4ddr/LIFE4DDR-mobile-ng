@@ -48,6 +48,7 @@ fun TrialSessionScreen(
     val focusManager = LocalFocusManager.current
 
     val viewState by viewModel.state.collectAsState()
+    val exScoreBar by viewModel.uiExScoreFlow.collectAsState()
     val bottomSheetState by viewModel.bottomSheetState.collectAsState()
     var dialogData by remember { mutableStateOf<TrialSessionEvent.ShowWarningDialog?>(null) }
 
@@ -117,6 +118,7 @@ fun TrialSessionScreen(
             ) { padding ->
                 TrialSessionContent(
                     viewData = viewData.data,
+                    exScoreBar = exScoreBar,
                     modifier = Modifier.padding(padding),
                     onAction = { viewModel.handleAction(it) }
                 )
@@ -171,6 +173,7 @@ fun TrialSessionScreen(
 @Composable
 fun TrialSessionContent(
     viewData: UITrialSession,
+    exScoreBar: UIEXScoreBar,
     modifier: Modifier = Modifier,
     onAction: (TrialSessionInput) -> Unit = {},
 ) {
@@ -193,6 +196,7 @@ fun TrialSessionContent(
         ) {
             TrialSessionHeader(
                 viewData = viewData,
+                exScoreBar = exScoreBar,
                 onAction = onAction,
             )
             SizedSpacer(16.dp)
@@ -256,6 +260,7 @@ fun TrialSessionContent(
 @Composable
 fun TrialSessionHeader(
     viewData: UITrialSession,
+    exScoreBar: UIEXScoreBar,
     modifier: Modifier = Modifier,
     onAction: (TrialSessionInput) -> Unit = {},
 ) {
@@ -301,7 +306,8 @@ fun TrialSessionHeader(
         }
         SizedSpacer(16.dp)
         EXScoreBar(
-            viewData = viewData.exScoreBar
+            viewData = exScoreBar,
+            onInput = onAction,
         )
 
         val targetSelection = viewData.targetRank as? UITargetRank.Selection
@@ -422,6 +428,7 @@ fun SongFocusedContent(
 fun EXScoreBar(
     viewData: UIEXScoreBar,
     modifier: Modifier = Modifier,
+    onInput: (TrialSessionInput) -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -437,8 +444,13 @@ fun EXScoreBar(
                 modifier = Modifier.weight(1f)
                     .height(8.dp)
             ) {
-                LinearProgressIndicator(progress = { viewData.currentEx / viewData.maxEx.toFloat() })
-                LinearProgressIndicator(progress = { viewData.hintCurrentEx!! / viewData.maxEx.toFloat() })
+                LinearProgressIndicator(
+                    progress = { viewData.currentEx / viewData.maxEx.toFloat() }
+                )
+                LinearProgressIndicator(
+                    progress = { viewData.hintCurrentEx!! / viewData.maxEx.toFloat() },
+                    color = ProgressIndicatorDefaults.linearColor.copy(alpha = 0.3f),
+                )
             }
         } else {
             LinearProgressIndicator(
@@ -448,15 +460,23 @@ fun EXScoreBar(
             )
         }
         SizedSpacer(8.dp)
-        Text(
-            text = viewData.currentExText.localized(),
-            style = MaterialTheme.typography.titleLarge,
-        )
-        SizedSpacer(4.dp)
-        Text(
-            text = viewData.maxExText.localized(),
-            style = MaterialTheme.typography.titleMedium,
-        )
+        Button(
+            onClick = { onInput(viewData.exTextClickAction) }
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = viewData.currentExText.localized(),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                SizedSpacer(4.dp)
+                Text(
+                    text = viewData.maxExText.localized(),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+        }
     }
 }
 

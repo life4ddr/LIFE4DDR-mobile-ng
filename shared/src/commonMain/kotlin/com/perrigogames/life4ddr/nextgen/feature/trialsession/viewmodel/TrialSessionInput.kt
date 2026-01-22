@@ -47,4 +47,8 @@ sealed class TrialSessionInput {
         val rank: TrialRank,
         val ex: Int
     ) : TrialSessionInput()
+
+    data class ToggleExLost(
+        val enabled: Boolean
+    ) : TrialSessionInput()
 }

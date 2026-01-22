@@ -10,6 +10,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialGoalStrings
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialSettings
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UIEXScoreBar
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITargetRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
@@ -19,7 +20,6 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.toInProgress
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialContentProvider
-import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import com.perrigogames.life4ddr.nextgen.util.toViewState
 import dev.icerock.moko.resources.desc.Raw
@@ -31,14 +31,13 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import kotlin.getValue
 
 class TrialSessionViewModel(
     trialId: String,
     private val userRankSettings: UserRankSettings,
     private val trialDataManager: TrialDataManager,
     private val trialRecordsManager: TrialRecordsManager,
+    private val trialSettings: TrialSettings,
     private val logger: Logger
 ) : ViewModel(), KoinComponent {
 
@@ -71,6 +70,54 @@ class TrialSessionViewModel(
     private val stage = MutableStateFlow<Int?>(null)
     private val inProgressSessionFlow = MutableStateFlow(InProgressTrialSession(trial))
     private val inProgressSession get() = inProgressSessionFlow.value
+    val uiExScoreFlow: StateFlow<UIEXScoreBar> =
+        combine(
+            stage,
+            trialRecordsManager.bestSessions.map { sessions ->
+                sessions.firstOrNull { it.trialId == trialId }
+            },
+            inProgressSessionFlow,
+            trialSettings.showExLost,
+        ) { stage, bestSession, inProgressSession, showExLost ->
+            val started = stage != null
+            val currentEx = if (started) {
+                inProgressSession.results.sumOf { it?.exScore ?: 0 }
+            } else {
+                bestSession?.exScore?.toInt() ?: 0
+            }
+            val currentMaxEx = if (started) {
+                inProgressSession.trial.songs.subList(0, stage!!).sumOf { it.ex }
+            } else {
+                0
+            }
+            UIEXScoreBar(
+                labelText = MR.strings.ex.desc(),
+                currentEx = currentEx,
+                currentExText = StringDesc.Raw(
+                    if (showExLost) {
+                        (currentEx - currentMaxEx).toString()
+                    } else {
+                        currentEx.toString()
+                    }
+                ),
+                hintCurrentEx = currentMaxEx,
+                maxEx = trial.totalEx,
+                maxExText = StringDesc.Raw("/" + trial.totalEx),
+                exTextClickAction = TrialSessionInput.ToggleExLost(!showExLost),
+            )
+        }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = UIEXScoreBar(
+                    labelText = MR.strings.ex.desc(),
+                    currentEx = 0,
+                    currentExText = "0".desc(),
+                    maxEx = trial.totalEx,
+                    maxExText = StringDesc.Raw("/" + trial.totalEx),
+                    exTextClickAction = TrialSessionInput.ToggleExLost(false),
+                )
+            )
 
     private val songEntryViewModel = MutableStateFlow<SongEntryViewModel?>(null)
 
@@ -120,7 +167,6 @@ class TrialSessionViewModel(
                 logger.d { "Creating stage $stage" }
                 val complete = stage >= 4
                 val current = (_state.value as? ViewState.Success)?.data ?: return@combine
-                val currentEx = session.results.sumOf { it?.exScore ?: 0 }
                 val targetRank = when (val target = current.targetRank) {
                     is UITargetRank.Selection -> target.toInProgress()
                     is UITargetRank.InProgress -> target
@@ -129,10 +175,6 @@ class TrialSessionViewModel(
                 _state.value = if (complete) {
                     current.copy(
                         targetRank = targetRank.toAchieved(), // FIXME calculate the user's actual rank
-                        exScoreBar = current.exScoreBar.copy(
-                            currentEx = currentEx,
-                            currentExText = StringDesc.Raw(currentEx.toString())
-                        ),
                         content = contentProvider.provideFinalScreen(session),
                         footer = UITrialSession.Footer.Button(
                             buttonText = MR.strings.take_results_photo.desc(),
@@ -142,10 +184,6 @@ class TrialSessionViewModel(
                 } else {
                     current.copy(
                         targetRank = targetRank,
-                        exScoreBar = current.exScoreBar.copy(
-                            currentEx = currentEx,
-                            currentExText = StringDesc.Raw(currentEx.toString())
-                        ),
                         content = contentProvider.provideMidSession(session, stage, targetRank.rank),
                         footer = UITrialSession.Footer.Button(
                             buttonText = MR.strings.take_photo.desc(),
@@ -171,7 +209,6 @@ class TrialSessionViewModel(
                 bestRank = bestSession?.goalRank,
                 allowedRanks = allowedRanks
             )
-            val bestSessionExScore = bestSession?.exScore?.toInt() ?: 0
             _state.value = ViewState.Success(
                 UITrialSession(
                     trialTitle = trial.name.desc(),
@@ -180,13 +217,6 @@ class TrialSessionViewModel(
                         trial.difficulty ?: 0
                     ),
                     backgroundImage = trial.coverResource ?: MR.images.trial_default.asImageDesc(),
-                    exScoreBar = UIEXScoreBar(
-                        labelText = MR.strings.ex.desc(),
-                        currentEx = bestSessionExScore,
-                        currentExText = StringDesc.Raw(bestSessionExScore.toString()),
-                        maxEx = trial.totalEx,
-                        maxExText = StringDesc.Raw("/" + trial.totalEx)
-                    ),
                     targetRank = UITargetRank.Selection(
                         rank = rank,
                         title = rank.nameRes.desc(),
@@ -303,6 +333,10 @@ class TrialSessionViewModel(
                     )
                     _events.emit(TrialSessionEvent.Close)
                 }
+            }
+
+            is TrialSessionInput.ToggleExLost -> {
+                trialSettings.setShowExLost(action.enabled)
             }
         }
     }

@@ -14,7 +14,6 @@ data class UITrialSession(
     val trialTitle: StringDesc,
     val trialLevel: StringDesc,
     val backgroundImage: ImageDesc,
-    val exScoreBar: UIEXScoreBar,
     val targetRank: UITargetRank,
     val content: UITrialSessionContent,
     val footer: Footer
@@ -42,6 +41,7 @@ data class UIEXScoreBar(
     val maxEx: Int,
     val currentExText: StringDesc,
     val maxExText: StringDesc,
+    val exTextClickAction: TrialSessionInput,
 )
 
 /**
