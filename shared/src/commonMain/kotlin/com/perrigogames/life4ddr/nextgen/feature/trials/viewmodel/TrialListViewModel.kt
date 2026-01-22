@@ -10,8 +10,8 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialState
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialJacketCorner
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
-import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialListSettings.Companion.KEY_TRIAL_LIST_HIGHLIGHT_NEW
-import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialListSettings.Companion.KEY_TRIAL_LIST_HIGHLIGHT_UNPLAYED
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialSettings.Companion.KEY_TRIAL_LIST_HIGHLIGHT_NEW
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialSettings.Companion.KEY_TRIAL_LIST_HIGHLIGHT_UNPLAYED
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UIPlacementBanner
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialList

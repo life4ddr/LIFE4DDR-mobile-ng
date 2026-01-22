@@ -14,7 +14,7 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsItem
 import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsAction
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.FilterPanelSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultSettings
-import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialListSettings
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialSettings
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.formatRivalCode
 import com.russhwolf.settings.ExperimentalSettingsApi
@@ -33,7 +33,7 @@ class SettingsPageProvider : BaseModel() {
     private val filterSettings: FilterPanelSettings by inject()
     private val userInfoSettings: UserInfoSettings by inject()
     private val ladderSettings: LadderSettings by inject()
-    private val trialSettings: TrialListSettings by inject()
+    private val trialSettings: TrialSettings by inject()
     private val maSettings: MASettings by inject()
     private val songResultSettings: SongResultSettings by inject()
 
@@ -264,12 +264,12 @@ class SettingsPageProvider : BaseModel() {
             screenTitle = MR.strings.trial_settings.desc(),
             settingsItems = listOf(
                 UISettingsItem.Checkbox(
-                    key = TrialListSettings.KEY_TRIAL_LIST_HIGHLIGHT_NEW,
+                    key = TrialSettings.KEY_TRIAL_LIST_HIGHLIGHT_NEW,
                     title = MR.strings.highlight_new_trials.desc(),
                     toggled = highlightNew
                 ),
                 UISettingsItem.Checkbox(
-                    key = TrialListSettings.KEY_TRIAL_LIST_HIGHLIGHT_UNPLAYED,
+                    key = TrialSettings.KEY_TRIAL_LIST_HIGHLIGHT_UNPLAYED,
                     title = MR.strings.highlight_unplayed_trials.desc(),
                     toggled = highlightUnplayed
                 ),

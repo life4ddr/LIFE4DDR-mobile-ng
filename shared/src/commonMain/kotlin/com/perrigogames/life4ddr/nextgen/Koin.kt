@@ -76,10 +76,10 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreList
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
-import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialListSettings
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialRecordsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
-import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialListSettings
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionViewModel
@@ -141,7 +141,7 @@ val coreModule = module {
     single<LadderSettings> { DefaultLadderSettings() }
     single<MASettings> { DefaultMASettings() }
     single<SongResultSettings> { DefaultSongResultSettings() }
-    single<TrialListSettings> { DefaultTrialListSettings() }
+    single<TrialSettings> { DefaultTrialSettings() }
     single<UserInfoSettings> { DefaultUserInfoSettings() }
     single<UserRankSettings> { DefaultUserRankSettings() }
     single<AlertSettings> { DefaultAlertSettings() }
