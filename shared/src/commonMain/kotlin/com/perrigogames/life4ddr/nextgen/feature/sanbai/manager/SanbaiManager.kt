@@ -56,16 +56,18 @@ class DefaultSanbaiManager : BaseModel(), SanbaiManager {
         }
         bannersManager.setBanner(BANNER_LOADING, BannerLocation.PROFILE, BannerLocation.SCORES)
         try {
+            val finalFlags = SanbaiImportFlags()
             sanbaiAPI.getScores()?.let { scores ->
                 songResultsManager.addScores(
                     scores.map {
                         it.toChartResult().let { (result, flags) ->
-                            processSanbaiFlags(flags)
+                            finalFlags.applyFlags(flags)
                             result
                         }
                     }
                 )
             }
+            processSanbaiFlags(finalFlags)
         } catch (e: Exception) {
             bannersManager.setBanner(BANNER_ERROR, BannerLocation.PROFILE, BannerLocation.SCORES, durationSeconds = 3)
             return false

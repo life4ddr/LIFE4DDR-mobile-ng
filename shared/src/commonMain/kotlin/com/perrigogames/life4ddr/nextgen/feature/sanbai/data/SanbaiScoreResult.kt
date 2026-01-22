@@ -73,5 +73,10 @@ fun SanbaiScoreResult.toChartResult(): Pair<ChartResult, SanbaiImportFlags> {
 }
 
 data class SanbaiImportFlags(
-    val wasLife4GivenWithFlare : Boolean
-)
+    var wasLife4GivenWithFlare : Boolean = false
+) {
+
+    fun applyFlags(other: SanbaiImportFlags) {
+        wasLife4GivenWithFlare = wasLife4GivenWithFlare || other.wasLife4GivenWithFlare
+    }
+}
