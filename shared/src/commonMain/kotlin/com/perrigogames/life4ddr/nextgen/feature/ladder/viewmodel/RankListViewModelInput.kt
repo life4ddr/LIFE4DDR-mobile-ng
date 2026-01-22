@@ -9,5 +9,6 @@ sealed class RankListViewModelInput {
     data class RankSelected(val rank: LadderRank) : RankListViewModelInput()
     data object MoveToPlacements : RankListViewModelInput()
     data object RankRejected : RankListViewModelInput()
+    data object Back : RankListViewModelInput()
     data class GoalList(val input: GoalListInput) : RankListViewModelInput()
 }

@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderSettings
+import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.AlertManager
+import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.AlertType
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.sanbai.manager.SanbaiManager
 import com.perrigogames.life4ddr.nextgen.feature.settings.SettingsDestination
@@ -34,6 +36,7 @@ class SettingsViewModel(
     private val userInfoSettings: UserInfoSettings,
     private val ladderSettings: LadderSettings,
     private val externalActions: ExternalActions,
+    private val alertManager: AlertManager,
 ) : ViewModel(), KoinComponent {
 
     private val pageStackState = MutableStateFlow(listOf(SettingsPage.ROOT))
@@ -90,6 +93,7 @@ class SettingsViewModel(
             is SettingsAction.Debug.SongLockPage -> viewModelScope.launch {
                 _events.emit(SettingsEvent.Navigate(SettingsDestination.SongLock))
             }
+            SettingsAction.Debug.Life4FlareAlert -> alertManager.sendAlert(AlertType.LIFE4FlarePromo(force = true))
             SettingsAction.ClearData.Results -> {
                 resultsManager.clearAllResults()
             }
