@@ -188,7 +188,7 @@ class DefaultChartResultOrganizer(
                             // Sort by score and take just the first X songs
                             exceptionDone.sortByDescending { it.result?.score ?: 0 }
                             while (exceptionDone.size > songClearGoal.exceptions) {
-                                exceptionNotDone.add(0, exceptionDone.removeLast())
+                                exceptionNotDone.add(0, exceptionDone.removeAt(exceptionDone.lastIndex))
                             }
                         }
                         songClearGoal.songExceptions != null -> {
@@ -196,7 +196,7 @@ class DefaultChartResultOrganizer(
                             val inProgress = exceptionDone.toMutableList()
                             exceptionDone.clear()
                             while (inProgress.isNotEmpty()) {
-                                val item = inProgress.removeLast()
+                                val item = inProgress.removeAt(inProgress.lastIndex)
                                 val isException = item.chart.song.title in goal.songExceptions!!
                                 if (isException) {
                                     exceptionNotDone.add(0, item)
