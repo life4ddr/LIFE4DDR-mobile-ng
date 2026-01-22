@@ -38,6 +38,8 @@ import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdSettings
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdSettings
+import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.AlertSettings
+import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.DefaultAlertSettings
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsViewModel
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListViewModel
@@ -140,6 +142,7 @@ val coreModule = module {
     single<TrialListSettings> { DefaultTrialListSettings() }
     single<UserInfoSettings> { DefaultUserInfoSettings() }
     single<UserRankSettings> { DefaultUserRankSettings() }
+    single<AlertSettings> { DefaultAlertSettings() }
     single { SettingsPageProvider() }
     single { GoalStateManager() }
     single { LadderGoalMapper() }
