@@ -11,8 +11,8 @@ plugins {
     alias(libs.plugins.mokoResources)
 }
 
-private val VERSION_CODE = 5
-private val VERSION_NAME = "0.4.0"
+private val VERSION_CODE = 6
+private val VERSION_NAME = "0.5.0"
 
 kotlin {
     androidTarget {
