@@ -331,8 +331,8 @@
     <string name="sanbai_syncing_error">Score syncing failed</string>
     <string name="song_list_sync_error">Failed to sync the song list. Try again later.</string>
 
-    <string name="sanbai_import_life4_flare_promo_title">Auto LIFE4 Promo</string>
-    <string name="sanbai_import_life4_flare_promo_body">One of your songs was normal cleared with Flare 8 or higher.\n\nBecause it isn't possible to clear Flare 8 or higher with more than 3 misses, it is marked automatically as a LIFE4 clear.</string>
+    <string name="sanbai_import_life4_flare_promo_title">Automatic LIFE4 Promo</string>
+    <string name="sanbai_import_life4_flare_promo_body">One of your songs was normal cleared with Flare VII or higher.\n\nBecause it isn't possible to clear Flare VII or higher with more than 3 misses, it is marked automatically as a LIFE4 clear.</string>
     <!-- endregion -->
 
     <!--  region Trials  -->

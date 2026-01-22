@@ -4,6 +4,7 @@ import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.view.UIAlert
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import dev.icerock.moko.resources.desc.desc
+import dev.icerock.moko.resources.desc.image.asImageDesc
 import kotlinx.coroutines.flow.*
 
 interface AlertManager {
@@ -24,11 +25,12 @@ class DefaultAlertManager(
         .map { alertType ->
             when {
                 alertType == null -> null
-                !settings.shouldShowAlert(alertType) -> null
+                !settings.shouldShowAlert(alertType) && !alertType.force -> null
                 else -> when (alertType) {
-                    AlertType.LIFE4FlarePromo -> UIAlert(
+                    is AlertType.LIFE4FlarePromo -> UIAlert(
                         title = MR.strings.sanbai_import_life4_flare_promo_title.desc(),
                         text = MR.strings.sanbai_import_life4_flare_promo_body.desc(),
+                        image = MR.images.flare_life4_alert.asImageDesc(),
                         canHide = alertType.canHide,
                     )
                 }

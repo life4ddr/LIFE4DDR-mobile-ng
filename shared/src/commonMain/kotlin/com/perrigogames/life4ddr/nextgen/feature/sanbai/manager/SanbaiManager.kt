@@ -76,7 +76,7 @@ class DefaultSanbaiManager : BaseModel(), SanbaiManager {
 
     private fun processSanbaiFlags(flags: SanbaiImportFlags) {
         if (flags.wasLife4GivenWithFlare) {
-            alertManager.sendAlert(AlertType.LIFE4FlarePromo)
+            alertManager.sendAlert(AlertType.LIFE4FlarePromo())
         }
     }
 

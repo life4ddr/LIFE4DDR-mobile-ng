@@ -5,9 +5,12 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsManage
 
 sealed class AlertType(
     val settingsKey: String,
-    val canHide: Boolean = true
+    val canHide: Boolean = true,
+    open val force: Boolean = false,
 ) {
-    data object LIFE4FlarePromo : AlertType(KEY_SHOULD_SHOW_LIFE4_ALERT)
+    data class LIFE4FlarePromo(
+        override val force: Boolean = false,
+    ) : AlertType(KEY_SHOULD_SHOW_LIFE4_ALERT)
 }
 
 interface AlertSettings {
