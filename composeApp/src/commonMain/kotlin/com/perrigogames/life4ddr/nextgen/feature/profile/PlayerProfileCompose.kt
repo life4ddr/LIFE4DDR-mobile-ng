@@ -42,6 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PlayerProfileScreen(
+    modifier: Modifier = Modifier,
     onBackPressed: () -> Unit = {},
     onAction: (PlayerProfileEvent) -> Unit = {},
 ) {
@@ -80,6 +81,7 @@ fun PlayerProfileScreen(
     }
 
     PlayerProfileContent(
+        modifier = modifier,
         playerInfoViewState = playerInfoViewState,
         headerViewState = headerViewState,
         goalListViewState = goalListViewState,
@@ -91,6 +93,7 @@ fun PlayerProfileScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerProfileContent(
+    modifier: Modifier = Modifier,
     playerInfoViewState: PlayerInfoViewState,
     headerViewState: ProfileHeader?,
     goalListViewState: ViewState<UILadderData, String>,
@@ -101,6 +104,7 @@ fun PlayerProfileContent(
     val goalError = (goalListViewState as? ViewState.Error)?.error
 
     BottomSheetScaffold(
+        modifier = modifier,
         scaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = bottomSheetState
         ),
@@ -114,7 +118,7 @@ fun PlayerProfileContent(
                     onInput = { onInput(PlayerProfileInput.GoalList(it)) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(horizontal = 8.dp)
                         .weight(1f)
                 )
             }

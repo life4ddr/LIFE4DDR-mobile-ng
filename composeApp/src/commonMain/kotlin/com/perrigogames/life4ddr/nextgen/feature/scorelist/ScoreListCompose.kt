@@ -146,7 +146,8 @@ fun ScoreListContent(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     BannerContainer(state.banner)
                 }
-            }
+            },
+            contentWindowInsets = WindowInsets(),
         ) { paddingValues ->
             val innerModifier = Modifier
                 .fillMaxSize()

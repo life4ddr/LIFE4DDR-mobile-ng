@@ -1,6 +1,9 @@
 package com.perrigogames.life4ddr.nextgen.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -24,6 +27,7 @@ fun NavGraphBuilder.profileNavigation(
 ) {
     composable<ProfileDestination.Profile> {
         PlayerProfileScreen(
+            modifier = Modifier.statusBarsPadding(),
             onBackPressed = { mainNavController.popBackStack() },
             onAction = { action ->
                 when (action) {
@@ -41,6 +45,7 @@ fun NavGraphBuilder.profileNavigation(
 
     composable<ProfileDestination.Scores> { backStackEntry ->
         ScoreListScreen(
+            modifier = Modifier.statusBarsPadding(),
             fabExpanded = backStackEntry.toRoute<ProfileDestination.Scores>().expandFAB,
             showSanbaiLogin = { url ->
                 mainNavController.navigate(FirstRunDestination.SanbaiImport(url))
@@ -51,7 +56,7 @@ fun NavGraphBuilder.profileNavigation(
 
     composable<ProfileDestination.Trials> {
         TrialListScreen(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.statusBarsPadding(),
             onTrialSelected = { selectedTrial ->
                 mainNavController.navigate(TrialDestination.TrialDetails(selectedTrial.id))
             },
