@@ -10,6 +10,7 @@
     <string name="cancel">Cancel</string>
     <string name="next_caps">NEXT</string>
     <string name="not_set">Not set</string>
+    <string name="dont_show_again">Don't show this again</string>
 
     <string name="goals">Goals</string>
     <string name="mandatory_goals">Mandatory Goals</string>
@@ -329,6 +330,9 @@
     <string name="sanbai_syncing_success">Score syncing completed!</string>
     <string name="sanbai_syncing_error">Score syncing failed</string>
     <string name="song_list_sync_error">Failed to sync the song list. Try again later.</string>
+
+    <string name="sanbai_import_life4_flare_promo_title">Auto LIFE4 Promo</string>
+    <string name="sanbai_import_life4_flare_promo_body">One of your songs was normal cleared with Flare 8 or higher.\n\nBecause it isn't possible to clear Flare 8 or higher with more than 3 misses, it is marked automatically as a LIFE4 clear.</string>
     <!-- endregion -->
 
     <!--  region Trials  -->

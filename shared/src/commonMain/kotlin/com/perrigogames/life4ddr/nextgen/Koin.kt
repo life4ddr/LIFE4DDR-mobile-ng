@@ -38,7 +38,9 @@ import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.DefaultMotdSettings
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdManager
 import com.perrigogames.life4ddr.nextgen.feature.motd.manager.MotdSettings
+import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.AlertManager
 import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.AlertSettings
+import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.DefaultAlertManager
 import com.perrigogames.life4ddr.nextgen.feature.notifications.alert.manager.DefaultAlertSettings
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsViewModel
@@ -151,6 +153,7 @@ val coreModule = module {
     single<SanbaiManager> { DefaultSanbaiManager() }
     single<MotdSettings> { DefaultMotdSettings() }
     single<BannerManager> { DefaultBannerManager() }
+    single<AlertManager> { DefaultAlertManager(get()) }
 
     viewModel { LaunchViewModel(get()) }
     viewModel { FirstRunInfoViewModel(get(), get(), get(), getLogger("FirstRunInfoViewModel")) }
