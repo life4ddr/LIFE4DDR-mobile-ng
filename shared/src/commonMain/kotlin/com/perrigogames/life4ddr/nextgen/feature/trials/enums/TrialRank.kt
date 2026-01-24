@@ -53,7 +53,7 @@ enum class TrialRank(
     companion object {
         fun parse(s: String?): TrialRank? = when (s) {
             null, "NONE" -> null
-            else -> valueOf(s)
+            else -> valueOf(s.uppercase())
         }
 
         fun parse(stableId: Long): TrialRank? = entries.firstOrNull { it.stableId == stableId }

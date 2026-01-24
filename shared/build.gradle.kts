@@ -36,6 +36,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.composeViewModel)
             implementation(libs.koin.composeViewModelNavigation)
+            implementation(libs.ksoup.html)
             implementation(libs.ksoup.entities)
             implementation(libs.ktor.clientAuth)
             implementation(libs.ktor.clientCio)

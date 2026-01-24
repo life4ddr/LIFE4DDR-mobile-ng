@@ -342,6 +342,11 @@
         <string name="new_tag">NEW!</string>
         <string name="event_tag">EVENT</string>
         <string name="author_credit_format">Created by %s</string>
+        <string name="scrape_progress_format">Syncing %d/%d (%s)</string>
+        <string name="scrape_hits_format">Found %d matches!</string>
+        <string name="scrape_complete">Trial sync complete!</string>
+        <string name="scrape_cooldown_title">You synced too recently!</string>
+        <string name="scrape_cooldown_description_format">Try again after %s</string>
 
         <string name="trial_clear_records_title">Clear Trial Records</string>
         <string name="trial_clear_records_body">Are you sure you want to delete all records for %s?</string>

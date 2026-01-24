@@ -1,39 +1,14 @@
 package com.perrigogames.life4ddr.nextgen.feature.trial
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.animation.*
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -47,6 +22,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UIPlacementBanner
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialJacket
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialList
+import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialScrapeProgress
 import com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel.TrialListViewModel
 import com.perrigogames.life4ddr.nextgen.view.JacketCorner
 import com.perrigogames.life4ddr.nextgen.view.RankImage
@@ -67,27 +43,75 @@ fun TrialListScreen(
 ) {
     val viewModel = koinViewModel<TrialListViewModel>()
     val state by viewModel.state.collectAsState()
+    val scrapeState by viewModel.scrapeState.collectAsState()
+    var lastGoodScrapeState by remember { mutableStateOf<UITrialScrapeProgress?>(null) }
     var quickAddDialogTrial by remember { mutableStateOf<Trial?>(null) }
     var deleteRecordsConfirmationTrial by remember { mutableStateOf<Trial?>(null) }
 
-    Column(modifier = modifier) {
-        state.placementBanner?.let { banner ->
-            PlacementBanner(
-                banner = banner,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = Paddings.MEDIUM)
-                    .padding(top = Paddings.LARGE),
-                onPlacementsSelected = onPlacementsSelected,
-            )
+    Scaffold(
+        contentWindowInsets = WindowInsets(),
+        modifier = modifier,
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = scrapeState == null,
+                enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(),
+                exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+            ) {
+                FloatingActionButton(
+                    onClick = { viewModel.scrapeTrialData() },
+                ) {
+                    Icon(
+                        painterResource(MR.images.sync),
+                        contentDescription = "Refresh trials from LIFE4 website"
+                    )
+                }
+            }
         }
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier.padding(contentPadding)
+        ) {
+            state.placementBanner?.let { banner ->
+                PlacementBanner(
+                    banner = banner,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = Paddings.MEDIUM)
+                        .padding(top = Paddings.LARGE),
+                    onPlacementsSelected = onPlacementsSelected,
+                )
+            }
 
-        TrialJacketList(
-            displayList = state.trials, // FIXME
-            onTrialSelected = onTrialSelected,
-            onTrialQuickAddSelected = { quickAddDialogTrial = it },
-            onTrialClearRecordsSelected = { deleteRecordsConfirmationTrial = it },
-            modifier = Modifier.weight(1f),
-        )
+            Box(
+                modifier = Modifier.weight(1f)
+            ) {
+                TrialJacketList(
+                    displayList = state.trials, // FIXME
+                    onTrialSelected = onTrialSelected,
+                    onTrialQuickAddSelected = { quickAddDialogTrial = it },
+                    onTrialClearRecordsSelected = { deleteRecordsConfirmationTrial = it },
+                    modifier = Modifier.fillMaxSize(),
+                )
+
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    AnimatedVisibility(
+                        visible = scrapeState != null,
+                        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+                        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+                    ) {
+                        if (scrapeState != null) {
+                            lastGoodScrapeState = scrapeState
+                        }
+                        TrialScrapeProgress(
+                            data = lastGoodScrapeState!!,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            }
+        }
     }
 
     quickAddDialogTrial?.let { trial ->
@@ -314,5 +338,36 @@ fun TrialDifficulty(
             color = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier.fillMaxWidth()
         )
+    }
+}
+
+@Composable
+fun TrialScrapeProgress(
+    data: UITrialScrapeProgress,
+    modifier: Modifier = Modifier,
+) {
+    Card (
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+        ) {
+            Text(
+                text = data.progressText.localized(),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            SizedSpacer(8.dp)
+            Text(
+                text = data.hitsText.localized(),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            SizedSpacer(16.dp)
+            LinearProgressIndicator(
+                progress = { data.progress },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }

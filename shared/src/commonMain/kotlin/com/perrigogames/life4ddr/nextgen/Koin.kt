@@ -75,6 +75,9 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResults
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
+import com.perrigogames.life4ddr.nextgen.api.base.baseHttpClient
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.DefaultTrialScraper
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialScraper
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialRecordsManager
@@ -125,6 +128,7 @@ val coreModule = module {
     single { MotdLocalRemoteData(get(), get(), get(named(MOTD_FILE_NAME)), logger = get { parametersOf("MotdLocalRemoteData") }) }
     single { SongListRemoteData(get(), get(), get(named(SONGS_FILE_NAME)), logger = get { parametersOf("SongListRemoteData") }) }
     single { TrialRemoteData(get(), get(), get(named(TRIALS_FILE_NAME)), logger = get { parametersOf("TrialRemoteData") }) }
+    single { baseHttpClient(get(), getLogger("HttpClient")) }
 
     single { PlacementManager() }
     single { MajorUpdateManager() }
@@ -133,7 +137,8 @@ val coreModule = module {
     single<SongResultsManager> { DefaultSongResultsManager(get(), get(), getLogger("SongResultsManager")) }
     single { LadderGoalProgressManager(get()) }
     single<TrialDataManager> { DefaultTrialDataManager(get(), get(), get(), get(), getLogger("TrialDataManager")) }
-    single<TrialRecordsManager> { DefaultTrialRecordsManager() }
+    single<TrialScraper> { DefaultTrialScraper(get(), get(), get(), getLogger("TrialScraper")) }
+    single<TrialRecordsManager> { DefaultTrialRecordsManager(get(), get()) }
     single<SongDataManager> { DefaultSongDataManager() }
     single<ChartResultOrganizer> { DefaultChartResultOrganizer(get()) }
     single<FilterPanelSettings> { DefaultFilterPanelSettings() }
@@ -164,7 +169,7 @@ val coreModule = module {
     viewModel { PlayerProfileViewModel(get(), get(), get(), get()) }
     viewModel { ScoreListViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { TrialListViewModel(get(), get(), get(), get()) }
+    viewModel { TrialListViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { params -> TrialSessionViewModel(trialId = params.get(), get(), get(), get(), get(), getLogger("TrialSessionViewModel")) }
     viewModel { VersionsDialogViewModel() }
 }

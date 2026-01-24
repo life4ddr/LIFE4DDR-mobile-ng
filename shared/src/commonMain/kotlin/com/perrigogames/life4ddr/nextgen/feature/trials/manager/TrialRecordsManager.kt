@@ -36,9 +36,10 @@ interface TrialRecordsManager {
 }
 
 @OptIn(ExperimentalTime::class)
-class DefaultTrialRecordsManager: BaseModel(), TrialRecordsManager {
-
-    private val dbHelper: TrialDatabaseHelper by inject()
+class DefaultTrialRecordsManager(
+    private val dbHelper: TrialDatabaseHelper,
+    private val trialSettings: TrialSettings,
+): BaseModel(), TrialRecordsManager {
 
     private val _refresh = MutableSharedFlow<Unit>()
     private val _bestSessions : MutableStateFlow<List<SelectBestSessions>> = MutableStateFlow(emptyList())
@@ -121,6 +122,7 @@ class DefaultTrialRecordsManager: BaseModel(), TrialRecordsManager {
     }
 
     override fun clearSessions() {
+        trialSettings.clearLastSyncTime()
         mainScope.launch {
             dbHelper.deleteAll()
             refreshSessions()
