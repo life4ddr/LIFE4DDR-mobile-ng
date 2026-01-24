@@ -51,6 +51,7 @@ fun PlayerProfileScreen(
 
     val playerInfoViewState by viewModel.playerInfoViewState.collectAsState()
     val headerViewState by viewModel.headerViewState.collectAsState()
+    val targetRankText by viewModel.targetRankTextViewState.collectAsState()
     val goalListViewState by viewModel.goalListViewModel.state.collectAsState()
     val density = LocalDensity.current
     val bottomSheetState = remember {
@@ -84,6 +85,7 @@ fun PlayerProfileScreen(
         modifier = modifier,
         playerInfoViewState = playerInfoViewState,
         headerViewState = headerViewState,
+        targetRankText = targetRankText.localized(),
         goalListViewState = goalListViewState,
         bottomSheetState = bottomSheetState,
         onInput = { viewModel.handleInput(it) },
@@ -96,6 +98,7 @@ fun PlayerProfileContent(
     modifier: Modifier = Modifier,
     playerInfoViewState: PlayerInfoViewState,
     headerViewState: ProfileHeader?,
+    targetRankText: String,
     goalListViewState: ViewState<UILadderData, String>,
     bottomSheetState: SheetState,
     onInput: (PlayerProfileInput) -> Unit = {},
@@ -173,6 +176,12 @@ fun PlayerProfileContent(
             }
 
             if (goalData != null) {
+                Text(
+                    text = targetRankText,
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                SizedSpacer(8.dp)
                 LadderGoalsContent(
                     goals = goalData.goals,
                     hideCompletedToggle = goalData.hideCompleted,

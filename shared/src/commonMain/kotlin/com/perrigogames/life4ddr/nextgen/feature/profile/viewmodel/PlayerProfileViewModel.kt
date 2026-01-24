@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.profile.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.banners.enums.BannerLocation
 import com.perrigogames.life4ddr.nextgen.feature.banners.manager.BannerManager
@@ -14,6 +15,9 @@ import com.perrigogames.life4ddr.nextgen.feature.profile.data.SocialNetwork
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserInfoSettings
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
+import dev.icerock.moko.resources.desc.ResourceFormattedStringDesc
+import dev.icerock.moko.resources.desc.StringDesc
+import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -32,6 +36,16 @@ class PlayerProfileViewModel(
 
     private val _headerViewState = MutableStateFlow<ProfileHeader?>(null)
     val headerViewState: StateFlow<ProfileHeader?> = _headerViewState.asStateFlow()
+
+    val targetRankTextViewState: StateFlow<StringDesc> = userRankSettings.targetRank.map { rank ->
+        rank?.let {
+            ResourceFormattedStringDesc(
+                MR.strings.profile_target_rank_title,
+                listOf(it.nameRes.desc())
+            )
+        } ?: MR.strings.not_set.desc()
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), MR.strings.loading.desc())
 
     val goalListViewModel = GoalListViewModel(GoalListConfig(allowHidingCompletedGoals = true))
 

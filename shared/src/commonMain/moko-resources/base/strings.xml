@@ -12,6 +12,7 @@
     <string name="none">None</string>
     <string name="not_set">Not set</string>
     <string name="dont_show_again">Don't show this again</string>
+    <string name="loading">Loading...</string>
 
     <string name="goals">Goals</string>
     <string name="mandatory_goals">Mandatory Goals</string>
@@ -270,6 +271,7 @@
     <string name="profile_sanbai_reminder_title">Got Sanbai?</string>
     <string name="profile_sanbai_reminder_subtitle">Sync your Sanbai scores from the Scores tab.</string>
     <string name="profile_sanbai_reminder_cta">Take me there</string>
+    <string name="profile_target_rank_title">To achieve %s:</string>
     <!-- endregion -->
 
     <!-- region Score List -->

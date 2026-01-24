@@ -189,7 +189,7 @@ fun CategorizedList(
         .flatMap { (info, goals) -> listOf(info) + goals }
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(all = 8.dp),
+        contentPadding = PaddingValues(start = 8.dp, end = 8.dp, bottom = 8.dp),
     ) {
         itemsIndexed(aggregateItems) { idx, item ->
             if (idx > 0) {
@@ -197,7 +197,9 @@ fun CategorizedList(
             }
             when(item) {
                 is UILadderGoals.CategorizedList.Category -> {
-                    SizedSpacer(8.dp)
+                    if (idx > 0) {
+                        SizedSpacer(8.dp)
+                    }
                     LadderCategoryRow(
                         item = item,
                         hideCompletedToggle = hideCompletedToggle.takeIf { idx == 0 },
