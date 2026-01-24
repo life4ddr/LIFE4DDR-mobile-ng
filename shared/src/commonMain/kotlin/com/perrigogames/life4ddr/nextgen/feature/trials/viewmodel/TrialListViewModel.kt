@@ -112,7 +112,6 @@ class TrialListViewModel(
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                 )
             } else {
-                trialSettings.setLastSyncTime(Clock.System.now())
                 trialScraper
                     .scrapeTrialData()
                     .collect { result ->
@@ -137,6 +136,7 @@ class TrialListViewModel(
                                 )
                             }
                             is TrialScraperResult.ProfileFound.Finished -> {
+                                trialSettings.setLastSyncTime(Clock.System.now())
                                 showTrialScrapeFinished(result.hits)
                             }
                         }
