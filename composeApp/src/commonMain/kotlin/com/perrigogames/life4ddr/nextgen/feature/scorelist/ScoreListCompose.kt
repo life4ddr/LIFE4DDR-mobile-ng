@@ -2,6 +2,8 @@ package com.perrigogames.life4ddr.nextgen.feature.scorelist
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +17,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.enums.flareImageResource
 import com.perrigogames.life4ddr.nextgen.feature.banners.BannerContainer
 import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIScore
 import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIScoreList
@@ -228,8 +231,24 @@ fun ScoreEntry(
     data: UIScore,
     useMonospaceFontForScore: Boolean
 ) {
+    var showManualScoreDialog by remember { mutableStateOf(false) }
+
+    if (showManualScoreDialog) {
+        ManualScoreInputDialog(
+            chart = data.chart,
+            onDismiss = { showManualScoreDialog = false }
+        )
+    }
+
     Row(
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier
+            .padding(4.dp)
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = {},
+                onLongClick = { showManualScoreDialog = true }
+            )
     ) {
         Column(
             modifier = Modifier.weight(1f),
@@ -265,18 +284,4 @@ fun ScoreEntry(
             SizedSpacer(32.dp)
         }
     }
-}
-
-fun flareImageResource(level: Int) = when(level) {
-    1 -> MR.images.flare_1
-    2 -> MR.images.flare_2
-    3 -> MR.images.flare_3
-    4 -> MR.images.flare_4
-    5 -> MR.images.flare_5
-    6 -> MR.images.flare_6
-    7 -> MR.images.flare_7
-    8 -> MR.images.flare_8
-    9 -> MR.images.flare_9
-    10 -> MR.images.flare_ex
-    else -> null
 }

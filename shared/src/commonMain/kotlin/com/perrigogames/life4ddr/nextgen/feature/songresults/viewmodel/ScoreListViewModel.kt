@@ -104,6 +104,7 @@ class ScoreListViewModel(
 }
 
 fun ChartResultPair.toUIScore(enableDifficultyTiers: Boolean) = UIScore(
+    chart = chart,
     titleText = KsoupEntities.decodeHtml(chart.song.title),
     difficultyText = StringDesc.Composition(
         args = listOf(

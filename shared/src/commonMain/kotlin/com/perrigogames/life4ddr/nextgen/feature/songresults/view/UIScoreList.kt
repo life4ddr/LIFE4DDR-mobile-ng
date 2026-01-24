@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.songresults.view
 
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.banners.view.UIBanner
+import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.FilterPanelInput
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListInput
 import dev.icerock.moko.resources.ColorResource
@@ -31,6 +32,7 @@ sealed class UIScoreList {
 }
 
 data class UIScore(
+    val chart: Chart,
     val titleText: String = "",
     val difficultyText: StringDesc,
     val scoreText: StringDesc,

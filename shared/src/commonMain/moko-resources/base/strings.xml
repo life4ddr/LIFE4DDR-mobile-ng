@@ -9,6 +9,7 @@
     <string name="close">Close</string>
     <string name="cancel">Cancel</string>
     <string name="next_caps">NEXT</string>
+    <string name="none">None</string>
     <string name="not_set">Not set</string>
     <string name="dont_show_again">Don't show this again</string>
 
@@ -199,6 +200,19 @@
     <string name="lamp_mfc">White lamp (MFC)</string>
     <!-- endregion -->
 
+    <!--  region Flare  -->
+    <string name="flare_1">Flare I</string>
+    <string name="flare_2">Flare II</string>
+    <string name="flare_3">Flare III</string>
+    <string name="flare_4">Flare IV</string>
+    <string name="flare_5">Flare V</string>
+    <string name="flare_6">Flare VI</string>
+    <string name="flare_7">Flare VII</string>
+    <string name="flare_8">Flare VIII</string>
+    <string name="flare_9">Flare IX</string>
+    <string name="flare_ex">Flare EX</string>
+    <!-- endregion -->
+
     <!--  region First Run  -->
     <string name="first_run_landing_header">Welcome to</string>
     <string name="first_run_landing_description">Are you new here?</string>
@@ -266,6 +280,7 @@
         <!-- region Filter Panel -->
         <string name="label_difficulty_number">Difficulty</string>
         <string name="label_clear_type">Clear Type</string>
+        <string name="label_flare">Flare</string>
         <!-- endregion -->
     <!-- endregion -->
 

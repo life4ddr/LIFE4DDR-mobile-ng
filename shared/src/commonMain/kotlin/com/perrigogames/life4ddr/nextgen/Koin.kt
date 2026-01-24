@@ -76,6 +76,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreList
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.api.base.baseHttpClient
+import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ManualScoreInputViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.DefaultTrialScraper
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialScraper
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
@@ -171,6 +172,7 @@ val coreModule = module {
     viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TrialListViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { params -> TrialSessionViewModel(trialId = params.get(), get(), get(), get(), get(), getLogger("TrialSessionViewModel")) }
+    viewModel { params -> ManualScoreInputViewModel(chart = params.get(), get()) }
     viewModel { VersionsDialogViewModel() }
 }
 
