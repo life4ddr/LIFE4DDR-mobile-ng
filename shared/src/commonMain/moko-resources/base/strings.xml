@@ -359,6 +359,10 @@
         <string name="new_tag">NEW!</string>
         <string name="event_tag">EVENT</string>
         <string name="author_credit_format">Created by %s</string>
+        <string name="scrape_profile_start_top">Starting Trial sync</string>
+        <string name="scrape_profile_start_bottom_format">Fetching profile for %s</string>
+        <string name="scrape_profile_error_bottom_format">Couldn't fetch profile for %s</string>
+        <string name="scrape_profile_no_trials_bottom_format">No Trial results found for %s</string>
         <string name="scrape_progress_format">Syncing %d/%d (%s)</string>
         <string name="scrape_hits_format">Found %d matches!</string>
         <string name="scrape_complete">Trial sync complete!</string>

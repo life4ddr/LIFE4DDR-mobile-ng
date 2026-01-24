@@ -353,21 +353,23 @@ fun TrialScrapeProgress(
             modifier = Modifier.padding(16.dp),
         ) {
             Text(
-                text = data.progressText.localized(),
+                text = data.topText.localized(),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.fillMaxWidth(),
             )
             SizedSpacer(8.dp)
             Text(
-                text = data.hitsText.localized(),
+                text = data.bottomText.localized(),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.fillMaxWidth(),
             )
-            SizedSpacer(16.dp)
-            LinearProgressIndicator(
-                progress = { data.progress },
-                modifier = Modifier.fillMaxWidth()
-            )
+            data.progress?.let { progress ->
+                SizedSpacer(16.dp)
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

@@ -16,15 +16,18 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.view.UISettingsData
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialRecordsManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialSettings
 import com.perrigogames.life4ddr.nextgen.util.ExternalActions
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.FlowSettings
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalSettingsApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalSettingsApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class SettingsViewModel(
     private val appInfo: AppInfo,
     private val resultsManager: SongResultsManager,
@@ -35,6 +38,7 @@ class SettingsViewModel(
     private val flowSettings: FlowSettings,
     private val userInfoSettings: UserInfoSettings,
     private val ladderSettings: LadderSettings,
+    private val trialSettings: TrialSettings,
     private val externalActions: ExternalActions,
     private val alertManager: AlertManager,
 ) : ViewModel(), KoinComponent {
@@ -94,6 +98,7 @@ class SettingsViewModel(
                 _events.emit(SettingsEvent.Navigate(SettingsDestination.SongLock))
             }
             SettingsAction.Debug.Life4FlareAlert -> alertManager.sendAlert(AlertType.LIFE4FlarePromo(force = true))
+            SettingsAction.Debug.TrialSyncReset -> trialSettings.setLastSyncTime(Instant.DISTANT_PAST)
             SettingsAction.ClearData.Results -> {
                 resultsManager.clearAllResults()
             }

@@ -28,5 +28,6 @@ sealed class SettingsAction {
     sealed class Debug: SettingsAction() {
         data object SongLockPage: Debug()
         data object Life4FlareAlert: Debug()
+        data object TrialSyncReset: Debug()
     }
 }
