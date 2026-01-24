@@ -7,6 +7,7 @@ import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.GoalStatus
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
+import com.perrigogames.life4ddr.nextgen.enums.ResultSource
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 
 abstract class DatabaseHelper(private val sqlDriver: SqlDriver) {
@@ -15,7 +16,8 @@ abstract class DatabaseHelper(private val sqlDriver: SqlDriver) {
         ChartResult.Adapter(
             StableIdColumnAdapter(DifficultyClass.entries.toTypedArray()),
             StableIdColumnAdapter(PlayStyle.entries.toTypedArray()),
-            StableIdColumnAdapter(ClearType.entries.toTypedArray())
+            StableIdColumnAdapter(ClearType.entries.toTypedArray()),
+            StableIdColumnAdapter(ResultSource.entries.toTypedArray())
         ),
         GoalState.Adapter(
             StableIdColumnAdapter(GoalStatus.entries.toTypedArray())

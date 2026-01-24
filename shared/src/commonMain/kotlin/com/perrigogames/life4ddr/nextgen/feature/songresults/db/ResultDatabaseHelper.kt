@@ -4,6 +4,7 @@ import app.cash.sqldelight.db.SqlDriver
 import com.perrigogames.life4ddr.nextgen.db.ChartResult
 import com.perrigogames.life4ddr.nextgen.db.DatabaseHelper
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
+import com.perrigogames.life4ddr.nextgen.enums.ResultSource
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.SASongEntry
 import kotlinx.coroutines.Dispatchers
@@ -82,6 +83,7 @@ fun Chart.toResult(
     exScore: Long = 0,
     flare: Long? = null,
     flareSkill: Long? = null,
+    source: ResultSource,
 ) = ChartResult(
     skillId = song.skillId,
     playStyle = playStyle,
@@ -90,5 +92,6 @@ fun Chart.toResult(
     score = score,
     exScore = exScore,
     flare = flare,
-    flareSkill = flareSkill
+    flareSkill = flareSkill,
+    source = source,
 )

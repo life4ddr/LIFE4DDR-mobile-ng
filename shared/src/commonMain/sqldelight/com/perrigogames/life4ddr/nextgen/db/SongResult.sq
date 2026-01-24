@@ -1,6 +1,7 @@
 import com.perrigogames.life4ddr.nextgen.enums.ClearType;
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass;
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle;
+import com.perrigogames.life4ddr.nextgen.enums.ResultSource;
 
 CREATE TABLE ChartResult (
 skillId TEXT NOT NULL,
@@ -11,6 +12,7 @@ score INTEGER NOT NULL DEFAULT 0,
 exScore INTEGER,
 flare INTEGER,
 flareSkill INTEGER,
+source INTEGER AS ResultSource NOT NULL DEFAULT 2,
 PRIMARY KEY (skillId, difficultyClass, playStyle)
 );
 

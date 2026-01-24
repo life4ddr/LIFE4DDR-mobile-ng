@@ -4,6 +4,7 @@ import com.perrigogames.life4ddr.nextgen.db.ChartResult
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
+import com.perrigogames.life4ddr.nextgen.enums.ResultSource
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -66,7 +67,8 @@ fun SanbaiScoreResult.toChartResult(): Pair<ChartResult, SanbaiImportFlags> {
         score = score.toLong(),
         exScore = null,
         flare = flare,
-        flareSkill = flareSkill?.toLong()
+        flareSkill = flareSkill?.toLong(),
+        source = ResultSource.SANBAI,
     ) to SanbaiImportFlags(
         wasLife4GivenWithFlare = wasLife4GivenWithFlare
     )

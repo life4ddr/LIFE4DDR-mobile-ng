@@ -1,0 +1,3 @@
+import com.perrigogames.life4ddr.nextgen.enums.ResultSource;
+
+ALTER TABLE ChartResult ADD COLUMN source INTEGER AS ResultSource NOT NULL DEFAULT 2;
