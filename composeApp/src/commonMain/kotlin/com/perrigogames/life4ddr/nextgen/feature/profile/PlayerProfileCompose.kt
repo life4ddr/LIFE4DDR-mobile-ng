@@ -175,6 +175,10 @@ fun PlayerProfileContent(
                 }
             }
 
+            if (headerViewState != null || playerInfoViewState.banner != null) {
+                SizedSpacer(8.dp)
+            }
+
             if (goalData != null) {
                 Text(
                     text = targetRankText,
