@@ -33,7 +33,7 @@ class DefaultMotdManager: MotdManager, BaseModel() {
             ) { data, version ->
                 if (version.majorVersionBlocked) {
                     _motdFlow.emit(Event.DataRequiresAppUpdateEvent)
-                } else if (settings.shouldShowMotd(version.version)) {
+                } else if (settings.shouldShowMotd(version.version.toInt())) {
                     data.unwrapLoaded()?.let {
                         _motdFlow.emit(Event.MotdEvent(it))
                     }

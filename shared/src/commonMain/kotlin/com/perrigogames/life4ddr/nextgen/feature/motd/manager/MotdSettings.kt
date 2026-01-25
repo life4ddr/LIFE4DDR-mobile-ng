@@ -10,8 +10,8 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsManage
  * currently saved.
  */
 interface MotdSettings {
-    fun shouldShowMotd(version: Long): Boolean
-    fun setLastVersion(version: Long)
+    fun shouldShowMotd(version: Int): Boolean
+    fun setLastVersion(version: Int)
 
     companion object {
         const val KEY_LAST_MOTD = "KEY_LAST_MOTD"
@@ -19,15 +19,15 @@ interface MotdSettings {
 }
 
 class DefaultMotdSettings : SettingsManager(), MotdSettings {
-    private var lastMotdId: Long
-        get() = basicSettings.getLong(KEY_LAST_MOTD, defaultValue = -1)
-        set(value) = basicSettings.putLong(KEY_LAST_MOTD, value)
+    private var lastMotdId: Int
+        get() = basicSettings.getInt(KEY_LAST_MOTD, defaultValue = -1)
+        set(value) = basicSettings.putInt(KEY_LAST_MOTD, value)
 
-    override fun shouldShowMotd(version: Long): Boolean {
+    override fun shouldShowMotd(version: Int): Boolean {
         return version < lastMotdId
     }
 
-    override fun setLastVersion(version: Long) {
+    override fun setLastVersion(version: Int) {
         lastMotdId = version
     }
 }
