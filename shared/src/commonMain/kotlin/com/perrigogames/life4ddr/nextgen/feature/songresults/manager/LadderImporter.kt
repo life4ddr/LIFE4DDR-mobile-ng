@@ -4,7 +4,6 @@ import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
-import com.perrigogames.life4ddr.nextgen.feature.ladder.manager.LadderDialogs
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.SASongEntry
 import com.perrigogames.life4ddr.nextgen.feature.songresults.db.ResultDatabaseHelper
@@ -36,7 +35,6 @@ class LadderImporter(
     private val songDataManager: SongDataManager by inject()
     private val resultDbHelper: ResultDatabaseHelper by inject()
     private val songResultsManager: SongResultsManager by inject()
-    private val ladderDialogs: LadderDialogs by inject()
 
     private var success = 0
     private var errors = 0
@@ -54,7 +52,7 @@ class LadderImporter(
                 OpMode.SA -> parseManagerLine(it)
             } }
             withContext(Dispatchers.Main) {
-                ladderDialogs.showImportFinishedToast()
+//                ladderDialogs.showImportFinishedToast()
 //                ignoreListManager.invalidateIgnoredIds() FIXME
                 // FIXME eventBus.post(SongResultsImportCompletedEvent())
                 songResultsManager.refresh()

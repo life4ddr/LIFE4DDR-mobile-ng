@@ -16,7 +16,6 @@ import kotlin.time.ExperimentalTime
 class GoalStateManager: BaseModel() {
 
     private val goalDBHelper: GoalDatabaseHelper by inject()
-    private val ladderDialogs: LadderDialogs by inject()
 
     private val _updated = MutableSharedFlow<Unit>(replay = 1)
     val updated = _updated.asSharedFlow()
@@ -41,15 +40,6 @@ class GoalStateManager: BaseModel() {
         mainScope.launch {
             goalDBHelper.insertGoalState(id, status)
             _updated.emit(Unit)
-        }
-    }
-
-    fun clearGoalStates() {
-        ladderDialogs.onClearGoalStates {
-            mainScope.launch {
-                goalDBHelper.deleteAll()
-                _updated.emit(Unit)
-            }
         }
     }
 }
