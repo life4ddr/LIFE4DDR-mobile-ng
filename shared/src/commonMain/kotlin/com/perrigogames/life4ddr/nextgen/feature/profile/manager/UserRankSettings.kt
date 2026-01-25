@@ -31,19 +31,19 @@ interface UserRankSettings {
 @OptIn(ExperimentalSettingsApi::class)
 class DefaultUserRankSettings : SettingsManager(), UserRankSettings {
 
-    override val rank: StateFlow<LadderRank?> = settings.getLongOrNullFlow(KEY_INFO_RANK)
-        .map { LadderRank.parse(it) }
+    override val rank: StateFlow<LadderRank?> = settings.getIntOrNullFlow(KEY_INFO_RANK)
+        .map { LadderRank.parse(it?.toLong()) }
         .stateIn(mainScope, SharingStarted.Eagerly, null)
 
     override fun setRank(rank: LadderRank?) {
         mainScope.launch {
-            rank?.also { settings.putLong(KEY_INFO_RANK, it.stableId) } ?: settings.remove(KEY_INFO_RANK)
+            rank?.also { settings.putInt(KEY_INFO_RANK, it.stableId.toInt()) } ?: settings.remove(KEY_INFO_RANK)
             setTargetRank(rank.nullableNext)
         }
     }
 
-    private val _targetRank = settings.getLongOrNullFlow(KEY_INFO_TARGET_RANK)
-        .map { LadderRank.parse(it) }
+    private val _targetRank = settings.getIntOrNullFlow(KEY_INFO_TARGET_RANK)
+        .map { LadderRank.parse(it?.toLong()) }
 
     /**
      * This flow emits the functional target rank depending on configuration.  Priority order is:
@@ -61,7 +61,7 @@ class DefaultUserRankSettings : SettingsManager(), UserRankSettings {
 
     override fun setTargetRank(rank: LadderRank?) {
         mainScope.launch {
-            rank?.also { settings.putLong(KEY_INFO_TARGET_RANK, it.stableId) } ?: settings.remove(KEY_INFO_TARGET_RANK)
+            rank?.also { settings.putInt(KEY_INFO_TARGET_RANK, it.stableId.toInt()) } ?: settings.remove(KEY_INFO_TARGET_RANK)
         }
     }
 }
