@@ -107,7 +107,7 @@ class TrialContentProvider(private val trial: Trial) : KoinComponent {
                     summaryContent = UITrialSessionContent.Summary.SummaryContent(
                         topText = result!!.score?.longNumberString()?.desc(),
                         bottomMainText = StringDesc.ResourceFormatted(MR.strings.ex_score_string_format, result.exScore ?: 0),
-                        bottomSubText = StringDesc.ResourceFormatted(MR.strings.ex_score_max_string_format, song.ex, result.exScore!! - song.ex),
+                        bottomSubText = StringDesc.ResourceFormatted(MR.strings.ex_score_max_string_format, song.ex, (result.exScore ?: 0) - song.ex),
                     ),
                 )
             }
