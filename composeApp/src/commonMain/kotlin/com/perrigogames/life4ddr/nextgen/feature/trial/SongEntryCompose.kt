@@ -31,7 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import coil3.toUri
+import coil3.compose.rememberAsyncImagePainter
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
@@ -47,15 +47,6 @@ fun SongEntryBottomSheetContentAndroid(
     SongEntryBottomSheetContent(
         viewData = viewData,
         onAction = onAction,
-        createBitmap = { path ->
-            error("// FIXME create image from URI")
-//            path.toUri()
-//                .let { uri ->
-//                    println(uri.toString())
-//                    context.contentResolver.openInputStream(uri)
-//                }
-//                ?.use { BitmapFactory.decodeStream(it).asImageBitmap() }
-        }
     )
 }
 
@@ -65,32 +56,20 @@ fun SongEntryBottomSheetContentAndroid(
 fun SongEntryBottomSheetContent(
     viewData: UITrialBottomSheet.Details,
     onAction: (TrialSessionInput) -> Unit,
-    createBitmap: (String) -> ImageBitmap?
 ) {
     BackHandler {
         onAction(TrialSessionInput.HideBottomSheet)
-    }
-
-    val decodedBitmap = remember(viewData.imagePath) {
-        if (viewData.imagePath.isEmpty()) return@remember null
-        try {
-            createBitmap(viewData.imagePath)
-        } catch (e: Exception) {
-            null
-        }
     }
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        decodedBitmap?.let {
-            InteractiveImage(
-                bitmap = decodedBitmap,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+        InteractiveImage(
+            painter = rememberAsyncImagePainter(model = viewData.imagePath),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
         SongEntryControls(
             fields = viewData.fields,
             shortcuts = viewData.shortcuts,

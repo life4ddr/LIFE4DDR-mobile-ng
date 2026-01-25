@@ -8,12 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
 
 @Composable
 fun InteractiveImage(
-    bitmap: ImageBitmap,
+    painter: Painter,
     contentDescription: String? = null,
     modifier: Modifier = Modifier
 ) {
@@ -26,7 +29,7 @@ fun InteractiveImage(
         modifier = modifier.pointerInput(Unit) {
             detectTransformGestures(
                 onGesture = { _, pan, zoom, rotation ->
-                    scale = (scale * zoom).coerceIn(0.5f, 5f) // Limit zoom between 0.5x and 5x
+                    scale = (scale * zoom).coerceIn(0.7f, 3f) // Limit zoom
                     offset = Offset(offset.x + pan.x, offset.y + pan.y) // Update drag/translate
                     rotationState += rotation // Keep track of rotation if needed
                 }
@@ -34,7 +37,7 @@ fun InteractiveImage(
         }
     ) {
         Image(
-            bitmap = bitmap,
+            painter = painter,
             contentDescription = contentDescription,
             contentScale = ContentScale.Fit,
             modifier = Modifier
