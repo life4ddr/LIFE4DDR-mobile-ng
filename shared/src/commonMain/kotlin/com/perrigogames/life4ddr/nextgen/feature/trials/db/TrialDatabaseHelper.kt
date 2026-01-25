@@ -65,9 +65,7 @@ class TrialDatabaseHelper(sqlDriver: SqlDriver): DatabaseHelper(sqlDriver) {
 
     fun sessionsForTrial(trialId: String) = queries.selectSessionByTrialId(trialId).executeAsList()
 
-    fun bestSession(trialId: String) = queries.selectBestSession(trialId).executeAsOneOrNull()
-
-    fun bestSessions() = queries.selectBestSessions().executeAsList()
+    fun fullSessions() = queries.selectFullSessions().executeAsList()
 
     fun songsForSession(sessionId: Long) = queries.selectSessionSongs(sessionId).executeAsList()
 

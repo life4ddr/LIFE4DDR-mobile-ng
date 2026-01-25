@@ -3,7 +3,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trials.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.db.SelectBestSessions
+import com.perrigogames.life4ddr.nextgen.db.SelectFullSessions
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialScraper
@@ -212,13 +212,13 @@ class TrialListViewModel(
         _scrapeState.value = null
     }
 
-    private fun matchTrials(trials: List<Trial>, sessions: List<SelectBestSessions>) = trials.associateWith { trial ->
+    private fun matchTrials(trials: List<Trial>, sessions: List<SelectFullSessions>) = trials.associateWith { trial ->
         sessions.firstOrNull { it.trialId == trial.id }
     }
 
     private fun createDisplayTrials(
         trials: List<Trial>,
-        sessions: List<SelectBestSessions>,
+        sessions: List<SelectFullSessions>,
         featureNew: Boolean,
         featureUnplayed: Boolean,
     ): List<UITrialList.Item> {

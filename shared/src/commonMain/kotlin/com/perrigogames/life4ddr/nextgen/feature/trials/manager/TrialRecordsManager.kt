@@ -1,6 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.trials.manager
 
-import com.perrigogames.life4ddr.nextgen.db.SelectBestSessions
+import com.perrigogames.life4ddr.nextgen.db.SelectFullSessions
 import com.perrigogames.life4ddr.nextgen.db.TrialSong
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
@@ -10,11 +10,11 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.SongResult
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
+import kotlin.collections.toList
 import kotlin.time.ExperimentalTime
 
 interface TrialRecordsManager {
-    val bestSessions: StateFlow<List<SelectBestSessions>>
+    val bestSessions: StateFlow<List<SelectFullSessions>>
 
     fun saveSession(record: InProgressTrialSession, targetRank: TrialRank)
 
@@ -42,12 +42,16 @@ class DefaultTrialRecordsManager(
 ): BaseModel(), TrialRecordsManager {
 
     private val _refresh = MutableSharedFlow<Unit>()
-    private val _bestSessions : MutableStateFlow<List<SelectBestSessions>> = MutableStateFlow(emptyList())
-    override val bestSessions: StateFlow<List<SelectBestSessions>> get() = _bestSessions.asStateFlow()
+    private val _bestSessions : MutableStateFlow<List<SelectFullSessions>> = MutableStateFlow(emptyList())
+    override val bestSessions: StateFlow<List<SelectFullSessions>> get() = _bestSessions.asStateFlow()
 
     init {
         mainScope.launch {
-            _refresh.map { dbHelper.bestSessions() }
+            _refresh.map {
+                dbHelper.fullSessions()
+                    .groupBy { it.trialId }
+                    .mapNotNull { (_, trials) -> trials.maxByOrNull { it.exScore ?: 0L } }
+            }
                 .collect(_bestSessions)
         }
         refreshSessions()
