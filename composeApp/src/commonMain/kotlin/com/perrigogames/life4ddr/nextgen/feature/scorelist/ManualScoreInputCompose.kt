@@ -1,6 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.scorelist
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -67,128 +69,152 @@ fun ManualScoreInputContent(
     var clearTypeSelection by remember { mutableStateOf(ClearType.CLEAR) }
     var clearTypeExpanded by remember { mutableStateOf(false) }
 
-    Column(modifier = modifier) {
-        Text(
-            text = state.songTitle.localized(),
-            style = MaterialTheme.typography.titleLarge,
-        )
-        SizedSpacer(4.dp)
-        Row {
+    Column {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surfaceVariant,
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "TAKE A PHOTO!",
+                    style = MaterialTheme.typography.headlineLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                SizedSpacer(8.dp)
+                Text(
+                    text = "Manual photos require photographic proof to be accepted.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
+        Column(modifier = modifier) {
             Text(
-                text = stringResource(state.songDifficultyClass.nameRes),
-                style = MaterialTheme.typography.labelLarge,
-                color = colorResource(state.songDifficultyClass.colorRes)
+                text = state.songTitle.localized(),
+                style = MaterialTheme.typography.titleLarge,
             )
             SizedSpacer(4.dp)
-            Text(
-                text = state.songDifficultyNumber.localized(),
-                style = MaterialTheme.typography.labelLarge,
-            )
-        }
-        SizedSpacer(16.dp)
-
-        TextField(
-            value = scoreInput.toString(),
-            onValueChange = {
-                scoreInput = it.toLongOrNull()?.coerceIn(0L..GameConstants.MAX_SCORE) ?: 0
-            },
-            enabled = clearTypeSelection != ClearType.MARVELOUS_FULL_COMBO,
-            label = { Text(state.scoreLabel.localized()) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        SizedSpacer(16.dp)
-        ExposedDropdownMenuBox(
-            expanded = clearTypeExpanded,
-            onExpandedChange = { clearTypeExpanded = it },
-        ) {
-            TextField(
-                value = stringResource(clearTypeSelection.clearRes),
-                onValueChange = {},
-                readOnly = true,
-                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                label = { Text(state.clearTypeLabel.localized()) },
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(MR.images.arrow_drop_down),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-            )
-            ExposedDropdownMenu(
-                expanded = clearTypeExpanded,
-                onDismissRequest = { clearTypeExpanded = false },
-            ) {
-                state.clearTypeOptions.forEach { value ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(value.clearRes)) },
-                        onClick = {
-                            clearTypeSelection = value
-                            clearTypeExpanded = false
-                            if (clearTypeSelection == ClearType.MARVELOUS_FULL_COMBO) {
-                                scoreInput = GameConstants.MAX_SCORE.toLong()
-                            }
-                        }
-                    )
-                }
+            Row {
+                Text(
+                    text = stringResource(state.songDifficultyClass.nameRes),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = colorResource(state.songDifficultyClass.colorRes)
+                )
+                SizedSpacer(4.dp)
+                Text(
+                    text = state.songDifficultyNumber.localized(),
+                    style = MaterialTheme.typography.labelLarge,
+                )
             }
-        }
+            SizedSpacer(16.dp)
 
-        SizedSpacer(16.dp)
-        ExposedDropdownMenuBox(
-            expanded = flareExpanded,
-            onExpandedChange = { flareExpanded = it },
-        ) {
             TextField(
-                value = state.flareOptions[flareSelection].first.localized(),
-                onValueChange = {},
-                readOnly = true,
-                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                label = { Text(state.flareLabel.localized()) },
-                leadingIcon = {
-                    flareImageResource(flareSelection)?.let {
-                        Image(
-                            painter = painterResource(it),
+                value = scoreInput.toString(),
+                onValueChange = {
+                    scoreInput = it.toLongOrNull()?.coerceIn(0L..GameConstants.MAX_SCORE) ?: 0
+                },
+                enabled = clearTypeSelection != ClearType.MARVELOUS_FULL_COMBO,
+                label = { Text(state.scoreLabel.localized()) },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            SizedSpacer(16.dp)
+            ExposedDropdownMenuBox(
+                expanded = clearTypeExpanded,
+                onExpandedChange = { clearTypeExpanded = it },
+            ) {
+                TextField(
+                    value = stringResource(clearTypeSelection.clearRes),
+                    onValueChange = {},
+                    readOnly = true,
+                    modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                    label = { Text(state.clearTypeLabel.localized()) },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(MR.images.arrow_drop_down),
                             contentDescription = null,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
-                },
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(MR.images.arrow_drop_down),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-            )
-            ExposedDropdownMenu(
-                expanded = flareExpanded,
-                onDismissRequest = { flareExpanded = false },
-            ) {
-                state.flareOptions.forEach { (label, value) ->
-                    DropdownMenuItem(
-                        text = { Text(label.localized()) },
-                        onClick = {
-                            flareSelection = value
-                            flareExpanded = false
-                        }
-                    )
+                )
+                ExposedDropdownMenu(
+                    expanded = clearTypeExpanded,
+                    onDismissRequest = { clearTypeExpanded = false },
+                ) {
+                    state.clearTypeOptions.forEach { value ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(value.clearRes)) },
+                            onClick = {
+                                clearTypeSelection = value
+                                clearTypeExpanded = false
+                                if (clearTypeSelection == ClearType.MARVELOUS_FULL_COMBO) {
+                                    scoreInput = GameConstants.MAX_SCORE.toLong()
+                                }
+                            }
+                        )
+                    }
                 }
             }
-        }
 
-        SizedSpacer(16.dp)
+            SizedSpacer(16.dp)
+            ExposedDropdownMenuBox(
+                expanded = flareExpanded,
+                onExpandedChange = { flareExpanded = it },
+            ) {
+                TextField(
+                    value = state.flareOptions[flareSelection].first.localized(),
+                    onValueChange = {},
+                    readOnly = true,
+                    modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                    label = { Text(state.flareLabel.localized()) },
+                    leadingIcon = {
+                        flareImageResource(flareSelection)?.let {
+                            Image(
+                                painter = painterResource(it),
+                                contentDescription = null,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(MR.images.arrow_drop_down),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                )
+                ExposedDropdownMenu(
+                    expanded = flareExpanded,
+                    onDismissRequest = { flareExpanded = false },
+                ) {
+                    state.flareOptions.forEach { (label, value) ->
+                        DropdownMenuItem(
+                            text = { Text(label.localized()) },
+                            onClick = {
+                                flareSelection = value
+                                flareExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
 
-        TextButton(
-            onClick = { onSubmit(scoreInput, clearTypeSelection, flareSelection) },
-            modifier = Modifier.align(Alignment.End),
-        ) {
-            Text(state.submitLabel.localized())
+            SizedSpacer(16.dp)
+
+            TextButton(
+                onClick = { onSubmit(scoreInput, clearTypeSelection, flareSelection) },
+                modifier = Modifier.align(Alignment.End),
+            ) {
+                Text(state.submitLabel.localized())
+            }
         }
     }
 }
