@@ -22,6 +22,8 @@ data class Chart(
     val difficultyNumberTier: Double? = null,
     val lockType: Int? = null,
 ) {
+    val key = "${song.skillId}/$playStyle/$difficultyClass"
+
     val combinedDifficultyNumber: Double = difficultyNumber + (difficultyNumberTier ?: -0.005)
     val difficultyTierString: String = difficultyNumberTier?.let {
         (it * 100).toInt().toString().let { text ->
