@@ -5,6 +5,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -211,7 +214,10 @@ fun TrialSessionContent(
             ) { content ->
                 when (content) {
                     is UITrialSessionContent.Summary -> {
-                        SummaryContent(content)
+                        SummaryContent(
+                            viewData = content,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                     is UITrialSessionContent.SongFocused -> {
                         SongFocusedContent(
@@ -326,13 +332,23 @@ fun SummaryContent(
     viewData: UITrialSessionContent.Summary,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .widthIn(max = 800.dp)
+                .scrollable(
+                    state = rememberScrollableState { it },
+                    orientation = Orientation.Vertical
+                ),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
+                modifier = Modifier.weight(1f)
             ) {
                 viewData.items.getOrNull(0)?.let { item ->
                     SummaryJacketItem(viewData = item, modifier = Modifier.weight(1f))
@@ -343,6 +359,7 @@ fun SummaryContent(
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
+                modifier = Modifier.weight(1f)
             ) {
                 viewData.items.getOrNull(2)?.let { item ->
                     SummaryJacketItem(viewData = item, modifier = Modifier.weight(1f))
@@ -493,7 +510,6 @@ fun RowScope.SummaryJacketItem(
                 .build(),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
                 .aspectRatio(1f),
             contentScale = ContentScale.Crop,
         )
