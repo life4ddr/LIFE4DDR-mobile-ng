@@ -111,7 +111,7 @@ class SettingsPageProvider : BaseModel() {
                     key = "KEY_LINK_X",
                     title = MR.strings.find_us_on_bluesky.desc(),
                     icon = MR.images.brand_bluesky,
-                    action = SettingsAction.WebLink(URL_find_us_on_bluesky)
+                    action = SettingsAction.WebLink(URL_FIND_US_ON_BLUESKY)
                 ),
                 // NOSHIP Credits are required for full app launch
 //                UISettingsItem.Link(
@@ -359,7 +359,7 @@ class SettingsPageProvider : BaseModel() {
 
         private const val URL_SHOP_LIFE4 = "https://life4.bigcartel.com/"
         private const val URL_SHOP_DANGERSHARK = "https://www.etsy.com/shop/DangerShark/"
-        private const val URL_find_us_on_bluesky = "https://bsky.app/profile/life4ddrbot.bsky.social"
+        private const val URL_FIND_US_ON_BLUESKY = "https://bsky.app/profile/life4ddrbot.bsky.social"
         private const val URL_JOIN_DISCORD = "https://discord.gg/sTYjWNn"
         private const val EMAIL_SUPPORT = "cperrigolife4@gmail.com"
     }
