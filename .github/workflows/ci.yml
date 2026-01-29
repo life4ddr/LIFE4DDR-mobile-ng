@@ -87,6 +87,7 @@ jobs:
           file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
           xcodebuild test-without-building -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=$platform,name=$device"
   dependency-submission:
+    name: Generate Gradle Dependency Graph
     runs-on: ubuntu-latest
     steps:
     - name: Checkout sources
