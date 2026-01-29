@@ -333,7 +333,7 @@
     <string name="action_refresh_sanbai_user_scores_subtitle">Fetch your personal scores from Sanbai. You may be prompted to log in.</string>
     <string name="debug_locked_songs">Locked songs</string>
     <string name="join_discord">Join our Discord</string>
-    <string name="find_us_on_x">Find us on X</string>
+    <string name="find_us_on_bluesky">Find us on BlueSky</string>
     <string name="action_email_support">Email Support</string>
     <string name="action_shop_life4">Shop LIFE4</string>
     <string name="description_shop_life4">Purchase physical LIFE4 gear</string>
