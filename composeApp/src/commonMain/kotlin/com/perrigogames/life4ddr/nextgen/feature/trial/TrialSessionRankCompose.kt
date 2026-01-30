@@ -55,19 +55,20 @@ fun RankDropdown(
     var dropdownExpanded: Boolean by remember { mutableStateOf(false) }
 
     Box {
+        val availableRanks = viewData.availableRanks
         CardRankDisplay(
             viewData = viewData,
-            showSelectorIcon = viewData is UITargetRank.Selection,
+            showSelectorIcon = availableRanks != null,
             modifier = Modifier.clickable(
-                enabled = viewData is UITargetRank.Selection,
+                enabled = availableRanks != null,
             ) { dropdownExpanded = true }
         )
-        if (viewData is UITargetRank.Selection) {
+        if (availableRanks != null) {
             DropdownMenu(
                 expanded = dropdownExpanded,
                 onDismissRequest = { dropdownExpanded = false },
             ) {
-                viewData.availableRanks.forEach { rank ->
+                availableRanks.forEach { rank ->
                     DropdownMenuItem(
                         text = { Text(stringResource(rank.nameRes)) },
                         leadingIcon = {

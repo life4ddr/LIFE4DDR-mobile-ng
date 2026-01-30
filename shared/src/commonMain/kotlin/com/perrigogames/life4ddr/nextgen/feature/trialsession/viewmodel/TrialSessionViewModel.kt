@@ -15,8 +15,6 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UIEXScoreBar
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITargetRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSession
-import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.toAchieved
-import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.toInProgress
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialContentProvider
@@ -129,32 +127,14 @@ class TrialSessionViewModel(
                     ?: return@collect
                 val current = (_state.value as? ViewState.Success)?.data ?: return@collect
                 if (current.targetRank.rank != target) {
-                    _state.value = when (val curr = current.targetRank) {
-                        is UITargetRank.Selection -> current.copy(
-                            targetRank = curr.copy(
-                                rank = target,
-                                title = target.nameRes.desc(),
-                                titleColor = target.colorRes,
-                                availableRanks = curr.availableRanks,
-                                rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(target)!!, trial)
-                            )
-                        )
-                        is UITargetRank.InProgress -> current.copy(
-                            targetRank = curr.copy(
-                                rank = target,
-                                title = target.nameRes.desc(),
-                                titleColor = target.colorRes,
-                                rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(target)!!, trial)
-                            )
-                        )
-                        is UITargetRank.Achieved -> current.copy(
-                            targetRank = curr.copy(
-                                rank = target,
-                                title = target.nameRes.desc(),
-                                titleColor = target.colorRes,
-                            )
-                        )
-                    }.toViewState()
+                    _state.value = current.copy(
+                        targetRank = current.targetRank.copy(
+                            rank = target,
+                            title = target.nameRes.desc(),
+                            titleColor = target.colorRes,
+                            rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(target)!!, trial),
+                        ),
+                    ).toViewState()
                 }
             }
         }
@@ -167,14 +147,24 @@ class TrialSessionViewModel(
                 logger.d { "Creating stage $stage" }
                 val complete = stage >= 4
                 val current = (_state.value as? ViewState.Success)?.data ?: return@combine
-                val targetRank = when (val target = current.targetRank) {
-                    is UITargetRank.Selection -> target.toInProgress()
-                    is UITargetRank.InProgress -> target
-                    is UITargetRank.Achieved -> throw IllegalStateException("Can't move from Achieved to In Progress")
-                }
+                val currentTarget = current.targetRank
+                val targetRank = currentTarget.copy(
+                    state = when (currentTarget.state) {
+                        UITargetRank.State.SELECTION -> UITargetRank.State.IN_PROGRESS
+                        UITargetRank.State.IN_PROGRESS,
+                        UITargetRank.State.ACHIEVED -> UITargetRank.State.ACHIEVED
+                    },
+                    availableRanks = if (currentTarget.state == UITargetRank.State.ACHIEVED) {
+                        null
+                    } else {
+                        currentTarget.availableRanks
+                    }
+                )
                 _state.value = if (complete) {
                     current.copy(
-                        targetRank = targetRank.toAchieved(), // FIXME calculate the user's actual rank
+                        targetRank = targetRank.copy(
+                            rank = currentTarget.rank // FIXME calculate the user's actual rank
+                        ),
                         content = contentProvider.provideFinalScreen(session),
                         footer = UITrialSession.Footer.Button(
                             buttonText = MR.strings.take_results_photo.desc(),
@@ -217,12 +207,13 @@ class TrialSessionViewModel(
                         trial.difficulty ?: 0
                     ),
                     backgroundImage = trial.coverResource ?: MR.images.trial_default.asImageDesc(),
-                    targetRank = UITargetRank.Selection(
+                    targetRank = UITargetRank(
                         rank = rank,
                         title = rank.nameRes.desc(),
                         titleColor = rank.colorRes,
                         availableRanks = allowedRanks,
                         rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(rank)!!, trial),
+                        state = UITargetRank.State.SELECTION,
                     ),
                     content = contentProvider.provideSummary(),
                     footer = when {
@@ -291,7 +282,8 @@ class TrialSessionViewModel(
                             finalPhotoUriString = action.photoUri
                         )
                     }
-                    // TODO acquire the images and upload them to the API
+                    // TODO return to the page and allow the user to make corrections
+                    // TODO upload images to the API
                     inProgressSession.goalObtained = true // FIXME
                     trialRecordsManager.saveSession(inProgressSession, targetRank.value)
                     _events.emit(TrialSessionEvent.Close)
@@ -390,19 +382,22 @@ class TrialSessionViewModel(
     }
 
     private fun updateTargetRank(allowIncrease: Boolean = false) {
-        var currIdx = if (allowIncrease) {
-            (trial.goals?.size ?: return) - 1
-        } else {
-            (trial.goals ?: return).map { it.rank }.indexOf(targetRank.value)
+        val newRank = findTargetRank(allowIncrease) ?: return
+        logger.d { "Rank changing from ${targetRank.value} to $newRank" }
+        targetRank.value = newRank
+    }
+
+    private fun findTargetRank(allowIncrease: Boolean = false): TrialRank? {
+        var currIdx = when {
+            trial.goals == null -> return null // no target for events
+            allowIncrease -> trial.goals.size - 1
+            else -> trial.goals.map { it.rank }.indexOf(targetRank.value)
         }
         fun currRank() = trial.goals[currIdx].rank
 
         while (inProgressSession.isRankSatisfied(currRank()) == false) {
             currIdx--
         }
-        logger.d { "Rank changing from ${targetRank.value} to ${currRank()}" }
-        targetRank.value = currRank()
+        return trial.goals[currIdx].rank
     }
 }
-
-typealias SubmitFieldsItem = Pair<String, String>

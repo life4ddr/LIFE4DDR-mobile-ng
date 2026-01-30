@@ -13,7 +13,7 @@ object UITrialSessionMocks {
         trialTitle = "Sidequest".desc(),
         trialLevel = "LV 14".desc(),
         backgroundImage = ImageDescUrl("https://raw.githubusercontent.com/life4ddr/Life4DDR/develop/androidApp/src/main/res/drawable-xxhdpi/sidequest.webp"),
-        targetRank = UITargetRank.InProgress(
+        targetRank = UITargetRank(
             rank = TrialRank.COBALT,
             title = "COBALT".desc(),
             titleColor = MR.colors.cobalt,
@@ -21,6 +21,8 @@ object UITrialSessionMocks {
                 "20 or fewer Greats, Goods, or Misses".desc(),
                 "230 missing EX or less (6532 EX)".desc(),
             ),
+            availableRanks = listOf(TrialRank.SILVER, TrialRank.GOLD, TrialRank.PLATINUM, TrialRank.DIAMOND, TrialRank.COBALT),
+            state = UITargetRank.State.IN_PROGRESS
         ),
         content = UITrialSessionContent.Summary(
             items = listOf(

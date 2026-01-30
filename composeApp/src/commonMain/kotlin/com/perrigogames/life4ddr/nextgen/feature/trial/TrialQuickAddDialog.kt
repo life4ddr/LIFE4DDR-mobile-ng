@@ -33,12 +33,13 @@ fun TrialQuickAddDialog(
     var trialRank by remember { mutableStateOf(TrialRank.ONYX) }
     val uiTrialRank by remember {
         derivedStateOf {
-            UITargetRank.Selection(
+            UITargetRank(
                 rank = trialRank,
                 title = trialRank.nameRes.desc(),
                 titleColor = trialRank.colorRes,
                 rankGoalItems = emptyList(),
-                availableRanks = availableRanks
+                availableRanks = availableRanks,
+                state = UITargetRank.State.SELECTION,
             )
         }
     }

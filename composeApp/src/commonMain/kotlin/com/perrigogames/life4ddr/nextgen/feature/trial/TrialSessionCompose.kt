@@ -294,7 +294,7 @@ fun TrialSessionHeader(
         }
 
         SizedSpacer(16.dp)
-        AnimatedContent(targetState = viewData.targetRank is UITargetRank.Achieved) { achieved ->
+        AnimatedContent(targetState = viewData.targetRank.state == UITargetRank.State.ACHIEVED) { achieved ->
             if (achieved) {
                 RankDisplay(
                     viewData = viewData.targetRank,
@@ -316,10 +316,10 @@ fun TrialSessionHeader(
             onInput = onAction,
         )
 
-        val targetSelection = viewData.targetRank as? UITargetRank.Selection
-        if (showManualScoreEntry && targetSelection != null) {
+        val availableRanks = viewData.targetRank.availableRanks
+        if (showManualScoreEntry && availableRanks != null) {
             TrialQuickAddDialog(
-                availableRanks = targetSelection.availableRanks,
+                availableRanks = availableRanks,
                 onSubmit = { rank, ex -> onAction(TrialSessionInput.ManualScoreEntry(rank, ex)) },
                 onDismiss = { }
             )

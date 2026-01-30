@@ -48,53 +48,33 @@ data class UIEXScoreBar(
  * Describes the content of the Target Rank section for a
  * Trial session.
  */
-sealed class UITargetRank {
+data class UITargetRank(
+    val state: State,
+    val rank: TrialRank,
+    val title: StringDesc,
+    val titleColor: ColorResource,
+    val rankGoalItems: List<StringDesc>,
+    val availableRanks: List<TrialRank>?,
+) {
+    enum class State {
+        /**
+         * Specifies an open selector that can be changed by the user.
+         */
+        SELECTION,
 
-    abstract val rank: TrialRank
-//    abstract val rankIcon: ImageDesc
-    abstract val title: StringDesc
-    abstract val titleColor: ColorResource
-    abstract val rankGoalItems: List<StringDesc>
+        /**
+         * Specifies an in-progress Trial with goals that should still be visible.
+         */
+        IN_PROGRESS,
 
-    /**
-     * Specifies an open selector that can be changed by the
-     * user.
-     */
-    data class Selection(
-        override val rank: TrialRank,
-        override val title: StringDesc,
-        override val titleColor: ColorResource,
-        override val rankGoalItems: List<StringDesc>,
-        val availableRanks: List<TrialRank>,
-    ) : UITargetRank()
+        /**
+         * Specifies a completed Trial that doesn't need to show the goals.
+         */
+        ACHIEVED;
 
-    /**
-     * Specifies an in-progress Trial with goals that should
-     * still be visible.
-     */
-    data class InProgress(
-        override val rank: TrialRank,
-        override val title: StringDesc,
-        override val titleColor: ColorResource,
-        override val rankGoalItems: List<StringDesc>
-    ) : UITargetRank()
 
-    /**
-     * Specifies a completed Trial that doesn't need to show
-     * the goals.
-     */
-    data class Achieved(
-        override val rank: TrialRank,
-        override val title: StringDesc,
-        override val titleColor: ColorResource,
-    ) : UITargetRank() {
-        override val rankGoalItems: List<StringDesc> = emptyList()
     }
 }
-
-fun UITargetRank.Selection.toInProgress() = UITargetRank.InProgress(rank, title, titleColor, rankGoalItems)
-
-fun UITargetRank.InProgress.toAchieved() = UITargetRank.Achieved(rank, title, titleColor)
 
 /**
  * Describes the content of the bottom half of the screen.
