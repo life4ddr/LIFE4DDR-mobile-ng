@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.FirstRunSettings
+import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.toUITrialSong
@@ -19,6 +21,7 @@ import org.koin.core.component.KoinComponent
 class PlacementDetailsViewModel(
     placementId: String,
     private val placementManager: PlacementManager,
+    private val settings: FirstRunSettings,
     private val logger: Logger,
 ) : ViewModel(), KoinComponent {
 
@@ -56,14 +59,17 @@ class PlacementDetailsViewModel(
             when (action) {
                 PlacementDetailsInput.Back -> _events.emit(PlacementDetailsEvent.Back)
                 PlacementDetailsInput.FinalizeClicked -> _events.emit(PlacementDetailsEvent.ShowCamera)
-                PlacementDetailsInput.PictureTaken -> _events.emit(
-                    PlacementDetailsEvent.ShowTooltip(
-                        title = MR.strings.placement_complete_tooltip_title.desc(),
-                        message = MR.strings.placement_complete_tooltip_message.desc(),
-                        ctaText = MR.strings.okay.desc(),
-                        ctaAction = PlacementDetailsInput.TooltipDismissed
+                PlacementDetailsInput.PictureTaken -> {
+                    settings.setInitState(InitState.DONE)
+                    _events.emit(
+                        PlacementDetailsEvent.ShowTooltip(
+                            title = MR.strings.placement_complete_tooltip_title.desc(),
+                            message = MR.strings.placement_complete_tooltip_message.desc(),
+                            ctaText = MR.strings.okay.desc(),
+                            ctaAction = PlacementDetailsInput.TooltipDismissed
+                        )
                     )
-                )
+                }
                 PlacementDetailsInput.TooltipDismissed -> {
                     _events.emit(PlacementDetailsEvent.NavigateToMainScreen(
                         submissionUrl = SUBMISSION_URL
