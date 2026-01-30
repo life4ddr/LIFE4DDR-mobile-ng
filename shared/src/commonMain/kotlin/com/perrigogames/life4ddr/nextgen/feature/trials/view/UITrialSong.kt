@@ -4,15 +4,16 @@ import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
 import dev.icerock.moko.resources.ColorResource
-import dev.icerock.moko.resources.compose.localized
+import dev.icerock.moko.resources.desc.StringDesc
+import dev.icerock.moko.resources.desc.desc
 
 data class UITrialSong(
-    val jacketUrl: String?,
-    val songNameText: String,
-    val subtitleText: String,
+    val jacketUrl: StringDesc?,
+    val songNameText: StringDesc,
+    val subtitleText: StringDesc,
     val playStyle: PlayStyle,
     val difficultyClass: DifficultyClass,
-    val difficultyText: String,
+    val difficultyText: StringDesc,
     val difficultyNumber: Int,
 ) {
     val color: ColorResource = difficultyClass.colorRes
@@ -20,11 +21,11 @@ data class UITrialSong(
 }
 
 fun TrialSong.toUITrialSong() = UITrialSong(
-    jacketUrl = url,
-    songNameText = chart.song.title,
-    subtitleText = chart.song.version.uiString.localized(),
+    jacketUrl = url?.desc(),
+    songNameText = chart.song.title.desc(),
+    subtitleText = chart.song.version.uiString,
     playStyle = playStyle,
     difficultyClass = difficultyClass,
-    difficultyText = chart.difficultyNumber.toString(),
+    difficultyText = chart.difficultyNumber.toString().desc(),
     difficultyNumber = chart.difficultyNumber,
 )

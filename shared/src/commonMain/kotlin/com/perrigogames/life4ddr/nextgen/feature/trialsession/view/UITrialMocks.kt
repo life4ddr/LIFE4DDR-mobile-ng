@@ -5,6 +5,7 @@ import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
 import com.perrigogames.life4ddr.nextgen.longNumberString
+import dev.icerock.moko.resources.desc.desc
 import kotlin.random.Random
 
 object UITrialMocks {
@@ -17,12 +18,12 @@ object UITrialMocks {
         difficultyText: String = "",
         difficultyNumber: Int = 1,
     ) = UITrialSong(
-        jacketUrl = jacketUrl,
-        songNameText = songNameText,
-        subtitleText = subtitleText,
+        jacketUrl = jacketUrl?.desc(),
+        songNameText = songNameText.desc(),
+        subtitleText = subtitleText.desc(),
         playStyle = playStyle,
         difficultyClass = difficultyClass,
-        difficultyText = difficultyText,
+        difficultyText = difficultyText.desc(),
         difficultyNumber = difficultyNumber,
     )
 

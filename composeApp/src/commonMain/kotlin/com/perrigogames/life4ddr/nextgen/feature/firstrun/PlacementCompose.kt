@@ -12,6 +12,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
 import dev.icerock.moko.resources.compose.colorResource
+import dev.icerock.moko.resources.compose.localized
 
 @Composable
 fun PlacementDifficultySurface(
@@ -35,7 +36,7 @@ fun PlacementDifficultySurface(
                 color = colorResource(data.difficultyClass.colorRes)
             )
             Text(
-                text = data.difficultyText,
+                text = data.difficultyText.localized(),
                 style = difficultyNumberTextStyle,
                 color = colorResource(data.difficultyClass.colorRes)
             )

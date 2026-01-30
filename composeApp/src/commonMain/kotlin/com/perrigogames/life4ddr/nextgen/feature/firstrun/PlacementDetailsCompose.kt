@@ -263,14 +263,14 @@ fun PlacementSongItem(
         ) {
             if (titleTextLines == 1) {
                 AutoResizedText(
-                    text = data.songNameText,
+                    text = data.songNameText.localized(),
                     style = titleTextStyle,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.fillMaxWidth()
                 )
             } else {
                 Text(
-                    text = data.songNameText,
+                    text = data.songNameText.localized(),
                     style = titleTextStyle,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     maxLines = titleTextLines,
@@ -278,7 +278,7 @@ fun PlacementSongItem(
                 )
             }
             Text(
-                text = data.subtitleText,
+                text = data.subtitleText.localized(),
                 style = mixTextStyle,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 maxLines = 1,
