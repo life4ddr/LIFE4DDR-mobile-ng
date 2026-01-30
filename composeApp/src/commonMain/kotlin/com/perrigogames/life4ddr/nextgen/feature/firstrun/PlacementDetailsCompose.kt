@@ -126,9 +126,9 @@ fun PlacementDetailsScreen(
                 BackHandler {
                     hideBottomSheet()
                 }
-                CameraBottomSheetContent {
+                CameraBottomSheetContent { uri ->
                     hideBottomSheet()
-                    viewModel.handleAction(PlacementDetailsInput.PictureTaken)
+                    viewModel.handleAction(PlacementDetailsInput.PictureTaken(uri))
                 }
             }
         }

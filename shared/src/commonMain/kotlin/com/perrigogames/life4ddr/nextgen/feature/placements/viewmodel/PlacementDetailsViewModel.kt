@@ -59,7 +59,7 @@ class PlacementDetailsViewModel(
             when (action) {
                 PlacementDetailsInput.Back -> _events.emit(PlacementDetailsEvent.Back)
                 PlacementDetailsInput.FinalizeClicked -> _events.emit(PlacementDetailsEvent.ShowCamera)
-                PlacementDetailsInput.PictureTaken -> {
+                is PlacementDetailsInput.PictureTaken -> {
                     settings.setInitState(InitState.DONE)
                     _events.emit(
                         PlacementDetailsEvent.ShowTooltip(

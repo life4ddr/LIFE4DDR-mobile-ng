@@ -5,7 +5,7 @@ sealed class PlacementDetailsInput {
 
     data object FinalizeClicked: PlacementDetailsInput()
 
-    data object PictureTaken : PlacementDetailsInput()
+    data class PictureTaken(val uri: String) : PlacementDetailsInput()
 
     data object TooltipDismissed : PlacementDetailsInput()
 }

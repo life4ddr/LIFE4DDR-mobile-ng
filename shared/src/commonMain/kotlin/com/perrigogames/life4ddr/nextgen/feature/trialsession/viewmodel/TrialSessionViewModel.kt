@@ -88,7 +88,7 @@ class TrialSessionViewModel(
             val currentMaxEx = if (started) {
                 inProgressSession.trial.songs.subList(0, stage!!).sumOf { it.ex }
             } else {
-                0
+                trial.totalEx
             }
             UIEXScoreBar(
                 labelText = MR.strings.ex.desc(),
