@@ -17,8 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.Paddings
-import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
-import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UIPlacementBanner
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialJacket
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialList
@@ -33,20 +32,23 @@ import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.desc.image.ImageDescResource
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TrialListScreen(
     modifier: Modifier = Modifier,
-    onTrialSelected: (Trial) -> Unit = {},
+    onTrialSelected: (Course) -> Unit = {},
     onPlacementsSelected: () -> Unit = {},
 ) {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
     val viewModel = koinViewModel<TrialListViewModel>()
     val state by viewModel.state.collectAsState()
     val scrapeState by viewModel.scrapeState.collectAsState()
     var lastGoodScrapeState by remember { mutableStateOf<UITrialScrapeProgress?>(null) }
-    var quickAddDialogTrial by remember { mutableStateOf<Trial?>(null) }
-    var deleteRecordsConfirmationTrial by remember { mutableStateOf<Trial?>(null) }
+    var quickAddDialogTrial by remember { mutableStateOf<Course?>(null) }
+    var deleteRecordsConfirmationTrial by remember { mutableStateOf<Course?>(null) }
 
     Scaffold(
         contentWindowInsets = WindowInsets(),
@@ -86,7 +88,15 @@ fun TrialListScreen(
             ) {
                 TrialJacketList(
                     displayList = state.trials, // FIXME
-                    onTrialSelected = onTrialSelected,
+                    onTrialSelected = {
+                        if (it is Course.Trial) {
+                            onTrialSelected(it)
+                        } else {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Events are currently not supported")
+                            }
+                        }
+                    },
                     onTrialQuickAddSelected = { quickAddDialogTrial = it },
                     onTrialClearRecordsSelected = { deleteRecordsConfirmationTrial = it },
                     modifier = Modifier.fillMaxSize(),
@@ -111,14 +121,29 @@ fun TrialListScreen(
                     }
                 }
             }
+
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(horizontal = 16.dp),
+            ) { data ->
+                Snackbar { Text(data.visuals.message) }
+            }
         }
     }
 
     quickAddDialogTrial?.let { trial ->
         TrialQuickAddDialog(
-            availableRanks = trial.goals?.map { it.rank } ?: listOf(TrialRank.COPPER),
+            availableRanks = trial.availableRanks,
             onSubmit = { rank, exScore ->
-                viewModel.addTrialPlay(trial, rank, exScore)
+                if (trial is Course.Trial) {
+                    viewModel.addTrialPlay(trial, rank, exScore)
+                } else {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Cannot quick-add an Event result")
+                    }
+                }
                 quickAddDialogTrial = null
             },
             onDismiss = { quickAddDialogTrial = null }
@@ -190,9 +215,9 @@ fun PlacementBanner(
 @Composable
 fun TrialJacketList(
     displayList: List<UITrialList.Item>,
-    onTrialSelected: (Trial) -> Unit,
-    onTrialQuickAddSelected: (Trial) -> Unit,
-    onTrialClearRecordsSelected: (Trial) -> Unit,
+    onTrialSelected: (Course) -> Unit,
+    onTrialQuickAddSelected: (Course) -> Unit,
+    onTrialClearRecordsSelected: (Course) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(

@@ -2,7 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trialsession.data
 
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.ClearType.*
-import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialEXProgress
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
@@ -14,8 +14,8 @@ import org.koin.core.component.KoinComponent
 
 @Serializable
 data class InProgressTrialSession(
-    val trial: Trial,
-    val results: Array<SongResult?> = kotlin.arrayOfNulls(trial.songs.size),
+    val trial: Course.Trial,
+    val results: Array<SongResult?> = arrayOfNulls(trial.songs.size),
     val finalPhotoUriString: String? = null,
 ) : KoinComponent {
 

@@ -2,7 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel
 
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsManager
-import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialGoalSet.GoalType.*
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
@@ -150,7 +150,7 @@ class SongEntryViewModel(
         )
     }
 
-    private fun requiredFields(trial: Trial, targetRank: TrialRank): List<String> {
+    private fun requiredFields(trial: Course.Trial, targetRank: TrialRank): List<String> {
         val goalTypes = trial.goalSet(targetRank)
             ?.goalTypes
             ?.toMutableList()

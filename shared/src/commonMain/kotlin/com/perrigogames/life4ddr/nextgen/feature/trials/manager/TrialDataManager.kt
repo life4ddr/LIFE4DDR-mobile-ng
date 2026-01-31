@@ -4,16 +4,13 @@ import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.api.base.CompositeData
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
-import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
-import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.russhwolf.settings.Settings
 import dev.icerock.moko.mvvm.flow.cMutableStateFlow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
-import kotlin.getValue
 
 /**
  * Manages data relating to Trials.  This includes:
@@ -22,11 +19,11 @@ import kotlin.getValue
  * - records for Trials the player has previously completed ('records')
  */
 interface TrialDataManager {
-    val trialsFlow: StateFlow<List<Trial>>
+    val trialsFlow: StateFlow<List<Course>>
     val dataVersionString: Flow<String>
-    val trials: List<Trial>
+    val trials: List<Course>
     val hasEventTrial: Boolean
-    fun findTrial(id: String): Trial?
+    fun findTrial(id: String): Course?
 }
 
 class DefaultTrialDataManager(
@@ -41,10 +38,10 @@ class DefaultTrialDataManager(
         data.versionState.map { it.versionString }
 
     override val trials get() = trialsFlow.value
-    override val hasEventTrial get() = trials.count { it.isActiveEvent } > 0
+    override val hasEventTrial get() = trials.count { it is Course.Event && it.isActiveEvent } > 0
 
-    private val _trialsFlow = MutableStateFlow<List<Trial>>(emptyList()).cMutableStateFlow()
-    override val trialsFlow: StateFlow<List<Trial>> = _trialsFlow
+    private val _trialsFlow = MutableStateFlow<List<Course>>(emptyList()).cMutableStateFlow()
+    override val trialsFlow: StateFlow<List<Course>> = _trialsFlow
 
     init {
         validateTrials()

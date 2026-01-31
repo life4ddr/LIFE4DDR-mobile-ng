@@ -3,6 +3,8 @@ package com.perrigogames.life4ddr.nextgen.feature.trials.view
 import com.perrigogames.life4ddr.nextgen.db.TrialSession
 import com.perrigogames.life4ddr.nextgen.db.TrialSong
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialState
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialRecord
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialRecordSong
@@ -26,8 +28,8 @@ class UITrialMaps : KoinComponent {
         return UITrialRecord(
             trialTitleText = trial.name,
             trialSubtitleText = when {
-                trial.isRetired -> "(Retired)"
-                trial.isEvent -> "(Event)"
+                trial.state == TrialState.RETIRED -> "(Retired)"
+                trial is Course.Event -> "(Event)"
                 else -> null
             },
             exScoreText = "FIXME",

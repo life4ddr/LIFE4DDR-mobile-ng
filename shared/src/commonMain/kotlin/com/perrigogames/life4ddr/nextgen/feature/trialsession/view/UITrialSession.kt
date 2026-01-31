@@ -1,10 +1,14 @@
 package com.perrigogames.life4ddr.nextgen.feature.trialsession.view
 
+import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import dev.icerock.moko.resources.ColorResource
+import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.color.ColorDesc
+import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.desc.image.ImageDesc
 
 /**
@@ -35,14 +39,32 @@ data class UITrialSession(
  * Describes the content of the EX score bar.
  */
 data class UIEXScoreBar(
-    val labelText: StringDesc,
-    val currentEx: Int,
+    val labelText: StringDesc = MR.strings.ex.desc(),
+    val currentEx: Int = 0,
     val hintCurrentEx: Int? = null,
-    val maxEx: Int,
-    val currentExText: StringDesc,
+    val maxEx: Int = 0,
+    val currentExText: StringDesc = "0".desc(),
     val maxExText: StringDesc,
-    val exTextClickAction: TrialSessionInput,
-)
+    val exTextClickAction: TrialSessionInput = TrialSessionInput.ToggleExLost(false),
+) {
+
+    constructor(
+        trial: Course,
+        labelText: StringDesc = MR.strings.ex.desc(),
+        currentEx: Int = 0,
+        hintCurrentEx: Int? = null,
+        currentExText: StringDesc = "0".desc(),
+        exTextClickAction: TrialSessionInput = TrialSessionInput.ToggleExLost(false),
+    ) : this(
+        labelText = labelText,
+        currentEx = currentEx,
+        hintCurrentEx = hintCurrentEx,
+        maxEx = trial.totalEx,
+        currentExText = currentExText,
+        maxExText = StringDesc.Raw("/" + trial.totalEx),
+        exTextClickAction = exTextClickAction,
+    )
+}
 
 /**
  * Describes the content of the Target Rank section for a

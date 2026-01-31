@@ -2,7 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trials.manager
 
 import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
-import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialGoalSet
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialStrings
 import dev.icerock.moko.resources.desc.StringDesc
@@ -10,13 +10,13 @@ import dev.icerock.moko.resources.desc.desc
 
 object TrialGoalStrings {
 
-    fun generateSingleGoalString(goalSet: TrialGoalSet, trial: Trial) = StringBuilder().apply {
+    fun generateSingleGoalString(goalSet: TrialGoalSet, trial: Course.Trial) = StringBuilder().apply {
         generateGoalStrings(goalSet, trial).forEachIndexed { idx, s ->
             append(if (idx == 0) s else "\n$s")
         }
     }.toString()
 
-    fun generateGoalStrings(goalSet: TrialGoalSet, trial: Trial): List<StringDesc> = mutableListOf<StringDesc>().also { list ->
+    fun generateGoalStrings(goalSet: TrialGoalSet, trial: Course.Trial): List<StringDesc> = mutableListOf<StringDesc>().also { list ->
         generateClearGoalStrings(goalSet, trial, list)
         generateSpecificScoreGoalStrings(goalSet, trial, list)
         generateScoreGoalStrings(goalSet, list)
@@ -30,11 +30,11 @@ object TrialGoalStrings {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun generateSpecificClearGoalStrings(goalSet: TrialGoalSet, trial: Trial, output: MutableList<StringDesc>) {
+    private fun generateSpecificClearGoalStrings(goalSet: TrialGoalSet, trial: Course.Trial, output: MutableList<StringDesc>) {
         output.add("TODO: we don't need this right now".desc()) //TODO
     }
 
-    private fun generateClearGoalStrings(goalSet: TrialGoalSet, trial: Trial, output: MutableList<StringDesc>) {
+    private fun generateClearGoalStrings(goalSet: TrialGoalSet, trial: Course.Trial, output: MutableList<StringDesc>) {
         goalSet.clearIndexed?.let { clears ->
             var setType: ClearType? = null
             var chainEnd: Int? = null
@@ -61,7 +61,7 @@ object TrialGoalStrings {
         }
     }
 
-    private fun generateSpecificScoreGoalStrings(goalSet: TrialGoalSet, trial: Trial, output: MutableList<StringDesc>) {
+    private fun generateSpecificScoreGoalStrings(goalSet: TrialGoalSet, trial: Course.Trial, output: MutableList<StringDesc>) {
         goalSet.scoreIndexed?.let { scores ->
             val scoreGroups = HashMap<Int, MutableList<Int>>()
             scores.forEachIndexed { index, i ->

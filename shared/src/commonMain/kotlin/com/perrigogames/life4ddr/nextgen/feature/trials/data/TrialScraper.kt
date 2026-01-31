@@ -62,7 +62,7 @@ class DefaultTrialScraper(
             private var resultsAreaFound = false
             private var resultsCompleted = false
             private var trialFound = false
-            private var currentTrial: Trial? = null
+            private var currentTrial: Course.Trial? = null
             private var rankingFound = false
 
             override fun onOpenTag(name: String, attributes: Map<String, String>, isImplied: Boolean) {
@@ -78,7 +78,7 @@ class DefaultTrialScraper(
                             ?.substringAfter("https://life4ddr.com/")
                             ?.trim('/')
                             ?: return
-                        val trial = trialDataManager.findTrial(trialId)
+                        val trial = trialDataManager.findTrial(trialId) as? Course.Trial
                         if (trial != null) {
                             currentTrial = trial
                         } else {
@@ -237,10 +237,10 @@ class DefaultTrialScraper(
     }
 
     private fun profilePageUrl(username: String) = "https://life4ddr.com/profile/$username/"
-    private fun trialPageUrl(trial: Trial) = "https://life4ddr.com/${trial.id}/"
+    private fun trialPageUrl(trial: Course.Trial) = "https://life4ddr.com/${trial.id}/"
 
     private data class TrialSearchItem(
-        val trial: Trial,
+        val trial: Course.Trial,
         val position: Int
     )
 }

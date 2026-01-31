@@ -77,6 +77,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.api.base.baseHttpClient
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ManualScoreInputViewModel
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.DefaultTrialScraper
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialScraper
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
@@ -124,6 +125,12 @@ val coreModule = module {
     single<GithubDataAPI> { DefaultGithubDataAPI() }
     single<SanbaiAPI> { DefaultSanbaiAPI() }
     single { Json { classDiscriminator = "t" } }
+    single(named(Course.COURSE_NAME)) {
+        Json {
+            classDiscriminator = "type"
+            ignoreUnknownKeys = true
+        }
+    }
 
     single { LadderRemoteData(get(), get(), get(named(RANKS_FILE_NAME)), logger = get { parametersOf("LadderRemoteData") }) }
     single { MotdLocalRemoteData(get(), get(), get(named(MOTD_FILE_NAME)), logger = get { parametersOf("MotdLocalRemoteData") }) }

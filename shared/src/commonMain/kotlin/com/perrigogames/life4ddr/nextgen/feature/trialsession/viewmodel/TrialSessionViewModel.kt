@@ -6,6 +6,8 @@ import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialState
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.TrialGoalStrings
@@ -19,17 +21,20 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTri
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialContentProvider
 import com.perrigogames.life4ddr.nextgen.util.ViewState
+import com.perrigogames.life4ddr.nextgen.util.ifNull
 import com.perrigogames.life4ddr.nextgen.util.toViewState
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.desc.image.asImageDesc
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class TrialSessionViewModel(
     trialId: String,
     private val userRankSettings: UserRankSettings,
@@ -39,12 +44,19 @@ class TrialSessionViewModel(
     private val logger: Logger
 ) : ViewModel(), KoinComponent {
 
-    private val trial = trialDataManager.trialsFlow.value.firstOrNull { it.id == trialId }
-        ?: throw IllegalStateException("Can't find trial with id $trialId")
+    private val trial: Course.Trial =
+        trialDataManager.trialsFlow.value
+            .filterIsInstance<Course.Trial>()
+            .firstOrNull { it.id == trialId }
+            ?: throw IllegalStateException("Can't find trial with id $trialId")
+
+    private val bestSession = trialRecordsManager.bestSessions.value
+        .firstOrNull { it.trialId == trialId }
 
     private val contentProvider = TrialContentProvider(trial = trial)
 
     private val targetRank = MutableStateFlow(TrialRank.BRONZE)
+    private val maxRank = MutableStateFlow(trial.goals.maxOf { it.rank })
     private val _state = MutableStateFlow<ViewState<UITrialSession, Unit>>(ViewState.Loading)
     val state: StateFlow<ViewState<UITrialSession, Unit>> = _state.asStateFlow()
 
@@ -84,12 +96,12 @@ class TrialSessionViewModel(
                 bestSession?.exScore?.toInt() ?: 0
             }
             val currentMaxEx = if (started) {
-                inProgressSession.trial.songs.subList(0, stage!!).sumOf { it.ex }
+                inProgressSession.trial.songs.subList(0, stage).sumOf { it.ex }
             } else {
                 trial.totalEx
             }
             UIEXScoreBar(
-                labelText = MR.strings.ex.desc(),
+                trial = trial,
                 currentEx = currentEx,
                 currentExText = StringDesc.Raw(
                     if (showExLost) {
@@ -99,22 +111,13 @@ class TrialSessionViewModel(
                     }
                 ),
                 hintCurrentEx = currentMaxEx,
-                maxEx = trial.totalEx,
-                maxExText = StringDesc.Raw("/" + trial.totalEx),
                 exTextClickAction = TrialSessionInput.ToggleExLost(!showExLost),
             )
         }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Lazily,
-                initialValue = UIEXScoreBar(
-                    labelText = MR.strings.ex.desc(),
-                    currentEx = 0,
-                    currentExText = "0".desc(),
-                    maxEx = trial.totalEx,
-                    maxExText = StringDesc.Raw("/" + trial.totalEx),
-                    exTextClickAction = TrialSessionInput.ToggleExLost(false),
-                )
+                initialValue = UIEXScoreBar(trial = trial)
             )
 
     private val songEntryViewModel = MutableStateFlow<SongEntryViewModel?>(null)
@@ -122,9 +125,6 @@ class TrialSessionViewModel(
     init {
         viewModelScope.launch {
             targetRank.collect { target ->
-                val trial = trialDataManager.trialsFlow.value
-                    .firstOrNull { it.id == trialId }
-                    ?: return@collect
                 val current = (_state.value as? ViewState.Success)?.data ?: return@collect
                 if (current.targetRank.rank != target) {
                     _state.value = current.copy(
@@ -149,10 +149,10 @@ class TrialSessionViewModel(
                 val current = (_state.value as? ViewState.Success)?.data ?: return@combine
                 val currentTarget = current.targetRank
                 val targetRank = currentTarget.copy(
-                    state = when (currentTarget.state) {
-                        UITargetRank.State.SELECTION -> UITargetRank.State.IN_PROGRESS
-                        UITargetRank.State.IN_PROGRESS,
-                        UITargetRank.State.ACHIEVED -> UITargetRank.State.ACHIEVED
+                    state = if (complete) {
+                        UITargetRank.State.ACHIEVED
+                    } else {
+                        UITargetRank.State.IN_PROGRESS
                     },
                     availableRanks = if (currentTarget.state == UITargetRank.State.ACHIEVED) {
                         null
@@ -162,9 +162,7 @@ class TrialSessionViewModel(
                 )
                 _state.value = if (complete) {
                     current.copy(
-                        targetRank = targetRank.copy(
-                            rank = currentTarget.rank // FIXME calculate the user's actual rank
-                        ),
+                        targetRank = targetRank,
                         content = contentProvider.provideFinalScreen(session),
                         footer = UITrialSession.Footer.Button(
                             buttonText = MR.strings.take_results_photo.desc(),
@@ -184,50 +182,40 @@ class TrialSessionViewModel(
             }.collect()
         }
 
-        val trial = trialDataManager.trialsFlow.value
-            .firstOrNull { it.id == trialId }
-        if (trial == null) {
-            _state.value = ViewState.Error(Unit)
-        } else {
-            val bestSession = trialRecordsManager.bestSessions.value
-                .firstOrNull { it.trialId == trialId }
-            val allowedRanks = trial.goals?.map { it.rank }
-                ?: trial.scoringGroups?.flatten()
-                ?: emptyList()
-            val rank = getStartingRank(
-                playerRank = userRankSettings.rank.value,
-                bestRank = bestSession?.goalRank,
-                allowedRanks = allowedRanks
+        val rank = getStartingRank(
+            playerRank = userRankSettings.rank.value,
+            bestRank = bestSession?.goalRank,
+            allowedRanks = trial.availableRanks
+        )
+        _state.value = ViewState.Success(
+            UITrialSession(
+                trialTitle = trial.name.desc(),
+                trialLevel = StringDesc.ResourceFormatted(
+                    MR.strings.level_short_format,
+                    trial.difficulty
+                ),
+                backgroundImage = trial.coverResource ?: MR.images.trial_default.asImageDesc(),
+                targetRank = UITargetRank(
+                    rank = rank,
+                    title = rank.nameRes.desc(),
+                    titleColor = rank.colorRes,
+                    availableRanks = trial.availableRanks,
+                    rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(rank)!!, trial),
+                    state = UITargetRank.State.SELECTION,
+                ),
+                content = contentProvider.provideSummary(),
+                footer = when {
+                    trial.state == TrialState.RETIRED -> {
+                        UITrialSession.Footer.Message(MR.strings.trial_warning_message_retired.desc())
+                    }
+                    else -> UITrialSession.Footer.Button(
+                        buttonText = MR.strings.placement_start.desc(),
+                        buttonAction = TrialSessionInput.StartTrial(fromDialog = false),
+                    )
+                },
             )
-            _state.value = ViewState.Success(
-                UITrialSession(
-                    trialTitle = trial.name.desc(),
-                    trialLevel = StringDesc.ResourceFormatted(
-                        MR.strings.level_short_format,
-                        trial.difficulty ?: 0
-                    ),
-                    backgroundImage = trial.coverResource ?: MR.images.trial_default.asImageDesc(),
-                    targetRank = UITargetRank(
-                        rank = rank,
-                        title = rank.nameRes.desc(),
-                        titleColor = rank.colorRes,
-                        availableRanks = allowedRanks,
-                        rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(rank)!!, trial),
-                        state = UITargetRank.State.SELECTION,
-                    ),
-                    content = contentProvider.provideSummary(),
-                    footer = when {
-                        trial.isEvent && !trial.isActiveEvent -> UITrialSession.Footer.Message(MR.strings.trial_warning_message_expired_event.desc())
-                        trial.isRetired -> UITrialSession.Footer.Message(MR.strings.trial_warning_message_retired.desc())
-                        else -> UITrialSession.Footer.Button(
-                            buttonText = MR.strings.placement_start.desc(),
-                            buttonAction = TrialSessionInput.StartTrial(fromDialog = false),
-                        )
-                    },
-                )
-            )
-            targetRank.value = rank
-        }
+        )
+        targetRank.value = rank
     }
 
     fun handleAction(action: TrialSessionInput) {
@@ -389,7 +377,6 @@ class TrialSessionViewModel(
 
     private fun findTargetRank(allowIncrease: Boolean = false): TrialRank? {
         var currIdx = when {
-            trial.goals == null -> return null // no target for events
             allowIncrease -> trial.goals.size - 1
             else -> trial.goals.map { it.rank }.indexOf(targetRank.value)
         }

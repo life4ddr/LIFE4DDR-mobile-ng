@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.db.SelectFullSessions
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
-import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialScraper
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialScraperResult
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialState
@@ -54,9 +54,6 @@ class TrialListViewModel(
     private val settings: Settings,
 ) : ViewModel(), KoinComponent {
 
-    private val trialsStateFlow = trialDataManager.trialsFlow
-        .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList())
-
     private val _state = MutableStateFlow(UITrialList())
     val state: StateFlow<UITrialList> = _state.asStateFlow()
 
@@ -69,7 +66,7 @@ class TrialListViewModel(
 
         viewModelScope.launch {
             combine(
-                trialsStateFlow,
+                trialDataManager.trialsFlow,
                 trialRecordsManager.bestSessions,
                 userRankSettings.rank,
             ) { trials, sessions, rank ->
@@ -90,7 +87,7 @@ class TrialListViewModel(
         }
     }
 
-    fun addTrialPlay(trial: Trial, targetRank: TrialRank, exScore: Int) {
+    fun addTrialPlay(trial: Course.Trial, targetRank: TrialRank, exScore: Int) {
         trialRecordsManager.saveFakeSession(
             trial = trial,
             targetRank = targetRank,
@@ -180,7 +177,7 @@ class TrialListViewModel(
         position: Int,
         total: Int,
         hits: Int,
-        trial: Trial,
+        trial: Course.Trial,
     ) {
         _scrapeState.value = UITrialScrapeProgress(
             topText = ResourceFormattedStringDesc(MR.strings.scrape_progress_format, listOf(position, total, trial.name)),
@@ -212,12 +209,12 @@ class TrialListViewModel(
         _scrapeState.value = null
     }
 
-    private fun matchTrials(trials: List<Trial>, sessions: List<SelectFullSessions>) = trials.associateWith { trial ->
+    private fun matchTrials(trials: List<Course>, sessions: List<SelectFullSessions>) = trials.associateWith { trial ->
         sessions.firstOrNull { it.trialId == trial.id }
     }
 
     private fun createDisplayTrials(
-        trials: List<Trial>,
+        trials: List<Course>,
         sessions: List<SelectFullSessions>,
         featureNew: Boolean,
         featureUnplayed: Boolean,

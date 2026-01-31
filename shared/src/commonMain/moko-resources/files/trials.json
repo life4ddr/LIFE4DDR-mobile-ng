@@ -1,6 +1,6 @@
 {
-    "version": 2,
-    "major_version": 4,
+    "version": 1,
+    "major_version": 5,
     "trials": [
         {
             "id": "devotion",
@@ -105,8 +105,7 @@
                     "rank": "ruby",
                     "ex_missing": 18
                 }
-            ],
-            "total_ex": 3702
+            ]
         },
         {
             "id": "heartbreak",
@@ -203,8 +202,7 @@
                     "judge": 1,
                     "ex_missing": 10
                 }
-            ],
-            "total_ex": 4056
+            ]
         },
         {
             "id": "believe",
@@ -310,8 +308,7 @@
                     "rank": "ruby",
                     "ex_missing": 24
                 }
-            ],
-            "total_ex": 4569
+            ]
         },
         {
             "id": "confectionary",
@@ -413,8 +410,7 @@
                     "rank": "ruby",
                     "ex_missing": 26
                 }
-            ],
-            "total_ex": 4908
+            ]
         },
         {
             "id": "celestial",
@@ -522,8 +518,7 @@
                     "rank": "ruby",
                     "ex_missing": 30
                 }
-            ],
-            "total_ex": 5169
+            ]
         },
         {
             "id": "gospel",
@@ -631,8 +626,7 @@
                     "rank": "ruby",
                     "ex_missing": 25
                 }
-            ],
-            "total_ex": 5280
+            ]
         },
         {
             "id": "mainframe",
@@ -740,8 +734,7 @@
                     "rank": "ruby",
                     "ex_missing": 32
                 }
-            ],
-            "total_ex": 4428
+            ]
         },
         {
             "id": "primal",
@@ -835,8 +828,7 @@
                     "judge": 2,
                     "ex_missing": 35
                 }
-            ],
-            "total_ex": 5142
+            ]
         },
         {
             "id": "species",
@@ -944,8 +936,7 @@
                     "rank": "ruby",
                     "ex_missing": 40
                 }
-            ],
-            "total_ex": 5073
+            ]
         },
         {
             "id": "passport",
@@ -1054,8 +1045,7 @@
                     "rank": "ruby",
                     "ex_missing": 45
                 }
-            ],
-            "total_ex": 4974
+            ]
         },
         {
             "id": "storybook",
@@ -1163,8 +1153,7 @@
                     "rank": "ruby",
                     "ex_missing": 38
                 }
-            ],
-            "total_ex": 5361
+            ]
         },
         {
             "id": "hallowed",
@@ -1222,8 +1211,7 @@
                     "emerald"
                 ]
             ],
-            "difficulty": 13,
-            "total_ex": 4950
+            "difficulty": 13
         },
         {
             "id": "daybreak",
@@ -1322,8 +1310,7 @@
                     "rank": "ruby",
                     "ex_missing": 36
                 }
-            ],
-            "total_ex": 5463
+            ]
         },
         {
             "id": "upheaval",
@@ -1423,8 +1410,7 @@
                     "rank": "ruby",
                     "ex_missing": 40
                 }
-            ],
-            "total_ex": 5544
+            ]
         },
         {
             "id": "superstar",
@@ -1522,8 +1508,7 @@
                     "rank": "ruby",
                     "ex_missing": 45
                 }
-            ],
-            "total_ex": 5451
+            ]
         },
         {
             "id": "countdown",
@@ -1622,8 +1607,7 @@
                     "judge": 4,
                     "ex_missing": 50
                 }
-            ],
-            "total_ex": 5460
+            ]
         },
         {
             "id": "sidequest",
@@ -1721,8 +1705,7 @@
                     "rank": "ruby",
                     "ex_missing": 45
                 }
-            ],
-            "total_ex": 6762
+            ]
         },
         {
             "id": "hellscape",
@@ -1840,8 +1823,7 @@
                     "rank": "ruby",
                     "ex_missing": 55
                 }
-            ],
-            "total_ex": 6615
+            ]
         },
         {
             "id": "clockwork",
@@ -1949,8 +1931,7 @@
                     "rank": "ruby",
                     "ex_missing": 58
                 }
-            ],
-            "total_ex": 6270
+            ]
         },
         {
             "id": "heatwave",
@@ -2058,8 +2039,7 @@
                     "rank": "ruby",
                     "ex_missing": 42
                 }
-            ],
-            "total_ex": 6735
+            ]
         },
         {
             "id": "tempest",
@@ -2167,8 +2147,7 @@
                     "rank": "ruby",
                     "ex_missing": 48
                 }
-            ],
-            "total_ex": 7446
+            ]
         },
         {
             "id": "mythos",
@@ -2282,8 +2261,7 @@
                     "rank": "ruby",
                     "ex_missing": 70
                 }
-            ],
-            "total_ex": 6471
+            ]
         },
         {
             "id": "pharaoh",
@@ -2391,8 +2369,7 @@
                     "rank": "ruby",
                     "ex_missing": 65
                 }
-            ],
-            "total_ex": 6870
+            ]
         },
         {
             "id": "rendition",
@@ -2500,8 +2477,7 @@
                     "rank": "ruby",
                     "ex_missing": 70
                 }
-            ],
-            "total_ex": 7236
+            ]
         },
         {
             "id": "wanderlust",
@@ -2604,8 +2580,7 @@
                     "rank": "ruby",
                     "ex_missing": 80
                 }
-            ],
-            "total_ex": 6957
+            ]
         },
         {
             "id": "circadia",
@@ -2704,8 +2679,7 @@
                     "rank": "ruby",
                     "ex_missing": 60
                 }
-            ],
-            "total_ex": 7116
+            ]
         },
         {
             "id": "snowdrift",
@@ -2803,8 +2777,7 @@
                     "rank": "ruby",
                     "ex_missing": 80
                 }
-            ],
-            "total_ex": 7161
+            ]
         },
         {
             "id": "paradox",
@@ -2902,8 +2875,7 @@
                     "rank": "ruby",
                     "ex_missing": 80
                 }
-            ],
-            "total_ex": 6951
+            ]
         },
         {
             "id": "spectacle",
@@ -3000,8 +2972,7 @@
                     "rank": "ruby",
                     "ex_missing": 90
                 }
-            ],
-            "total_ex": 6750
+            ]
         },
         {
             "id": "inhuman",
@@ -3097,8 +3068,7 @@
                     "rank": "ruby",
                     "ex_missing": 90
                 }
-            ],
-            "total_ex": 7311
+            ]
         },
         {
             "id": "chemical",
@@ -3187,8 +3157,7 @@
                     "rank": "ruby",
                     "ex_missing": 190
                 }
-            ],
-            "total_ex": 7749
+            ]
         },
         {
             "id": "ascension",
@@ -3277,8 +3246,7 @@
                     "rank": "ruby",
                     "ex_missing": 180
                 }
-            ],
-            "total_ex": 7470
+            ]
         },
         {
             "id": "dogfight",
@@ -3379,8 +3347,7 @@
                     ],
                     "ex_missing": 300
                 }
-            ],
-            "total_ex": 7980
+            ]
         },
         {
             "id": "quantum",
@@ -3482,8 +3449,7 @@
                     ],
                     "ex_missing": 300
                 }
-            ],
-            "total_ex": 8817
+            ]
         },
         {
             "id": "origin",
@@ -3560,8 +3526,7 @@
                     ],
                     "ex_missing": 250
                 }
-            ],
-            "total_ex": 9396
+            ]
         }
     ]
 }

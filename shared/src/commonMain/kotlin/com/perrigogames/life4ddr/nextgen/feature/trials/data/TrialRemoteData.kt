@@ -32,23 +32,7 @@ class TrialRemoteData(
 class TrialDataConverter(
     private val json: Json
 ): Converter<TrialData> {
-    override fun create(s: String): TrialData {
-        val data = json.decodeFromString(TrialData.serializer(), s)
-        validateTrialData(data)
-        //FIXME debug data
-        return data
-    }
+    override fun create(s: String): TrialData = json.decodeFromString(TrialData.serializer(), s)
 
     override fun create(data: TrialData) = json.encodeToString(TrialData.serializer(), data)
-
-    private fun validateTrialData(data: TrialData) {
-        data.trials
-            .firstOrNull { !it.isExValid }
-            ?.let { trial ->
-                val exScores = trial.songs.map { it.ex }.joinToString()
-                throw Exception(
-                    "Trial ${trial.name} (${trial.totalEx}) has improper EX scores: $exScores"
-                )
-            }
-    }
 }

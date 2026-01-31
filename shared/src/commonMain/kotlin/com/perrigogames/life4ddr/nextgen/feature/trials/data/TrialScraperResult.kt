@@ -24,13 +24,13 @@ sealed class TrialScraperResult {
             val position: Int,
             override val total: Int,
             override val hits: Int,
-            val trial: Trial
+            val trial: Course.Trial
         ) : ProfileFound()
 
         data class Success(
             override val total: Int,
             override val hits: Int,
-            val trial: Trial,
+            val trial: Course.Trial,
             val rank: TrialRank,
             val exScore: Int
         ) : ProfileFound()

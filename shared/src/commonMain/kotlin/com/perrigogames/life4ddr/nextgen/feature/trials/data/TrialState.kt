@@ -11,7 +11,6 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(with = TrialStateSerializer::class)
 enum class TrialState(val jsonName: String) {
     NEW("new"),
-    EVENT("event"),
     RETIRED("retired"),
     ACTIVE("active"),
     ;
@@ -22,7 +21,7 @@ enum class TrialState(val jsonName: String) {
 }
 
 object TrialStateSerializer: KSerializer<TrialState> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ladderRank", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("trialState", PrimitiveKind.STRING)
     override fun deserialize(decoder: Decoder) = TrialState.parse(decoder.decodeString())!!
     override fun serialize(encoder: Encoder, value: TrialState) {
         encoder.encodeString(value.name.lowercase())

@@ -6,7 +6,7 @@ import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
-import com.perrigogames.life4ddr.nextgen.feature.trials.data.Trial
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSessionContent
@@ -20,7 +20,7 @@ import dev.icerock.moko.resources.desc.desc
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class TrialContentProvider(private val trial: Trial) : KoinComponent {
+class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
 
     private val songDataManager: SongDataManager by inject()
 

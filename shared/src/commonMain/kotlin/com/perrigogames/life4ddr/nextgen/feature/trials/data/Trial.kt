@@ -26,12 +26,15 @@ import dev.icerock.moko.resources.getImageByFileName
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
+import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlin.getValue
 import kotlin.math.min
+import kotlin.text.get
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -39,7 +42,7 @@ import kotlin.time.ExperimentalTime
 data class TrialData(
     override val version: Long,
     @SerialName("major_version") override val majorVersion: Int,
-    val trials: List<Trial>,
+    val trials: List<Course>,
 ): MajorVersioned {
 
     companion object {
@@ -47,52 +50,45 @@ data class TrialData(
     }
 }
 
-@OptIn(ExperimentalTime::class)
+@OptIn(ExperimentalTime::class, ExperimentalSerializationApi::class)
+@JsonClassDiscriminator("type")
 @Serializable
-data class Trial(
-    val id: String,
-    val name: String,
-    val author: String? = null,
-    val state: TrialState = TrialState.ACTIVE,
-    val type: TrialType,
-    @SerialName("placement_rank") val placementRank: PlacementRank? = null,
-    val songs: List<TrialSong>,
-    @SerialName("play_style") val playStyle: PlayStyle = PlayStyle.SINGLE,
-    @SerialName("event_start") val eventStart: LocalDateTime? = null,
-    @SerialName("event_end") val eventEnd: LocalDateTime? = null,
-    @SerialName("scoring_groups") val scoringGroups: List<List<TrialRank>>? = null,
-    val difficulty: Int? = null,
-    val goals: List<TrialGoalSet>? = null,
-    @SerialName("total_ex") val totalEx: Int = 0,
-    @SerialName("cover_url") val coverUrl: String? = null,
-    @SerialName("cover_override") val coverOverride: Boolean = false,
-) {
+sealed class Course {
 
-    val coverResource by lazy {
-        MR.images.getImageByFileName(id)?.asImageDesc()
-    }
+    abstract val id: String
+    abstract val name: String
+    abstract val author: String?
+    abstract val state: TrialState
+//    abstract val type: TrialType
+    abstract val songs: List<TrialSong>
+    abstract val playStyle: PlayStyle
+    abstract val difficulty: Int?
+    abstract val availableRanks: List<TrialRank>
+    @SerialName("cover_url") abstract val coverUrl: String?
+    @SerialName("cover_override") abstract val coverOverride: Boolean
 
-    val isRetired: Boolean = state == TrialState.RETIRED
-    val isEvent: Boolean = type == TrialType.EVENT && eventStart != null && eventEnd != null
-    val isActiveEvent: Boolean
-        get() = isEvent && (eventStart!!.rangeTo(eventEnd!!)).contains(
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-    val new = state == TrialState.NEW
+    @Serializable
+    @SerialName("trial")
+    data class Trial(
+        override val id: String,
+        override val name: String,
+        override val author: String? = null,
+        override val state: TrialState = TrialState.ACTIVE,
+        override val songs: List<TrialSong>,
+        @SerialName("play_style") override val playStyle: PlayStyle = PlayStyle.SINGLE,
+        override val difficulty: Int,
+        val goals: List<TrialGoalSet>,
+        @SerialName("cover_url") override val coverUrl: String? = null,
+        @SerialName("cover_override") override val coverOverride: Boolean = false,
+    ) : Course() {
 
-    fun goalSet(rank: TrialRank?): TrialGoalSet? = goals?.find { it.rank == rank }
+        fun goalSet(rank: TrialRank?): TrialGoalSet? = goals.find { it.rank == rank }
 
-    fun highestGoal(): TrialGoalSet? = goals?.maxByOrNull { it.rank.stableId }
+        override val availableRanks: List<TrialRank> = goals.map { it.rank }
 
-    /**
-     * Return the scoring group for a user with a particular rank.
-     */
-    fun findScoringGroup(rank: TrialRank) = scoringGroups?.first { it.contains(rank) }
+        fun highestGoal(): TrialGoalSet? = goals.maxByOrNull { it.rank.stableId }
 
-    val isExValid get() = songs.sumOf { it.ex }.let { it == 0 || it == totalEx }
-
-    fun rankAfter(rank: TrialRank): TrialRank? {
-        return goals?.let { goals ->
+        fun rankAfter(rank: TrialRank): TrialRank = goals.let { goals ->
             val startIdx = goals.indexOfFirst { it.rank == rank }
             val idx = min(
                 startIdx + 1,
@@ -100,6 +96,65 @@ data class Trial(
             )
             return goals[idx].rank
         }
+    }
+
+    @Serializable
+    @SerialName("placement")
+    data class Placement(
+        override val id: String,
+        override val name: String,
+        override val author: String? = null,
+        override val state: TrialState = TrialState.ACTIVE,
+        override val songs: List<TrialSong>,
+        @SerialName("play_style") override val playStyle: PlayStyle = PlayStyle.SINGLE,
+        @SerialName("cover_url") override val coverUrl: String? = null,
+        @SerialName("cover_override") override val coverOverride: Boolean = false,
+        @SerialName("placement_rank") val placementRank: PlacementRank? = null,
+    ) : Course() {
+
+        override val availableRanks: List<TrialRank> = emptyList()
+
+        override val difficulty: Int? = null
+    }
+
+    @Serializable
+    @SerialName("event")
+    data class Event(
+        override val id: String,
+        override val name: String,
+        override val author: String? = null,
+        override val state: TrialState = TrialState.ACTIVE,
+        override val songs: List<TrialSong>,
+        @SerialName("play_style") override val playStyle: PlayStyle = PlayStyle.SINGLE,
+        override val difficulty: Int,
+        @SerialName("cover_url") override val coverUrl: String? = null,
+        @SerialName("cover_override") override val coverOverride: Boolean = false,
+        @SerialName("event_start") val eventStart: LocalDateTime,
+        @SerialName("event_end") val eventEnd: LocalDateTime,
+        @SerialName("scoring_groups") val scoringGroups: List<List<TrialRank>>,
+    ) : Course() {
+
+        override val availableRanks: List<TrialRank> = scoringGroups.flatten()
+
+        val isActiveEvent: Boolean
+            get() = (eventStart.rangeTo(eventEnd)).contains(
+                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            )
+
+        /**
+         * Return the scoring group for a user with a particular rank.
+         */
+        fun findScoringGroup(rank: TrialRank) = scoringGroups.first { it.contains(rank) }
+    }
+
+    val totalEx get() = songs.sumOf { it.ex }
+
+    val coverResource by lazy {
+        MR.images.getImageByFileName(id)?.asImageDesc()
+    }
+
+    companion object {
+        const val COURSE_NAME = "course"
     }
 }
 
