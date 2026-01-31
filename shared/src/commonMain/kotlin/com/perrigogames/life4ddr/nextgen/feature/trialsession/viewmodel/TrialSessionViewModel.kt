@@ -18,6 +18,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITargetRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.SatisfiedResult
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialContentProvider
 import com.perrigogames.life4ddr.nextgen.util.ViewState
@@ -143,7 +144,8 @@ class TrialSessionViewModel(
             combine(
                 inProgressSessionFlow.filterNotNull(),
                 stage.filterNotNull(),
-            ) { session, stage ->
+                targetRank
+            ) { session, stage, _ ->
                 logger.d { "Creating stage $stage" }
                 val complete = stage >= 4
                 val current = (_state.value as? ViewState.Success)?.data ?: return@combine
@@ -375,14 +377,14 @@ class TrialSessionViewModel(
         targetRank.value = newRank
     }
 
-    private fun findTargetRank(allowIncrease: Boolean = false): TrialRank? {
+    private fun findTargetRank(allowIncrease: Boolean = false): TrialRank {
         var currIdx = when {
-            allowIncrease -> trial.goals.size - 1
-            else -> trial.goals.map { it.rank }.indexOf(targetRank.value)
+            allowIncrease -> trial.availableRanks.size - 1
+            else -> trial.availableRanks.indexOf(targetRank.value)
         }
-        fun currRank() = trial.goals[currIdx].rank
+        fun currRank() = trial.availableRanks[currIdx]
 
-        while (inProgressSession.isRankSatisfied(currRank()) == false) {
+        while (inProgressSession.isRankSatisfied(currRank()) == SatisfiedResult.UNSATISFIED) {
             currIdx--
         }
         return trial.goals[currIdx].rank

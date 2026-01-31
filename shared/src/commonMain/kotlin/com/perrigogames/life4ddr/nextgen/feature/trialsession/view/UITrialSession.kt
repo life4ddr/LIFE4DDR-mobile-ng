@@ -149,6 +149,7 @@ sealed class UITrialSessionContent {
             val bottomBoldText: StringDesc?,
             val bottomTagColor: ColorDesc,
             val tapAction: TrialSessionInput?,
+            val hasError: Boolean = false,
         )
     }
 }
@@ -188,9 +189,9 @@ sealed class UITrialBottomSheet {
         val fields: List<List<Field>>,
         val isEdit: Boolean,
         val shortcuts: List<Shortcut>,
+        val shortcutColor: ColorResource? = null,
         override val onDismissAction: TrialSessionInput = TrialSessionInput.HideBottomSheet,
-    ) : UITrialBottomSheet() {
-    }
+    ) : UITrialBottomSheet()
 
     /**
      * Defines a single field on the sheet.

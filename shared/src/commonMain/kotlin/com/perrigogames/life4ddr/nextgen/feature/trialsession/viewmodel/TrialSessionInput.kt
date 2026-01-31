@@ -30,7 +30,6 @@ sealed class TrialSessionInput {
     data object AdvanceStage : TrialSessionInput()
 
     data class UseShortcut(
-        val songId: String,
         val shortcut: ShortcutType?,
     ) : TrialSessionInput()
 

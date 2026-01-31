@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trial
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
+import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.*
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionEvent
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
@@ -35,6 +38,7 @@ import com.perrigogames.life4ddr.nextgen.view.LargeCTAButton
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
+import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -206,6 +210,7 @@ fun TrialSessionContent(
 
             AnimatedContent(
                 targetState = viewData.content, label = "content",
+                contentKey = { it::class },
                 transitionSpec = {
                     slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }) togetherWith
                             slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth })
@@ -581,17 +586,40 @@ fun RowScope.InProgressJacketItem(
         modifier = modifier
             .clickable(enabled = onClick != null) { onClick?.invoke() }
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalPlatformContext.current)
-                .data(viewData.jacketUrl)
-//                .fallback(MR.images.trial_default)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
-            contentScale = ContentScale.Crop,
-        )
+        Box {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalPlatformContext.current)
+                    .data(viewData.jacketUrl)
+//                    .fallback(MR.images.trial_default)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop,
+            )
+
+            Column(
+                modifier = Modifier.matchParentSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                AnimatedVisibility(visible = viewData.hasError) {
+                    Image(
+                        painter = painterResource(MR.images.warning),
+                        contentDescription = "needs update",
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f),
+                                shape = MaterialTheme.shapes.medium,
+                            )
+                            .padding(4.dp)
+                    )
+                }
+            }
+        }
         Column(
             modifier = Modifier.fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)

@@ -1,23 +1,19 @@
 package com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel
 
 import com.perrigogames.life4ddr.nextgen.MR
-import com.perrigogames.life4ddr.nextgen.feature.settings.manager.SettingsManager
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialGoalSet.GoalType.*
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
-import dev.icerock.moko.mvvm.flow.CMutableStateFlow
-import dev.icerock.moko.mvvm.flow.CStateFlow
-import dev.icerock.moko.mvvm.flow.cMutableStateFlow
-import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import kotlin.math.min
 
 class SongEntryViewModel(
@@ -28,11 +24,11 @@ class SongEntryViewModel(
     private val isEdit: Boolean,
 ): ViewModel(), KoinComponent {
 
-    private val settingsManager: SettingsManager by inject()
-
-    val passedChecked: CMutableStateFlow<Boolean> = MutableStateFlow(true).cMutableStateFlow()
+    val passedChecked: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    val song = session.trial.songs[index]
     val result get() = session.results[index]!!
 
+    private val _shortcut: MutableStateFlow<ShortcutType?> = MutableStateFlow(shortcut)
     private val _numberMap = MutableStateFlow(mapOf(
         ID_SCORE to result.score,
         ID_EX_SCORE to result.exScore,
@@ -42,6 +38,7 @@ class SongEntryViewModel(
         ID_PERFECTS to result.perfects,
         ID_PASSED to if (result.passed) 1 else 0,
     ))
+    private val _disabledMap = MutableStateFlow(emptyList<String>())
     private val _viewDataMap = MutableStateFlow(mapOf(
         ID_SCORE to UITrialBottomSheet.Field(
             id = ID_SCORE,
@@ -76,59 +73,172 @@ class SongEntryViewModel(
         ),
     ))
 
-    private val _state = MutableStateFlow(generateViewState(shortcut)).cMutableStateFlow()
-    val state: CStateFlow<UITrialBottomSheet.Details> = _state.cStateFlow()
+    private val _state = MutableStateFlow(generateViewState(shortcut))
+    val state: StateFlow<UITrialBottomSheet.Details> = _state
+
+    private fun createField(
+        id: String,
+        enabled: Boolean = !_disabledMap.value.contains(id),
+    ): UITrialBottomSheet.Field {
+        val number = _numberMap.value[id]
+        return _viewDataMap.value[id]!!.copy(
+            text = if (number != null && number != 0) number.toString() else "",
+            enabled = enabled,
+        )
+    }
+
+    private fun createFields(vararg ids: String) = ids.map { createField(it) }
 
     private fun generateViewState(
         shortcut: ShortcutType?
     ): UITrialBottomSheet.Details {
-        // TODO process shortcut
         val requiredFields = requiredFields(session.trial, targetRank)
+        val scoreRequired = requiredFields.contains(ID_SCORE)
         return UITrialBottomSheet.Details(
             imagePath = session.results[index]?.photoUriString.orEmpty(),
-            fields = requiredFields.fold(mutableListOf<MutableList<UITrialBottomSheet.Field>>()) { acc, id ->
-                if (id == NEWLINE) {
-                    acc.add(mutableListOf())
-                } else {
-                    val number = _numberMap.value[id]
-                    if (acc.isEmpty()) acc.add(mutableListOf())
-                    acc.last().add(
-                        _viewDataMap.value[id]!!.copy(
-                            text = if (number != null && number != 0) number.toString() else "",
-                        )
-                    )
+            fields = when {
+                shortcut == null -> {
+                    requiredFields.fold(mutableListOf<MutableList<UITrialBottomSheet.Field>>()) { acc, id ->
+                        if (id == NEWLINE) {
+                            acc.add(mutableListOf())
+                        } else {
+                            if (acc.isEmpty()) acc.add(mutableListOf())
+                            acc.last().add(createField(id))
+                        }
+                        acc
+                    }
                 }
-                acc
+                scoreRequired -> { when (shortcut) {
+                    ShortcutType.MFC -> listOf(createFields(ID_SCORE, ID_EX_SCORE))
+                    ShortcutType.PFC -> listOf(createFields(ID_SCORE, ID_EX_SCORE, ID_PERFECTS))
+                    ShortcutType.GFC -> listOf(
+                        createFields(ID_SCORE, ID_EX_SCORE),
+                        createFields(ID_PERFECTS, ID_GREATS),
+                    )
+                } }
+                else -> { when (shortcut) {
+                    ShortcutType.MFC -> listOf(createFields(ID_EX_SCORE))
+                    ShortcutType.PFC -> listOf(createFields(ID_EX_SCORE, ID_PERFECTS))
+                    ShortcutType.GFC -> listOf(
+                        createFields(ID_EX_SCORE),
+                        createFields(ID_PERFECTS, ID_GREATS)
+                    )
+                } }
             },
             isEdit = isEdit,
-            shortcuts = emptyList(), // FIXME
+            shortcuts = listOf(
+                UITrialBottomSheet.Shortcut(
+                    MR.strings.clear_mfc.desc(),
+                    TrialSessionInput.UseShortcut(ShortcutType.MFC)
+                ),
+                UITrialBottomSheet.Shortcut(
+                    MR.strings.clear_pfc.desc(),
+                    TrialSessionInput.UseShortcut(ShortcutType.PFC)
+                ),
+                UITrialBottomSheet.Shortcut(
+                    MR.strings.clear_gfc.desc(),
+                    TrialSessionInput.UseShortcut(ShortcutType.GFC)
+                ),
+                UITrialBottomSheet.Shortcut(
+                    MR.strings.none.desc(),
+                    TrialSessionInput.UseShortcut(null)
+                ),
+            ),
+            shortcutColor = when (shortcut) {
+                ShortcutType.MFC -> MR.colors.marvelous
+                ShortcutType.PFC -> MR.colors.perfect
+                ShortcutType.GFC -> MR.colors.great
+                else -> null
+            }
         )
     }
 
     fun setShortcutState(shortcut: ShortcutType?) {
+        _shortcut.value = shortcut
+        when (shortcut) {
+            ShortcutType.MFC,
+            ShortcutType.PFC -> {
+                _numberMap.update {
+                    mapOf(
+                        ID_SCORE to GameConstants.MAX_SCORE,
+                        ID_EX_SCORE to song.ex,
+                        ID_MISSES to 0,
+                        ID_GOODS to 0,
+                        ID_GREATS to 0,
+                        ID_PERFECTS to 0.takeIf { shortcut == ShortcutType.MFC },
+                    )
+                }
+            }
+            ShortcutType.GFC -> {
+                _numberMap.update {
+                    mapOf(
+                        ID_SCORE to null,
+                        ID_EX_SCORE to song.ex,
+                        ID_MISSES to 0,
+                        ID_GOODS to 0,
+                        ID_GREATS to null,
+                        ID_PERFECTS to null,
+                    )
+                }
+            }
+            null -> {
+                _numberMap.update {
+                    mapOf(
+                        ID_SCORE to null,
+                        ID_EX_SCORE to null,
+                        ID_MISSES to null,
+                        ID_GOODS to null,
+                        ID_GREATS to null,
+                        ID_PERFECTS to null,
+                    )
+                }
+            }
+        }
+        when (shortcut) {
+            ShortcutType.MFC -> _disabledMap.update {
+                listOf(ID_SCORE, ID_EX_SCORE, ID_MISSES, ID_GOODS, ID_GREATS, ID_PERFECTS)
+            }
+            ShortcutType.PFC -> _disabledMap.update {
+                listOf(ID_SCORE, ID_EX_SCORE, ID_MISSES, ID_GOODS, ID_GREATS)
+            }
+            ShortcutType.GFC -> _disabledMap.update {
+                listOf(ID_MISSES, ID_GOODS, ID_EX_SCORE)
+            }
+            else -> _disabledMap.update { emptyList() }
+        }
+
         _state.value = generateViewState(shortcut)
     }
 
     fun changeText(id: String, text: String) {
-        _numberMap.update { map ->
-            val number = text.toIntOrNull()
-            map + (id to number)
+        val number = text.toIntOrNull()
+        when (_shortcut.value) {
+            ShortcutType.MFC -> {} // No fields are enabled for MFC
+            ShortcutType.PFC -> { // Perfects enabled, calculate score and EX
+                val perfects = (number ?: 0).takeIf {id == ID_PERFECTS } ?: _numberMap.value[ID_PERFECTS] ?: 0
+                _numberMap.update { map ->
+                    map.toMutableMap().apply {
+                        put(ID_SCORE, GameConstants.MAX_SCORE - (perfects * 10))
+                        put(ID_EX_SCORE, song.ex - perfects)
+                        put(id, number)
+                    }
+                }
+            }
+            ShortcutType.GFC -> {
+                val perfects = (number ?: 0).takeIf {id == ID_PERFECTS } ?: _numberMap.value[ID_PERFECTS] ?: 0
+                val greats = (number ?: 0).takeIf {id == ID_GREATS } ?: _numberMap.value[ID_GREATS] ?: 0
+                _numberMap.update { map ->
+                    map.toMutableMap().apply {
+                        put(ID_EX_SCORE, song.ex - (perfects + (greats * 2)))
+                        put(id, number)
+                    }
+                }
+            }
+            else -> _numberMap.update { map ->
+                map + (id to number)
+            }
         }
-        // we should only update if the value needs adjustment
-        // right now we aren't doing any of that
-//        _state.update { state ->
-//            state.copy(
-//                fields = state.fields.map { row ->
-//                    row.map { field ->
-//                        if (field.id == id) {
-//                            field.copy(text = text)
-//                        } else {
-//                            field
-//                        }
-//                    }
-//                }
-//            )
-//        }
+        _state.value = generateViewState(_shortcut.value)
     }
 
     fun commitChanges(): InProgressTrialSession {
@@ -142,6 +252,7 @@ class SongEntryViewModel(
             greats = _numberMap.value[ID_GREATS],
             perfects = _numberMap.value[ID_PERFECTS],
             passed = passedChecked.value,
+            shortcut = _shortcut.value
         )
         return session.copy(
             results = session.results.copyOf().also {

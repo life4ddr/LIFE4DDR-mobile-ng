@@ -63,6 +63,9 @@ class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
                     } else {
                         null
                     },
+                    hasError = result != null
+                            && currentGoalSet != null
+                            && !result.hasAllInfoSpecified(currentGoalSet)
                 )
             },
             focusedJacketUrl = trial.songs[stage].url,

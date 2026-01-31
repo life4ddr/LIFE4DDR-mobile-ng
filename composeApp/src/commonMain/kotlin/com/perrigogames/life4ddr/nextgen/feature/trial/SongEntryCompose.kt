@@ -1,31 +1,16 @@
 package com.perrigogames.life4ddr.nextgen.feature.trial
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,6 +21,8 @@ import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import com.perrigogames.life4ddr.nextgen.view.InteractiveImage
+import dev.icerock.moko.resources.ColorResource
+import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 
@@ -73,6 +60,7 @@ fun SongEntryBottomSheetContent(
         SongEntryControls(
             fields = viewData.fields,
             shortcuts = viewData.shortcuts,
+            shortcutColor = viewData.shortcutColor,
             isEdit = viewData.isEdit,
             submitAction = viewData.onDismissAction,
             onAction = onAction,
@@ -84,6 +72,7 @@ fun SongEntryBottomSheetContent(
 fun SongEntryControls(
     fields: List<List<UITrialBottomSheet.Field>>,
     shortcuts: List<UITrialBottomSheet.Shortcut>,
+    shortcutColor: ColorResource?,
     isEdit: Boolean,
     submitAction: TrialSessionInput,
     modifier: Modifier = Modifier,
@@ -92,6 +81,7 @@ fun SongEntryControls(
     val focusManager = LocalFocusManager.current
     val flatFields = remember(fields) { fields.flatten() }
     val focusRequesters = remember(flatFields.size) { List(flatFields.size) { FocusRequester() } }
+    var dropdownExpanded: Boolean by remember { mutableStateOf(false) }
 
     Row(
         modifier = modifier.padding(8.dp),
@@ -155,23 +145,51 @@ fun SongEntryControls(
             }
         }
 
-        if (shortcuts.isNotEmpty()) {
-            // FIXME implement shortcuts
-        }
-
-        IconButton(
-            onClick = { onAction(submitAction) },
-        ) {
-            Icon(
-                painter = painterResource(
-                    if (isEdit) {
-                        MR.images.check
-                    } else {
-                        MR.images.arrow_forward
+        Column {
+            if (shortcuts.isNotEmpty()) {
+                Box {
+                    IconButton(
+                        onClick = { dropdownExpanded = true },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = shortcutColor?.let { colorResource(it) } ?: LocalContentColor.current
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(MR.images.award_star),
+                            contentDescription = "Shortcuts"
+                        )
                     }
-                ),
-                contentDescription = "Next"
-            )
+                    DropdownMenu(
+                        expanded = dropdownExpanded,
+                        onDismissRequest = { dropdownExpanded = false },
+                    ) {
+                        shortcuts.forEach { shortcut ->
+                            DropdownMenuItem(
+                                text = { Text(shortcut.itemText.localized()) },
+                                onClick = {
+                                    onAction(shortcut.action)
+                                    dropdownExpanded = false
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+
+            IconButton(
+                onClick = { onAction(submitAction) },
+            ) {
+                Icon(
+                    painter = painterResource(
+                        if (isEdit) {
+                            MR.images.check
+                        } else {
+                            MR.images.arrow_forward
+                        }
+                    ),
+                    contentDescription = "Done"
+                )
+            }
         }
     }
 }

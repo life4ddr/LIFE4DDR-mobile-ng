@@ -4,13 +4,16 @@ import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.ClearType.*
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialEXProgress
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialGoalSet
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.hasCascade
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.koin.core.component.KoinComponent
+import kotlin.collections.isNotEmpty
 
 @Serializable
 data class InProgressTrialSession(
@@ -22,9 +25,6 @@ data class InProgressTrialSession(
     private val logger by injectLogger(this::class.simpleName ?: "InProgressTrialSession")
 
     @Transient var goalObtained: Boolean = false
-
-    val hasStarted: Boolean
-        get() = results.filterNotNull().any { it.score != null }
 
     fun hasResult(index: Int): Boolean = results[index] != null
 
@@ -120,56 +120,65 @@ data class InProgressTrialSession(
             }
         }
 
+    fun isAllInfoPresent(rank: TrialRank, index: Int): Boolean {
+        val goal = trial.goalSet(rank) ?: return true
+        val result = results[index] ?: return true
+        return result.hasAllInfoSpecified(goal)
+    }
+
     /**
      * Checks to see if the specified [TrialRank] goals would be satisfied under the current conditions.
      * Returns true or false if it can reliably be concluded that the requirements are or are not met, or
      * null if there's not enough information to make the determination.
      */
-    fun isRankSatisfied(rank: TrialRank): Boolean? {
-        val goal = trial.goalSet(rank) ?: return false
+    fun isRankSatisfied(rank: TrialRank): SatisfiedResult {
+        val goal = trial.goalSet(rank) ?: return SatisfiedResult.UNSATISFIED
         val presentResults = results.filterNotNull()
         val scores = results.mapNotNull { it?.score }
         val clears = results.mapNotNull { it?.clearType?.stableId?.toInt() }
 
-        fun exMissingSatisfied(): Boolean? = evaluateGoalCheck(goal.exMissing, missingExScore)
+        fun exMissingSatisfied(): SatisfiedResult = evaluateGoalCheck(goal.exMissing, missingExScore)
 
-        fun judgeMissingSatisfied(): Boolean? = evaluateGoalCheck(goal.judge, currentValidatedBadJudgments)
+        fun judgeMissingSatisfied(): SatisfiedResult = evaluateGoalCheck(goal.judge, currentValidatedBadJudgments)
 
-        fun missTotalSatisfied(): Boolean? = evaluateGoalCheck(goal.miss, currentValidatedMisses)
+        fun missTotalSatisfied(): SatisfiedResult = evaluateGoalCheck(goal.miss, currentValidatedMisses)
 
-        fun missEachSatisfied(): Boolean? = if (goal.missEach == null) {
-            true
+        fun missEachSatisfied(): SatisfiedResult = if (goal.missEach == null) {
+            SatisfiedResult.SATISFIED
         } else {
-            presentResults.map { (it.misses ?: return@map null) <= goal.missEach }.minimumResult()
+            presentResults.map {
+                val misses = it.misses ?: return@map SatisfiedResult.MISSING_INFO
+                (misses <= goal.missEach).toSatisfiedResult()
+            }.minimumResult()
         }
 
-        fun scoresSatisfied(): Boolean? = when {
-            goal.score == null -> true
-            presentResults.any { it.score == null } -> null
-            else -> goal.score.hasCascade(scores)
+        fun scoresSatisfied(): SatisfiedResult = when {
+            goal.score == null -> SatisfiedResult.SATISFIED
+            presentResults.any { it.score == null } -> SatisfiedResult.MISSING_INFO
+            else -> (goal.score.hasCascade(scores)).toSatisfiedResult()
         }
 
-        fun scoresIndexedSatisfied(): Boolean? = when {
-            goal.scoreIndexed == null -> true
-            presentResults.any { it.score == null } -> null
+        fun scoresIndexedSatisfied(): SatisfiedResult = when {
+            goal.scoreIndexed == null -> SatisfiedResult.SATISFIED
+            presentResults.any { it.score == null } -> SatisfiedResult.UNSATISFIED
             else -> {
-                trial.songs.mapIndexed { idx, song ->
-                    (results[idx] ?: return@mapIndexed true).score!! == goal.scoreIndexed[idx]
+                trial.songs.mapIndexed { idx, _ ->
+                    val result = results[idx] ?: return@mapIndexed SatisfiedResult.SATISFIED
+                    (result.score == goal.scoreIndexed[idx]).toSatisfiedResult()
                 }.minimumResult()
             }
         }
 
-        fun clearsSatisfied(): Boolean? = goal.clear
-            ?.map { it.stableId.toInt() }
-            ?.let { it.hasCascade(clears.filterNotNull()) }
-            ?: true
+        fun clearsSatisfied(): SatisfiedResult =
+            (goal.clear?.map { it.stableId.toInt() }?.hasCascade(clears))?.toSatisfiedResult()
+                ?: SatisfiedResult.SATISFIED
 
-        fun clearsIndexedSatisfied(): Boolean? = when {
-            goal.clearIndexed == null -> true
-            presentResults.any { it.clearType == null } -> null
+        fun clearsIndexedSatisfied(): SatisfiedResult = when {
+            goal.clearIndexed == null -> SatisfiedResult.SATISFIED
             else -> {
-                trial.songs.mapIndexed { idx, song ->
-                    (results[idx] ?: return@mapIndexed true).clearType.stableId == goal.clearIndexed[idx].stableId
+                trial.songs.mapIndexed { idx, _ ->
+                    val result = results[idx] ?: return@mapIndexed SatisfiedResult.SATISFIED
+                    (result.clearType.stableId == goal.clearIndexed[idx].stableId).toSatisfiedResult()
                 }.minimumResult()
             }
         }
@@ -185,25 +194,35 @@ data class InProgressTrialSession(
             "Clear Idx" to clearsIndexedSatisfied(),
         ).map { (name, result) ->
             when (result) {
-                false -> logger.d { "$name not satisfied for ${rank.name}" }
-                null -> logger.d { "$name unknown for ${rank.name}" }
+                SatisfiedResult.UNSATISFIED -> logger.d { "$name not satisfied for ${rank.name}" }
+                SatisfiedResult.MISSING_INFO -> logger.d { "$name unknown for ${rank.name}" }
                 else -> {}
             }
             result
         }.minimumResult()
     }
 
-    private fun evaluateGoalCheck(target: Int?, actual: Int?): Boolean? = when {
-        target == null -> true
-        actual == null -> null
-        else -> actual <= target
+    private fun evaluateGoalCheck(target: Int?, actual: Int?): SatisfiedResult = when {
+        target == null -> SatisfiedResult.SATISFIED
+        actual == null -> SatisfiedResult.MISSING_INFO
+        else -> (actual <= target).toSatisfiedResult()
     }
 }
 
-fun List<Boolean?>.minimumResult(): Boolean? = when {
-    this.any { it == false } -> false
-    this.any { it == null } -> null
-    else -> true
+enum class SatisfiedResult {
+    SATISFIED, MISSING_INFO, UNSATISFIED
+}
+
+fun Boolean?.toSatisfiedResult(): SatisfiedResult = when (this) {
+    null -> SatisfiedResult.MISSING_INFO
+    true -> SatisfiedResult.SATISFIED
+    false -> SatisfiedResult.UNSATISFIED
+}
+
+fun List<SatisfiedResult>.minimumResult(): SatisfiedResult = when {
+    this.any { it == SatisfiedResult.UNSATISFIED } -> SatisfiedResult.UNSATISFIED
+    this.any { it == SatisfiedResult.MISSING_INFO } -> SatisfiedResult.MISSING_INFO
+    else -> SatisfiedResult.SATISFIED
 }
 
 @Serializable
@@ -217,6 +236,7 @@ data class SongResult(
     val greats: Int? = null,
     val perfects: Int? = null,
     val passed: Boolean = true,
+    val shortcut: ShortcutType? = null,
 ) {
 
     val badJudges get() = when {
@@ -224,6 +244,21 @@ data class SongResult(
         goods == null -> null
         greats == null -> null
         else -> misses + goods + greats
+    }
+
+    fun hasAllInfoSpecified(goal: TrialGoalSet): Boolean {
+        val hasMissRequirement = goal.miss != null || goal.missEach != null
+        val hasScoreRequirement = goal.score?.isNotEmpty() == true || goal.scoreIndexed?.isNotEmpty() == true
+        val hasBadJudgeRequirement = goal.judge != null
+                || goal.clear?.isNotEmpty() == true
+                || goal.clearIndexed?.isNotEmpty() == true
+        return when {
+            this.exScore == null -> false // EX score is always required
+            hasMissRequirement && this.misses == null -> false
+            hasBadJudgeRequirement && this.badJudges == null -> false
+            hasScoreRequirement && this.score == null -> false
+            else -> true
+        }
     }
 
     val clearType: ClearType
