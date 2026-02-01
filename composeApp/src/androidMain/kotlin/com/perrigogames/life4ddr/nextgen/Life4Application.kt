@@ -49,4 +49,5 @@ object AndroidAppInfo : AppInfo {
     override val appId: String = BuildConfig.APPLICATION_ID
     override val isDebug: Boolean = BuildConfig.DEBUG
     override val version: String = BuildConfig.VERSION_NAME
+    override val platform: PlatformType = PlatformType.ANDROID
 }

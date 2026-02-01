@@ -45,7 +45,7 @@ fun SongEntryBottomSheetContent(
     onAction: (TrialSessionInput) -> Unit,
 ) {
     BackHandler {
-        onAction(TrialSessionInput.HideBottomSheet)
+        onAction(viewData.onDismissAction)
     }
 
     Box(

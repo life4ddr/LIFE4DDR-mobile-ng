@@ -42,6 +42,7 @@ fun main() = application {
                 override val appId: String get() = "LIFE4Desktop"
                 override val isDebug: Boolean get() = true
                 override val version: String get() = "0.1"
+                override val platform: PlatformType get() = PlatformType.DESKTOP
             },
             motdReader = JvmDataReader(MR.files.motd_json.readText(), File("../desktopData/$MOTD_FILE_NAME")),
             placementsReader = JvmUncachedDataReader(MR.files.placements_json.readText()),

@@ -4,6 +4,8 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 
 sealed class TrialSessionInput {
+    data class AttemptToClose(val confirmed: Boolean = false) : TrialSessionInput()
+
     data class StartTrial(val fromDialog: Boolean) : TrialSessionInput()
 
     data class ChangeTargetRank(

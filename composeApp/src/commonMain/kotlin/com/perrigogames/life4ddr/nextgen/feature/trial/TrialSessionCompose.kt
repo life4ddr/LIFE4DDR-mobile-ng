@@ -34,10 +34,10 @@ import com.perrigogames.life4ddr.nextgen.util.ViewState
 import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
 import com.perrigogames.life4ddr.nextgen.view.LargeCTAButton
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.SystemBackButton
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
-import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -82,7 +82,7 @@ fun TrialSessionScreen(
     }
 
     BackHandler {
-        onClose()
+        viewModel.handleAction(TrialSessionInput.AttemptToClose())
     }
 
     when (val viewData = viewState) {
@@ -305,6 +305,7 @@ fun TrialSessionHeader(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            SystemBackButton { onAction(TrialSessionInput.AttemptToClose()) }
             Text(
                 text = viewData.trialTitle.localized(),
                 style = MaterialTheme.typography.headlineMedium,

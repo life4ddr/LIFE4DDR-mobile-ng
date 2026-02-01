@@ -26,6 +26,7 @@ fun MainViewController(
                 override val appId: String get() = "LIFE4iOS"
                 override val isDebug: Boolean get() = true
                 override val version: String get() = "0.1"
+                override val platform: PlatformType get() = PlatformType.IOS
             },
             motdReader = IosDataReader(MR.files.motd_json, MOTD_FILE_NAME),
             placementsReader = FileResourceDataReader(MR.files.placements_json),

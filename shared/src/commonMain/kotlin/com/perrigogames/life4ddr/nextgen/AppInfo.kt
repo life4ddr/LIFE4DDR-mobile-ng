@@ -4,4 +4,9 @@ interface AppInfo {
     val appId: String
     val isDebug: Boolean
     val version: String
+    val platform: PlatformType
+}
+
+enum class PlatformType {
+    IOS, ANDROID, DESKTOP
 }

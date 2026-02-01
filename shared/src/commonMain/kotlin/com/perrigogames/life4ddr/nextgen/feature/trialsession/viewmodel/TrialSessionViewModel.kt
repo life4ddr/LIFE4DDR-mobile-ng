@@ -222,7 +222,7 @@ class TrialSessionViewModel(
                 content = contentProvider.provideSummary(),
                 footer = when {
                     trial.state == TrialState.RETIRED -> {
-                        UITrialSession.Footer.Message(MR.strings.trial_warning_message_retired.desc())
+                        UITrialSession.Footer.Message(MR.strings.trial_warning_retired_message.desc())
                     }
                     else -> UITrialSession.Footer.Button(
                         buttonText = MR.strings.placement_start.desc(),
@@ -237,6 +237,24 @@ class TrialSessionViewModel(
     fun handleAction(action: TrialSessionInput) {
         logger.d { "Handling action $action" }
         when (action) {
+            is TrialSessionInput.AttemptToClose -> {
+                viewModelScope.launch {
+                    if (action.confirmed || (stage.value ?: 0) < 1) {
+                        _events.emit(TrialSessionEvent.Close)
+                    } else {
+                        _events.emit(
+                            TrialSessionEvent.ShowWarningDialog(
+                                title = MR.strings.are_you_sure.desc(),
+                                body = MR.strings.trial_warning_early_close_message.desc(),
+                                ctaCancelText = MR.strings.cancel.desc(),
+                                ctaConfirmText = MR.strings.close.desc(),
+                                ctaConfirmInput = TrialSessionInput.AttemptToClose(confirmed = true),
+                            )
+                        )
+                    }
+                }
+            }
+            
             is TrialSessionInput.ChangeTargetRank -> {
                 targetRank.value = action.target
             }
@@ -248,10 +266,10 @@ class TrialSessionViewModel(
                     viewModelScope.launch {
                         _events.emit(
                             TrialSessionEvent.ShowWarningDialog(
-                                title = MR.strings.trial_warning_dialog_title.desc(),
-                                body = MR.strings.trial_warning_dialog_body.desc(),
+                                title = MR.strings.trial_warning_stability_dialog_title.desc(),
+                                body = MR.strings.trial_warning_stability_dialog_body.desc(),
                                 ctaCancelText = MR.strings.cancel.desc(),
-                                ctaConfirmText = MR.strings.trial_warning_dialog_play.desc(),
+                                ctaConfirmText = MR.strings.trial_warning_stability_dialog_play.desc(),
                                 ctaConfirmInput = TrialSessionInput.StartTrial(fromDialog = true),
                             )
                         )
