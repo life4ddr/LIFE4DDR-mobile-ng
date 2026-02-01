@@ -57,7 +57,6 @@ fun TrialSessionScreen(
     val viewState by viewModel.state.collectAsState()
     val exScoreBar by viewModel.uiExScoreFlow.collectAsState()
     val bottomSheetState by viewModel.bottomSheetState.collectAsState()
-    var lastGoodBottomSheetState by remember { mutableStateOf<UITrialBottomSheet?>(null) }
     var dialogData by remember { mutableStateOf<TrialSessionEvent.ShowWarningDialog?>(null) }
 
     val scaffoldState = rememberBottomSheetScaffoldState(
@@ -68,7 +67,6 @@ fun TrialSessionScreen(
     )
     LaunchedEffect(bottomSheetState) {
         if (bottomSheetState != null) {
-            lastGoodBottomSheetState = bottomSheetState
             scaffoldState.bottomSheetState.expand()
         } else {
             focusManager.clearFocus()
@@ -97,12 +95,12 @@ fun TrialSessionScreen(
                 sheetContent = {
                     fun sendBottomSheetAction() {
                         coroutineScope.launch {
-                            lastGoodBottomSheetState?.onDismissAction?.let {
+                            bottomSheetState?.onDismissAction?.let {
                                 viewModel.handleAction(it)
                             }
                         }
                     }
-                    when (val state = lastGoodBottomSheetState) {
+                    when (val state = bottomSheetState) {
                         is UITrialBottomSheet.ImageCapture -> {
                             BackHandler { sendBottomSheetAction() }
                             CameraBottomSheetContent(
