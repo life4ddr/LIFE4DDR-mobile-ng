@@ -14,12 +14,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun LargeCTAButton(
     text: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     colors: ButtonColors = ButtonDefaults.elevatedButtonColors()
 ) = Button(
     elevation = ButtonDefaults.elevatedButtonElevation(),
     colors = colors,
-    modifier = Modifier.fillMaxWidth(),
+    modifier = modifier.fillMaxWidth(),
     onClick = onClick
 ) {
     Text(

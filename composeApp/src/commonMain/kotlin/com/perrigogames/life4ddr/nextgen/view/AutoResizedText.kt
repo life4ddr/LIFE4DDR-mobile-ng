@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.isUnspecified
 
 @Composable
@@ -18,7 +20,10 @@ fun AutoResizedText(
     text: String,
     style: TextStyle = MaterialTheme.typography.bodyMedium,
     modifier: Modifier = Modifier,
-    color: Color = style.color
+    color: Color = style.color,
+    fontWeight: FontWeight? = null,
+    textAlign: TextAlign? = null,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     var resizedTextStyle by remember {
         mutableStateOf(style)
@@ -39,6 +44,9 @@ fun AutoResizedText(
         },
         softWrap = false,
         style = resizedTextStyle,
+        fontWeight = fontWeight,
+        textAlign = textAlign,
+        maxLines = maxLines,
         onTextLayout = { result ->
             if (result.didOverflowWidth) {
                 resizedTextStyle = resizedTextStyle.copy(

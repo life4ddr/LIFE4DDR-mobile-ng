@@ -174,7 +174,7 @@ fun CameraPreview(
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(16.dp)
+                .padding(32.dp)
         ) {
             Text(text = "Take Photo")
         }

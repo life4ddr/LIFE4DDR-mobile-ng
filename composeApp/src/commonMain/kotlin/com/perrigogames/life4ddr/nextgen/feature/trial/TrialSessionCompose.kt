@@ -1,15 +1,11 @@
 package com.perrigogames.life4ddr.nextgen.feature.trial
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,17 +24,20 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.*
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionEvent
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionViewModel
 import com.perrigogames.life4ddr.nextgen.util.MokoImage
 import com.perrigogames.life4ddr.nextgen.util.ViewState
+import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
 import com.perrigogames.life4ddr.nextgen.view.LargeCTAButton
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
+import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -49,6 +48,7 @@ fun TrialSessionScreen(
     trialId: String,
     modifier: Modifier = Modifier,
     onClose: () -> Unit,
+    onSubmit: (InProgressTrialSession) -> Unit ,
 ) {
     val viewModel = koinViewModel<TrialSessionViewModel> { parametersOf(trialId) }
     val coroutineScope = rememberCoroutineScope()
@@ -57,6 +57,7 @@ fun TrialSessionScreen(
     val viewState by viewModel.state.collectAsState()
     val exScoreBar by viewModel.uiExScoreFlow.collectAsState()
     val bottomSheetState by viewModel.bottomSheetState.collectAsState()
+    var lastGoodBottomSheetState by remember { mutableStateOf<UITrialBottomSheet?>(null) }
     var dialogData by remember { mutableStateOf<TrialSessionEvent.ShowWarningDialog?>(null) }
 
     val scaffoldState = rememberBottomSheetScaffoldState(
@@ -67,6 +68,7 @@ fun TrialSessionScreen(
     )
     LaunchedEffect(bottomSheetState) {
         if (bottomSheetState != null) {
+            lastGoodBottomSheetState = bottomSheetState
             scaffoldState.bottomSheetState.expand()
         } else {
             focusManager.clearFocus()
@@ -95,12 +97,12 @@ fun TrialSessionScreen(
                 sheetContent = {
                     fun sendBottomSheetAction() {
                         coroutineScope.launch {
-                            bottomSheetState?.onDismissAction?.let {
+                            lastGoodBottomSheetState?.onDismissAction?.let {
                                 viewModel.handleAction(it)
                             }
                         }
                     }
-                    when (val state = bottomSheetState) {
+                    when (val state = lastGoodBottomSheetState) {
                         is UITrialBottomSheet.ImageCapture -> {
                             BackHandler { sendBottomSheetAction() }
                             CameraBottomSheetContent(
@@ -165,6 +167,10 @@ fun TrialSessionScreen(
         viewModel.events.collect { event ->
             when (event) {
                 TrialSessionEvent.Close -> onClose()
+                is TrialSessionEvent.SubmitAndClose -> {
+                    onClose()
+                    onSubmit(event.session)
+                }
                 TrialSessionEvent.HideBottomSheet -> {
                     focusManager.clearFocus()
                     scaffoldState.bottomSheetState.hide()
@@ -208,59 +214,77 @@ fun TrialSessionContent(
             )
             SizedSpacer(16.dp)
 
-            AnimatedContent(
-                targetState = viewData.content, label = "content",
-                contentKey = { it::class },
-                transitionSpec = {
-                    slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }) togetherWith
-                            slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth })
-                },
-                modifier = Modifier.weight(1f)
-            ) { content ->
-                when (content) {
-                    is UITrialSessionContent.Summary -> {
-                        SummaryContent(
-                            viewData = content,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                    is UITrialSessionContent.SongFocused -> {
-                        SongFocusedContent(
-                            viewData = content,
-                            onAction = onAction,
-                        )
-                    }
-                }
-            }
-            SizedSpacer(32.dp)
-            AnimatedContent(
-                targetState = viewData.footer,
-                transitionSpec = { fadeIn() togetherWith fadeOut() }
-            ) {
-                when (it) {
-                    is UITrialSession.Footer.Button -> {
-                        LargeCTAButton(
-                            text = it.buttonText.localized(),
-                            onClick = { onAction(it.buttonAction) }
-                        )
-                    }
-                    is UITrialSession.Footer.Message -> {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            Surface(
-                                color = MaterialTheme.colorScheme.errorContainer,
-                                shape = MaterialTheme.shapes.medium,
-                            ) {
-                                Text(
-                                    text = it.message.localized(),
-                                    color = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier.padding(16.dp)
+            Box(modifier = Modifier.weight(1f)) {
+                AnimatedContent(
+                    targetState = viewData.content, label = "content",
+                    contentKey = { it::class },
+                    transitionSpec = {
+                        slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }) togetherWith
+                                slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth })
+                    },
+                    modifier = Modifier.matchParentSize()
+                ) { content ->
+                    Column {
+                        when (content) {
+                            is UITrialSessionContent.Summary -> {
+                                SummaryContent(
+                                    viewData = content,
+                                )
+                            }
+                            is UITrialSessionContent.SongFocused -> {
+                                SongFocusedContent(
+                                    viewData = content,
+                                    onAction = onAction,
+                                    modifier = Modifier.padding(bottom = 48.dp)
                                 )
                             }
                         }
                     }
+                }
+
+                AnimatedContent(
+                    targetState = viewData.footer,
+                    transitionSpec = { fadeIn() togetherWith fadeOut() },
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                ) {
+                    FooterWidget(
+                        footer = viewData.footer,
+                        onAction = onAction,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FooterWidget(
+    footer: UITrialSession.Footer,
+    modifier: Modifier = Modifier,
+    onAction: (TrialSessionInput) -> Unit,
+) {
+    when (footer) {
+        is UITrialSession.Footer.Button -> {
+            LargeCTAButton(
+                text = footer.buttonText.localized(),
+                onClick = { onAction(footer.buttonAction) },
+                modifier = modifier,
+            )
+        }
+        is UITrialSession.Footer.Message -> {
+            Column(
+                modifier = modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Surface(
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    shape = MaterialTheme.shapes.medium,
+                ) {
+                    Text(
+                        text = footer.message.localized(),
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
             }
         }
@@ -337,42 +361,21 @@ fun SummaryContent(
     viewData: UITrialSessionContent.Summary,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .widthIn(max = 800.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(bottom = 24.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .widthIn(max = 800.dp)
-                .scrollable(
-                    state = rememberScrollableState { it },
-                    orientation = Orientation.Vertical
-                ),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                viewData.items.getOrNull(0)?.let { item ->
-                    SummaryJacketItem(viewData = item, modifier = Modifier.weight(1f))
-                }
-                viewData.items.getOrNull(1)?.let { item ->
-                    SummaryJacketItem(viewData = item, modifier = Modifier.weight(1f))
-                }
-            }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                viewData.items.getOrNull(2)?.let { item ->
-                    SummaryJacketItem(viewData = item, modifier = Modifier.weight(1f))
-                }
-                viewData.items.getOrNull(3)?.let { item ->
-                    SummaryJacketItem(viewData = item, modifier = Modifier.weight(1f))
-                }
-            }
+        items(viewData.items) { item ->
+            SummaryJacketItem(viewData = item)
+        }
+        item {
+            SizedSpacer(24.dp)
         }
     }
 }
@@ -413,34 +416,47 @@ fun SongFocusedContent(
         )
 
         SizedSpacer(16.dp)
-        Text(
-            text = viewData.songTitleText.localized(),
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-        )
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
+        Surface(
+            shape = MaterialTheme.shapes.medium,
         ) {
-            Text(
-                text = viewData.difficultyClassText.localized(),
-                color = colorResource(viewData.difficultyClassColor),
-                fontWeight = FontWeight.Bold,
-            )
-            Text(
-                text = viewData.difficultyNumberText.localized(),
-                fontWeight = FontWeight.Bold,
-            )
-            Text(
-                text = viewData.exScoreText.localized(),
-            )
-        }
-        viewData.reminder?.let { reminder ->
-            Text(
-                text = reminder.localized(),
-                fontWeight = FontWeight.Bold
-            )
+            Column(
+                modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                AutoResizedText(
+                    text = viewData.songTitleText.localized(),
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                )
+
+                SizedSpacer(8.dp)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = viewData.difficultyClassText.localized(),
+                        color = colorResource(viewData.difficultyClassColor),
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = viewData.difficultyNumberText.localized(),
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = viewData.exScoreText.localized(),
+                    )
+                }
+                viewData.reminder?.let { reminder ->
+                    SizedSpacer(8.dp)
+                    Text(
+                        text = reminder.localized(),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
         SizedSpacer(32.dp)
     }
@@ -503,9 +519,9 @@ fun EXScoreBar(
 }
 
 @Composable
-fun RowScope.SummaryJacketItem(
+fun SummaryJacketItem(
     viewData: UITrialSessionContent.Summary.Item,
-    modifier: Modifier = Modifier.weight(1f)
+    modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         AsyncImage(
@@ -627,12 +643,18 @@ fun RowScope.InProgressJacketItem(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             viewData.topText?.let { topText ->
-                Text(
-                    text = topText.localized(),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                )
+                Box(
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(text = " ") // dummy text to retain bounding box
+                    AutoResizedText(
+                        text = topText.localized(),
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        maxLines = 1
+                    )
+                }
             }
             viewData.bottomBoldText?.let { bottomText ->
                 Text(

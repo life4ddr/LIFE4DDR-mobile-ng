@@ -13,6 +13,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSessio
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import com.perrigogames.life4ddr.nextgen.longNumberString
+import dev.icerock.moko.resources.desc.Resource
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.color.asColorDesc
@@ -93,6 +94,9 @@ class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
                         MR.strings.trial_reminder_score,
                         requiredScore.longNumberString(),
                     )
+                }
+                trial.isLegacy && stage == 4 -> {
+                    StringDesc.Resource(MR.strings.trial_reminder_final_stage_life4)
                 }
                 else -> null
             }

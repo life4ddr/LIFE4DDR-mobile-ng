@@ -78,6 +78,7 @@ sealed class Course {
         @SerialName("play_style") override val playStyle: PlayStyle = PlayStyle.SINGLE,
         override val difficulty: Int,
         val goals: List<TrialGoalSet>,
+        val isLegacy: Boolean = true, // Legacy trials require clearing the final stage on LIFE4
         @SerialName("cover_url") override val coverUrl: String? = null,
         @SerialName("cover_override") override val coverOverride: Boolean = false,
     ) : Course() {

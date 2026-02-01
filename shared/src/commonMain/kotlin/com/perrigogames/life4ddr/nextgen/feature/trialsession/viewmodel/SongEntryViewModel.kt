@@ -76,6 +76,10 @@ class SongEntryViewModel(
     private val _state = MutableStateFlow(generateViewState(shortcut))
     val state: StateFlow<UITrialBottomSheet.Details> = _state
 
+    init {
+        setShortcutState(shortcut, allowNumberModification = false)
+    }
+
     private fun createField(
         id: String,
         enabled: Boolean = !_disabledMap.value.contains(id),
@@ -153,12 +157,23 @@ class SongEntryViewModel(
         )
     }
 
-    fun setShortcutState(shortcut: ShortcutType?) {
+    fun setShortcutState(
+        shortcut: ShortcutType?,
+        allowNumberModification: Boolean = true,
+    ) {
         _shortcut.value = shortcut
-        when (shortcut) {
-            ShortcutType.MFC,
-            ShortcutType.PFC -> {
-                _numberMap.update {
+        if (allowNumberModification) {
+            processShortcutNumberChanges(shortcut)
+        }
+        processShortcutEnabledChanges(shortcut)
+        _state.value = generateViewState(shortcut)
+    }
+
+    private fun processShortcutNumberChanges(shortcut: ShortcutType?) {
+        _numberMap.update {
+            when (shortcut) {
+                ShortcutType.MFC,
+                ShortcutType.PFC -> {
                     mapOf(
                         ID_SCORE to GameConstants.MAX_SCORE,
                         ID_EX_SCORE to song.ex,
@@ -168,9 +183,8 @@ class SongEntryViewModel(
                         ID_PERFECTS to 0.takeIf { shortcut == ShortcutType.MFC },
                     )
                 }
-            }
-            ShortcutType.GFC -> {
-                _numberMap.update {
+
+                ShortcutType.GFC -> {
                     mapOf(
                         ID_SCORE to null,
                         ID_EX_SCORE to song.ex,
@@ -180,9 +194,8 @@ class SongEntryViewModel(
                         ID_PERFECTS to null,
                     )
                 }
-            }
-            null -> {
-                _numberMap.update {
+
+                null -> {
                     mapOf(
                         ID_SCORE to null,
                         ID_EX_SCORE to null,
@@ -194,6 +207,9 @@ class SongEntryViewModel(
                 }
             }
         }
+    }
+
+    private fun processShortcutEnabledChanges(shortcut: ShortcutType?) {
         when (shortcut) {
             ShortcutType.MFC -> _disabledMap.update {
                 listOf(ID_SCORE, ID_EX_SCORE, ID_MISSES, ID_GOODS, ID_GREATS, ID_PERFECTS)
@@ -206,8 +222,6 @@ class SongEntryViewModel(
             }
             else -> _disabledMap.update { emptyList() }
         }
-
-        _state.value = generateViewState(shortcut)
     }
 
     fun changeText(id: String, text: String) {

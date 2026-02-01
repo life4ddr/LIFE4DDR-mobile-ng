@@ -25,6 +25,8 @@ sealed class TrialSessionInput {
         val photoUri: String,
     ) : TrialSessionInput()
 
+    data object Finished : TrialSessionInput()
+
     data object HideBottomSheet : TrialSessionInput()
 
     data object AdvanceStage : TrialSessionInput()

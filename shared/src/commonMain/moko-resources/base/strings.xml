@@ -388,6 +388,7 @@
         <string name="trial_reminder_score">You must score %s on this song!</string>
         <string name="trial_reminder_clear_type">You must %s this song!</string>
         <string name="trial_reminder_fail_allowed">You are not required to pass this song.</string>
+        <string name="trial_reminder_final_stage_life4">You must LIFE4 Clear or Flare VIII Clear this song.</string>
 
         <string name="score">Score</string>
         <string name="ex_score">EX Score</string>

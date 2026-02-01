@@ -22,7 +22,6 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.SatisfiedResu
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialContentProvider
 import com.perrigogames.life4ddr.nextgen.util.ViewState
-import com.perrigogames.life4ddr.nextgen.util.ifNull
 import com.perrigogames.life4ddr.nextgen.util.toViewState
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.ResourceFormatted
@@ -166,10 +165,25 @@ class TrialSessionViewModel(
                     current.copy(
                         targetRank = targetRank,
                         content = contentProvider.provideFinalScreen(session),
-                        footer = UITrialSession.Footer.Button(
-                            buttonText = MR.strings.take_results_photo.desc(),
-                            buttonAction = TrialSessionInput.TakeResultsPhoto,
-                        ),
+                        footer = when {
+                            session.finalPhotoUriString == null -> {
+                                UITrialSession.Footer.Button(
+                                    buttonText = MR.strings.take_results_photo.desc(),
+                                    buttonAction = TrialSessionInput.TakeResultsPhoto,
+                                )
+                            }
+                            session.isAllInfoPresent(targetRank.rank) -> {
+                                UITrialSession.Footer.Message(
+                                    "Some results need fixing".desc()
+                                )
+                            }
+                            else -> {
+                                UITrialSession.Footer.Button(
+                                    buttonText = MR.strings.submit.desc(),
+                                    buttonAction = TrialSessionInput.Finished,
+                                )
+                            }
+                        },
                     )
                 } else {
                     current.copy(
@@ -272,11 +286,15 @@ class TrialSessionViewModel(
                             finalPhotoUriString = action.photoUri
                         )
                     }
-                    // TODO return to the page and allow the user to make corrections
-                    // TODO upload images to the API
+                    _bottomSheetState.value = null
+                }
+            }
+
+            TrialSessionInput.Finished -> {
+                viewModelScope.launch {
                     inProgressSession.goalObtained = true // FIXME
                     trialRecordsManager.saveSession(inProgressSession, targetRank.value)
-                    _events.emit(TrialSessionEvent.Close)
+                    _events.emit(TrialSessionEvent.SubmitAndClose(inProgressSession))
                 }
             }
 
@@ -285,10 +303,11 @@ class TrialSessionViewModel(
             }
 
             is TrialSessionInput.EditItem -> {
-                if (inProgressSession.results.getOrNull(action.index) != null) {
+                inProgressSession.results.getOrNull(action.index)?.let { result ->
                     showSongEntry(
                         index = action.index,
                         isEdit = true,
+                        shortcut = result.shortcut,
                     )
                 }
             }
@@ -384,9 +403,9 @@ class TrialSessionViewModel(
         }
         fun currRank() = trial.availableRanks[currIdx]
 
-        while (inProgressSession.isRankSatisfied(currRank()) == SatisfiedResult.UNSATISFIED) {
+        while (inProgressSession.isRankSatisfied(currRank()) == SatisfiedResult.UNSATISFIED && currIdx > 0) {
             currIdx--
         }
-        return trial.goals[currIdx].rank
+        return trial.availableRanks[currIdx]
     }
 }

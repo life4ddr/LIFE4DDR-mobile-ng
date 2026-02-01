@@ -120,10 +120,14 @@ data class InProgressTrialSession(
             }
         }
 
-    fun isAllInfoPresent(rank: TrialRank, index: Int): Boolean {
+    fun isAllInfoPresent(rank: TrialRank): Boolean {
         val goal = trial.goalSet(rank) ?: return true
-        val result = results[index] ?: return true
-        return result.hasAllInfoSpecified(goal)
+        results.forEach { result ->
+            if (result?.hasAllInfoSpecified(goal) == false) {
+                return false
+            }
+        }
+        return true
     }
 
     /**
