@@ -117,6 +117,8 @@ sealed class UITrialSessionContent {
             val difficultyClassColor: ColorResource,
             val difficultyNumberText: StringDesc,
             val summaryContent: SummaryContent? = null,
+            val tapAction: TrialSessionInput? = null,
+            val hasError: Boolean = false,
         )
 
         data class SummaryContent(

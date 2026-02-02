@@ -37,6 +37,7 @@ data class InProgressTrialSession(
 
         if (trial != other.trial) return false
         if (!results.contentEquals(other.results)) return false
+        if (finalPhotoUriString != other.finalPhotoUriString) return false
 
         return true
     }

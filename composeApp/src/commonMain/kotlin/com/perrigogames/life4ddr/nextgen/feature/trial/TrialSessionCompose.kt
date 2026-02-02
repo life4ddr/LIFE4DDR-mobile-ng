@@ -15,10 +15,12 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
@@ -227,6 +229,7 @@ fun TrialSessionContent(
                             is UITrialSessionContent.Summary -> {
                                 SummaryContent(
                                     viewData = content,
+                                    onAction = onAction,
                                 )
                             }
                             is UITrialSessionContent.SongFocused -> {
@@ -359,6 +362,7 @@ fun TrialSessionHeader(
 fun SummaryContent(
     viewData: UITrialSessionContent.Summary,
     modifier: Modifier = Modifier,
+    onAction: (TrialSessionInput) -> Unit = {},
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -371,7 +375,7 @@ fun SummaryContent(
         contentPadding = PaddingValues(bottom = 24.dp),
     ) {
         items(viewData.items) { item ->
-            SummaryJacketItem(viewData = item)
+            SummaryJacketItem(viewData = item, onAction = onAction)
         }
         item {
             SizedSpacer(24.dp)
@@ -520,19 +524,24 @@ fun EXScoreBar(
 @Composable
 fun SummaryJacketItem(
     viewData: UITrialSessionContent.Summary.Item,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAction: (TrialSessionInput) -> Unit,
 ) {
     Column(modifier = modifier) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalPlatformContext.current)
-                .data(viewData.jacketUrl)
+        Box {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalPlatformContext.current)
+                    .data(viewData.jacketUrl)
 //                .fallback(MR.images.trial_default)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier
-                .aspectRatio(1f),
-            contentScale = ContentScale.Crop,
-        )
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .clickable(enabled = viewData.tapAction != null) { viewData.tapAction?.let { onAction(it) } },
+                contentScale = ContentScale.Crop,
+            )
+            ErrorOverlayLarge(viewData.hasError)
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth()
@@ -614,26 +623,7 @@ fun RowScope.InProgressJacketItem(
                 contentScale = ContentScale.Crop,
             )
 
-            Column(
-                modifier = Modifier.matchParentSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                AnimatedVisibility(visible = viewData.hasError) {
-                    Image(
-                        painter = painterResource(MR.images.warning),
-                        contentDescription = "needs update",
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f),
-                                shape = MaterialTheme.shapes.medium,
-                            )
-                            .padding(4.dp)
-                    )
-                }
-            }
+            ErrorOverlaySmall(viewData.hasError)
         }
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -662,6 +652,50 @@ fun RowScope.InProgressJacketItem(
                     textAlign = TextAlign.Center,
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun BoxScope.ErrorOverlaySmall(hasError: Boolean) = ErrorOverlay(
+    hasError = hasError,
+    iconSize = 48.dp,
+    iconPadding = 4.dp
+)
+
+@Composable
+fun BoxScope.ErrorOverlayLarge(hasError: Boolean) = ErrorOverlay(
+    hasError = hasError,
+    iconSize = 96.dp,
+    iconPadding = 16.dp,
+    shape = MaterialTheme.shapes.large
+)
+
+@Composable
+fun BoxScope.ErrorOverlay(
+    hasError: Boolean,
+    iconSize: Dp,
+    iconPadding: Dp,
+    shape: Shape = MaterialTheme.shapes.medium,
+) {
+    Column(
+        modifier = Modifier.matchParentSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        AnimatedVisibility(visible = hasError) {
+            Image(
+                painter = painterResource(MR.images.warning),
+                contentDescription = "needs update",
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
+                modifier = Modifier
+                    .size(iconSize)
+                    .background(
+                        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f),
+                        shape = shape,
+                    )
+                    .padding(iconPadding)
+            )
         }
     }
 }

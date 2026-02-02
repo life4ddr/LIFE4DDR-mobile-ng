@@ -164,7 +164,7 @@ class TrialSessionViewModel(
                 _state.value = if (complete) {
                     current.copy(
                         targetRank = targetRank,
-                        content = contentProvider.provideFinalScreen(session),
+                        content = contentProvider.provideFinalScreen(session, targetRank.rank),
                         footer = when {
                             session.finalPhotoUriString == null -> {
                                 UITrialSession.Footer.Button(
@@ -173,14 +173,14 @@ class TrialSessionViewModel(
                                 )
                             }
                             session.isAllInfoPresent(targetRank.rank) -> {
-                                UITrialSession.Footer.Message(
-                                    "Some results need fixing".desc()
-                                )
-                            }
-                            else -> {
                                 UITrialSession.Footer.Button(
                                     buttonText = MR.strings.submit.desc(),
                                     buttonAction = TrialSessionInput.Finished,
+                                )
+                            }
+                            else -> {
+                                UITrialSession.Footer.Message(
+                                    "Some results need fixing".desc()
                                 )
                             }
                         },
@@ -298,14 +298,12 @@ class TrialSessionViewModel(
 
             is TrialSessionInput.ResultsPhotoTaken -> {
                 updateTargetRank(allowIncrease = true)
-                viewModelScope.launch {
-                    inProgressSessionFlow.update { session ->
-                        session.copy(
-                            finalPhotoUriString = action.photoUri
-                        )
-                    }
-                    _bottomSheetState.value = null
+                inProgressSessionFlow.update { session ->
+                    session.copy(
+                        finalPhotoUriString = action.photoUri
+                    )
                 }
+                _bottomSheetState.value = null
             }
 
             TrialSessionInput.Finished -> {

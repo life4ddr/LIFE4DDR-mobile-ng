@@ -103,9 +103,12 @@ class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
         )
     }
 
-    fun provideFinalScreen(session: InProgressTrialSession) : UITrialSessionContent.Summary {
+    fun provideFinalScreen(session: InProgressTrialSession, targetRank: TrialRank) : UITrialSessionContent.Summary {
+        val currentGoalSet = trial.goalSet(targetRank)
         return UITrialSessionContent.Summary(
-            items = session.trial.songs.zip(session.results) { song, result ->
+            items = session.trial.songs
+                .mapIndexed { idx, song -> idx to song }
+                .zip(session.results) { (idx, song), result ->
                 UITrialSessionContent.Summary.Item(
                     jacketUrl = song.url,
                     difficultyClassText = song.chart.difficultyClass.nameRes.desc(),
@@ -116,6 +119,8 @@ class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
                         bottomMainText = StringDesc.ResourceFormatted(MR.strings.ex_score_string_format, result.exScore ?: 0),
                         bottomSubText = StringDesc.ResourceFormatted(MR.strings.ex_score_max_string_format, song.ex, (result.exScore ?: 0) - song.ex),
                     ),
+                    tapAction = TrialSessionInput.EditItem(idx),
+                    hasError = currentGoalSet != null && !result.hasAllInfoSpecified(currentGoalSet)
                 )
             }
         )
