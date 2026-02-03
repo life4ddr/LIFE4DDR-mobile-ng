@@ -58,6 +58,7 @@ interface ChartResultOrganizer {
         const val EXTRA_SAVIOR = 280
         const val GALAXY_BRAVE = 290
         const val PLATINUM_PASS = 300
+        const val BEMANI_PRO_LEAGUE_TRIPLE = 310
 
         val EXPANDED_LOCKS = listOf(
             ASIA_EXCLUSIVE,
@@ -67,7 +68,8 @@ interface ChartResultOrganizer {
             GALAXY_BRAVE,
             GOLDEN_LEAGUE,
             PLATINUM_PASS,
-            BEMANI_PRO_LEAGUE
+            BEMANI_PRO_LEAGUE,
+            BEMANI_PRO_LEAGUE_TRIPLE
         )
 
         val BASIC_LOCKS = EXPANDED_LOCKS + listOf(
@@ -77,6 +79,7 @@ interface ChartResultOrganizer {
 
         fun lockTypeName(lockType: Int?) = when(lockType) {
             ASIA_EXCLUSIVE -> "Asia Exclusive ($lockType)"
+            BEMANI_PRO_LEAGUE_TRIPLE,
             BEMANI_PRO_LEAGUE -> "BEMANI Pro League ($lockType)"
             EXTRA_SAVIOR -> "Extra Savior ($lockType)"
             FLARE_LOCKED -> "Flare Locked ($lockType)"
