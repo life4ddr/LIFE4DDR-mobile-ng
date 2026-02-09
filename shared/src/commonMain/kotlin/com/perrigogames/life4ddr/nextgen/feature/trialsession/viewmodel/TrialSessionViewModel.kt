@@ -18,8 +18,8 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITargetRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialBottomSheet
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
-import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.SatisfiedResult
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.SatisfiedResult
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.TrialContentProvider
 import com.perrigogames.life4ddr.nextgen.util.ViewState
 import com.perrigogames.life4ddr.nextgen.util.toViewState

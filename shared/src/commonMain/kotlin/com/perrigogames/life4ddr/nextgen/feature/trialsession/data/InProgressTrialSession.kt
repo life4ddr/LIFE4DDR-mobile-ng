@@ -8,6 +8,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialGoalSet
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
+import com.perrigogames.life4ddr.nextgen.feature.trialsession.manager.SatisfiedResult
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.util.hasCascade
 import kotlinx.serialization.Serializable
@@ -142,6 +143,9 @@ data class InProgressTrialSession(
         val scores = results.mapNotNull { it?.score }
         val clears = results.mapNotNull { it?.clearType?.stableId?.toInt() }
 
+        fun List<Int>.zeroPadded(): List<Int> =
+            List(size = 4) { idx -> this.getOrNull(idx) ?: 0 }
+
         fun exMissingSatisfied(): SatisfiedResult = evaluateGoalCheck(goal.exMissing, missingExScore)
 
         fun judgeMissingSatisfied(): SatisfiedResult = evaluateGoalCheck(goal.judge, currentValidatedBadJudgments)
@@ -160,22 +164,22 @@ data class InProgressTrialSession(
         fun scoresSatisfied(): SatisfiedResult = when {
             goal.score == null -> SatisfiedResult.SATISFIED
             presentResults.any { it.score == null } -> SatisfiedResult.MISSING_INFO
-            else -> (goal.score.hasCascade(scores)).toSatisfiedResult()
+            else -> (goal.score.zeroPadded().hasCascade(scores)).toSatisfiedResult()
         }
 
         fun scoresIndexedSatisfied(): SatisfiedResult = when {
             goal.scoreIndexed == null -> SatisfiedResult.SATISFIED
             presentResults.any { it.score == null } -> SatisfiedResult.UNSATISFIED
             else -> {
-                trial.songs.mapIndexed { idx, _ ->
-                    val result = results[idx] ?: return@mapIndexed SatisfiedResult.SATISFIED
+                List(trial.songs.size) { idx ->
+                    val result = results[idx] ?: return@List SatisfiedResult.SATISFIED
                     (result.score == goal.scoreIndexed[idx]).toSatisfiedResult()
                 }.minimumResult()
             }
         }
 
         fun clearsSatisfied(): SatisfiedResult =
-            (goal.clear?.map { it.stableId.toInt() }?.hasCascade(clears))?.toSatisfiedResult()
+            (goal.clear?.map { it.stableId.toInt() }?.zeroPadded()?.hasCascade(clears))?.toSatisfiedResult()
                 ?: SatisfiedResult.SATISFIED
 
         fun clearsIndexedSatisfied(): SatisfiedResult = when {
@@ -212,10 +216,6 @@ data class InProgressTrialSession(
         actual == null -> SatisfiedResult.MISSING_INFO
         else -> (actual <= target).toSatisfiedResult()
     }
-}
-
-enum class SatisfiedResult {
-    SATISFIED, MISSING_INFO, UNSATISFIED
 }
 
 fun Boolean?.toSatisfiedResult(): SatisfiedResult = when (this) {

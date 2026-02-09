@@ -83,6 +83,8 @@ sealed class Course {
         @SerialName("cover_override") override val coverOverride: Boolean = false,
     ) : Course() {
 
+        val size: Int = songs.size
+
         fun goalSet(rank: TrialRank?): TrialGoalSet? = goals.find { it.rank == rank }
 
         override val availableRanks: List<TrialRank> = goals.map { it.rank }
