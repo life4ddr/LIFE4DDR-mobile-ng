@@ -325,7 +325,7 @@ fun TrialSessionHeader(
         }
 
         SizedSpacer(16.dp)
-        AnimatedContent(targetState = viewData.targetRank.state == UITargetRank.State.ACHIEVED) { achieved ->
+        AnimatedContent(targetState = viewData.targetRank.state == UITargetRank.State.COMPACT) { achieved ->
             if (achieved) {
                 RankDisplay(
                     viewData = viewData.targetRank,

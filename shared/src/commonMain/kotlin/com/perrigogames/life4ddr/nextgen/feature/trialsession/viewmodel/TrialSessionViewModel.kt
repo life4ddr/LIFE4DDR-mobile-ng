@@ -149,13 +149,14 @@ class TrialSessionViewModel(
                 val complete = stage >= 4
                 val current = (_state.value as? ViewState.Success)?.data ?: return@combine
                 val currentTarget = current.targetRank
+                val newState = if (complete) {
+                    UITargetRank.State.UNSELECTABLE
+                } else {
+                    UITargetRank.State.SELECTABLE
+                }
                 val targetRank = currentTarget.copy(
-                    state = if (complete) {
-                        UITargetRank.State.ACHIEVED
-                    } else {
-                        UITargetRank.State.IN_PROGRESS
-                    },
-                    availableRanks = if (currentTarget.state == UITargetRank.State.ACHIEVED) {
+                    state = newState,
+                    availableRanks = if (newState == UITargetRank.State.COMPACT) {
                         null
                     } else {
                         currentTarget.availableRanks
@@ -217,7 +218,7 @@ class TrialSessionViewModel(
                     titleColor = rank.colorRes,
                     availableRanks = trial.availableRanks,
                     rankGoalItems = TrialGoalStrings.generateGoalStrings(trial.goalSet(rank)!!, trial),
-                    state = UITargetRank.State.SELECTION,
+                    state = UITargetRank.State.SELECTABLE,
                 ),
                 content = contentProvider.provideSummary(),
                 footer = when {

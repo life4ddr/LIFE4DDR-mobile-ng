@@ -39,7 +39,7 @@ fun TrialQuickAddDialog(
                 titleColor = trialRank.colorRes,
                 rankGoalItems = emptyList(),
                 availableRanks = availableRanks,
-                state = UITargetRank.State.SELECTION,
+                state = UITargetRank.State.SELECTABLE,
             )
         }
     }

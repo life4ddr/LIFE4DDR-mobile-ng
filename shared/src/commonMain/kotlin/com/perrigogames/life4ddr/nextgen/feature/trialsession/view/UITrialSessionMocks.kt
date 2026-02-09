@@ -3,7 +3,6 @@ package com.perrigogames.life4ddr.nextgen.feature.trialsession.view
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
-import dev.icerock.moko.resources.desc.color.ColorDescResource
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.desc.image.ImageDescUrl
 
@@ -22,7 +21,7 @@ object UITrialSessionMocks {
                 "230 missing EX or less (6532 EX)".desc(),
             ),
             availableRanks = listOf(TrialRank.SILVER, TrialRank.GOLD, TrialRank.PLATINUM, TrialRank.DIAMOND, TrialRank.COBALT),
-            state = UITargetRank.State.IN_PROGRESS
+            state = UITargetRank.State.UNSELECTABLE
         ),
         content = UITrialSessionContent.Summary(
             items = listOf(

@@ -80,19 +80,19 @@ data class UITargetRank(
 ) {
     enum class State {
         /**
-         * Specifies an open selector that can be changed by the user.
+         * Specifies a view with an open selector that can be changed by the user.
          */
-        SELECTION,
+        SELECTABLE,
 
         /**
-         * Specifies an in-progress Trial with goals that should still be visible.
+         * Specifies a view with goals that should still be visible.
          */
-        IN_PROGRESS,
+        UNSELECTABLE,
 
         /**
-         * Specifies a completed Trial that doesn't need to show the goals.
+         * Specifies a view that doesn't need to show the goals.
          */
-        ACHIEVED;
+        COMPACT;
 
 
     }
