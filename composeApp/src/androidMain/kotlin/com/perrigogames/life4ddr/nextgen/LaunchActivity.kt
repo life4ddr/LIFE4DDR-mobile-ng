@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.perrigogames.life4ddr.nextgen.feature.deeplink.DeeplinkManager
@@ -32,8 +34,7 @@ class LaunchActivity: AppCompatActivity(), KoinComponent {
 
         super.onCreate(savedInstanceState)
         setContent {
-            RootNavHost(
-                modifier = Modifier.fillMaxSize(),
+            LIFE4App(
                 onLoaded = { loaded = true }
             )
         }
@@ -44,5 +45,15 @@ class LaunchActivity: AppCompatActivity(), KoinComponent {
         val uri = intent.data
         println(uri)
         // Extract the authorization code from the URI and exchange it for an access token
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("loaded", loaded)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        loaded = savedInstanceState.getBoolean("loaded", false)
     }
 }

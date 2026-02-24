@@ -66,79 +66,77 @@ fun RootNavHost(
         onLoaded()
     }
 
-    LIFE4Theme {
-        Surface(
-            color = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.onBackground,
+    Surface(
+        color = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = FirstRunDestination.Landing,
+            modifier = modifier
         ) {
-            NavHost(
+            firstRunNavigation(
                 navController = navController,
-                startDestination = FirstRunDestination.Landing,
-                modifier = modifier
-            ) {
-                firstRunNavigation(
-                    navController = navController,
-                    deeplinkManager = deeplinkManager,
-                    onExit = onExit
-                )
-                ladderNavigation(navController)
-                trialNavigation(navController)
-                settingsNavigation(navController)
-            }
+                deeplinkManager = deeplinkManager,
+                onExit = onExit
+            )
+            ladderNavigation(navController)
+            trialNavigation(navController)
+            settingsNavigation(navController)
         }
+    }
 
-        alert?.let { safeAlert ->
-            var hideChecked by remember { mutableStateOf(false) }
-            BasicAlertDialog(
-                onDismissRequest = { alertManager.dismissAlert(hideChecked) }
-            ) {
-                Card {
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .padding(top = 16.dp)
-                            .padding(bottom = 8.dp)
-                    ) {
-                        Text(
-                            text = safeAlert.title.localized(),
-                            style = MaterialTheme.typography.titleLarge,
-                        )
+    alert?.let { safeAlert ->
+        var hideChecked by remember { mutableStateOf(false) }
+        BasicAlertDialog(
+            onDismissRequest = { alertManager.dismissAlert(hideChecked) }
+        ) {
+            Card {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 16.dp)
+                        .padding(bottom = 8.dp)
+                ) {
+                    Text(
+                        text = safeAlert.title.localized(),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                    SizedSpacer(16.dp)
+
+                    safeAlert.image?.let { image ->
+                        MokoImage(desc = image)
                         SizedSpacer(16.dp)
+                    }
 
-                        safeAlert.image?.let { image ->
-                            MokoImage(desc = image)
-                            SizedSpacer(16.dp)
-                        }
-
-                        Text(
-                            text = safeAlert.text.localized(),
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                        if (safeAlert.canHide && safeAlert.hideCheckboxText != null) {
-                            SizedSpacer(8.dp)
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.align(Alignment.End),
-                            ) {
-                                Text(
-                                    text = safeAlert.hideCheckboxText!!.localized(),
-                                    style = MaterialTheme.typography.labelLarge,
-                                )
-                                Checkbox(
-                                    checked = hideChecked,
-                                    onCheckedChange = { hideChecked = it },
-                                )
-                            }
-                        }
-                        TextButton(
+                    Text(
+                        text = safeAlert.text.localized(),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                    if (safeAlert.canHide && safeAlert.hideCheckboxText != null) {
+                        SizedSpacer(8.dp)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.align(Alignment.End),
-                            onClick = { alertManager.dismissAlert(hideChecked) }
                         ) {
                             Text(
-                                text = safeAlert.ctaConfirmText.localized(),
+                                text = safeAlert.hideCheckboxText!!.localized(),
+                                style = MaterialTheme.typography.labelLarge,
+                            )
+                            Checkbox(
+                                checked = hideChecked,
+                                onCheckedChange = { hideChecked = it },
                             )
                         }
+                    }
+                    TextButton(
+                        modifier = Modifier.align(Alignment.End),
+                        onClick = { alertManager.dismissAlert(hideChecked) }
+                    ) {
+                        Text(
+                            text = safeAlert.ctaConfirmText.localized(),
+                        )
                     }
                 }
             }
