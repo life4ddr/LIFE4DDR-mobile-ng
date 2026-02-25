@@ -16,7 +16,11 @@ class IosExternalActions : ExternalActions {
     private fun openUrl(url: NSURL) {
         val app = UIApplication.sharedApplication()
         if (app.canOpenURL(url)) {
-            app.openURL(url)
+            app.openURL(
+                url = url,
+                options = emptyMap<Any?, Any?>(),
+                completionHandler = null
+            )
         }
     }
 }
