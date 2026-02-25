@@ -24,6 +24,7 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SettingsView
 import com.perrigogames.life4ddr.nextgen.util.Destination
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
+import kotlinx.coroutines.flow.MutableStateFlow
 import me.zhanghai.compose.preference.*
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -101,7 +102,9 @@ fun SettingsScreenContent(
     modifier: Modifier = Modifier,
     onAction: (SettingsAction) -> Unit = {}
 ) {
-    ProvidePreferenceLocals {
+    ProvidePreferenceLocals(
+        flow = MutableStateFlow(MapPreferences())
+    ) {
         LazyColumn(modifier = modifier) {
             items.forEach { item ->
                 item(item.key) {
