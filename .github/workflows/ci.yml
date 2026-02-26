@@ -43,7 +43,7 @@ jobs:
           JAVA_OPTS: -Xmx3g
 
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: composeApp-debug
           path: composeApp/build/outputs/apk/debug/composeApp-debug.apk
