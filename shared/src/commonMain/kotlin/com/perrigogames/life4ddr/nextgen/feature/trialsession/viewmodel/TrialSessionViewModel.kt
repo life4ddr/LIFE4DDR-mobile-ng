@@ -261,21 +261,21 @@ class TrialSessionViewModel(
             }
 
             is TrialSessionInput.StartTrial -> {
-                if (action.fromDialog) {
+//                if (action.fromDialog) {
                     stage.value = 0
-                } else {
-                    viewModelScope.launch {
-                        _events.emit(
-                            TrialSessionEvent.ShowWarningDialog(
-                                title = MR.strings.trial_warning_stability_dialog_title.desc(),
-                                body = MR.strings.trial_warning_stability_dialog_body.desc(),
-                                ctaCancelText = MR.strings.cancel.desc(),
-                                ctaConfirmText = MR.strings.trial_warning_stability_dialog_play.desc(),
-                                ctaConfirmInput = TrialSessionInput.StartTrial(fromDialog = true),
-                            )
-                        )
-                    }
-                }
+//                } else {
+//                    viewModelScope.launch {
+//                        _events.emit(
+//                            TrialSessionEvent.ShowWarningDialog(
+//                                title = MR.strings.trial_warning_stability_dialog_title.desc(),
+//                                body = MR.strings.trial_warning_stability_dialog_body.desc(),
+//                                ctaCancelText = MR.strings.cancel.desc(),
+//                                ctaConfirmText = MR.strings.trial_warning_stability_dialog_play.desc(),
+//                                ctaConfirmInput = TrialSessionInput.StartTrial(fromDialog = true),
+//                            )
+//                        )
+//                    }
+//                }
             }
 
             is TrialSessionInput.TakePhoto -> {
