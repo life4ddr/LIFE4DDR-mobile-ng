@@ -288,7 +288,7 @@ class TrialSessionViewModel(
 
             is TrialSessionInput.PhotoTaken -> {
                 inProgressSessionFlow.update { session ->
-                    session.createOrUpdateSongResult(action.index, action.photoUri)
+                    session.createOrUpdateSongResult(action.index, action.photoPath.toString())
                 }
                 showSongEntry(
                     index = action.index,
@@ -301,7 +301,7 @@ class TrialSessionViewModel(
                 updateTargetRank(allowIncrease = true)
                 inProgressSessionFlow.update { session ->
                     session.copy(
-                        finalPhotoUriString = action.photoUri
+                        finalPhotoUriString = action.photoPath.toString()
                     )
                 }
                 _bottomSheetState.value = null

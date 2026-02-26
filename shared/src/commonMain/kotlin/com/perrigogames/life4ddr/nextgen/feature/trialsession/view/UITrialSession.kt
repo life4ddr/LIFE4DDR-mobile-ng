@@ -10,6 +10,7 @@ import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.color.ColorDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.desc.image.ImageDesc
+import kotlinx.io.files.Path
 
 /**
  * Describes the content of the Trial Session screen.
@@ -170,9 +171,9 @@ sealed class UITrialBottomSheet {
      */
     data class ImageCapture(val index: Int?) : UITrialBottomSheet() {
 
-        fun createResultAction(uri: String) =
-            index?.let { index -> TrialSessionInput.PhotoTaken(uri, index) }
-                ?: TrialSessionInput.ResultsPhotoTaken(uri)
+        fun createResultAction(path: Path) =
+            index?.let { index -> TrialSessionInput.PhotoTaken(path, index) }
+                ?: TrialSessionInput.ResultsPhotoTaken(path)
     }
 
     /**

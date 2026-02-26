@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) requires camera access to take pictures of song scores.</string>
+	<string>$(PRODUCT_NAME) requires camera access to take photos of song scores.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) requires photo library access to save score photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires photo library access to attach photos from outside the app.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

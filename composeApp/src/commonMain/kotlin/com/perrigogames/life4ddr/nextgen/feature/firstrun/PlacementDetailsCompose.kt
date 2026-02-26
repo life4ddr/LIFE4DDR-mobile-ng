@@ -11,7 +11,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -37,12 +36,13 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LadderRankClassTheme
-import com.perrigogames.life4ddr.nextgen.feature.ladder.viewmodel.RankListViewModelInput
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsEvent
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsInput
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementDetailsViewModel
-import com.perrigogames.life4ddr.nextgen.feature.trial.CameraBottomSheetContent
+import com.perrigogames.life4ddr.nextgen.feature.trial.CameraView
+import com.perrigogames.life4ddr.nextgen.feature.trial.CameraCallback
+import com.perrigogames.life4ddr.nextgen.feature.trial.ImageCaptureView
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialSong
 import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
 import com.perrigogames.life4ddr.nextgen.view.LargeCTAButton
@@ -53,6 +53,7 @@ import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import kotlinx.io.files.Path
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -126,10 +127,13 @@ fun PlacementDetailsScreen(
                 BackHandler {
                     hideBottomSheet()
                 }
-                CameraBottomSheetContent { uri ->
-                    hideBottomSheet()
-                    viewModel.handleAction(PlacementDetailsInput.PictureTaken(uri))
-                }
+                ImageCaptureView(
+                    onImageCaptured = { uri ->
+                        hideBottomSheet()
+                        viewModel.handleAction(PlacementDetailsInput.PictureTaken(uri))
+                    },
+                    onClose = { hideBottomSheet() }
+                )
             }
         }
     ) {

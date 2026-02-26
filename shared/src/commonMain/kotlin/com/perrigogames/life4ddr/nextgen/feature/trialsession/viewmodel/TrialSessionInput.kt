@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel
 
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.enums.ShortcutType
+import kotlinx.io.files.Path
 
 sealed class TrialSessionInput {
     data class AttemptToClose(val confirmed: Boolean = false) : TrialSessionInput()
@@ -19,12 +20,12 @@ sealed class TrialSessionInput {
     data object TakeResultsPhoto : TrialSessionInput()
 
     data class PhotoTaken(
-        val photoUri: String,
+        val photoPath: Path,
         val index: Int,
     ) : TrialSessionInput()
 
     data class ResultsPhotoTaken(
-        val photoUri: String,
+        val photoPath: Path,
     ) : TrialSessionInput()
 
     data object Finished : TrialSessionInput()

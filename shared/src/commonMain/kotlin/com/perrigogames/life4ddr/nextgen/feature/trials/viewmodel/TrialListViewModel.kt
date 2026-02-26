@@ -20,22 +20,19 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.view.UIPlacementBanner
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialList
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.UITrialScrapeProgress
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.toUIJacket
+import com.perrigogames.life4ddr.nextgen.util.DATETIME_FORMAT_12H
 import com.russhwolf.settings.Settings
 import dev.icerock.moko.resources.desc.ResourceFormattedStringDesc
 import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
-import kotlinx.datetime.format.FormatStringsInDatetimeFormats
-import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import org.koin.core.component.KoinComponent
 import kotlin.time.Clock
@@ -201,7 +198,7 @@ class TrialListViewModel(
             topText = MR.strings.scrape_cooldown_title.desc(),
             bottomText = ResourceFormattedStringDesc(
                 MR.strings.scrape_cooldown_description_format,
-                listOf(time.format(DATETIME_FORMAT))
+                listOf(time.format(DATETIME_FORMAT_12H))
             ),
             progress = null
         )
@@ -253,20 +250,5 @@ class TrialListViewModel(
     companion object {
         val SCRAPE_COOLDOWN_DURATION = 12.hours
         val SCRAPE_FINISH_HIDE = 3000.milliseconds
-
-        @OptIn(FormatStringsInDatetimeFormats::class)
-        private val DATETIME_FORMAT = LocalDateTime.Format {
-            year()
-            char('/')
-            monthNumber()
-            char('/')
-            day()
-            char(' ')
-            amPmHour()
-            char(':')
-            minute()
-            char(' ')
-            amPmMarker("AM", "PM")
-        }
     }
 }

@@ -1,5 +1,9 @@
 package com.perrigogames.life4ddr.nextgen.util
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.char
+
 fun <T> List<T>.split(matchBlock: (T) -> Boolean): Pair<List<T>, List<T>> {
     val match = mutableListOf<T>()
     val noMatch = mutableListOf<T>()
@@ -54,4 +58,30 @@ fun List<Int>.hasCascade(other: List<Int>): Boolean {
         }
     }
     return true
+}
+
+@OptIn(FormatStringsInDatetimeFormats::class)
+val DATETIME_FORMAT_12H = LocalDateTime.Format {
+    year()
+    char('/')
+    monthNumber()
+    char('/')
+    day()
+    char(' ')
+    amPmHour()
+    char(':')
+    minute()
+    char(' ')
+    amPmMarker("AM", "PM")
+}
+
+@OptIn(FormatStringsInDatetimeFormats::class)
+val DATETIME_FORMAT_FILENAME_24H = LocalDateTime.Format {
+    year()
+    monthNumber()
+    day()
+    char('_')
+    hour()
+    minute()
+    second()
 }

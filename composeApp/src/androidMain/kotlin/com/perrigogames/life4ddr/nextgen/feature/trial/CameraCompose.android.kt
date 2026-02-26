@@ -36,13 +36,14 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.perrigogames.life4ddr.nextgen.util.correctImageOrientation
 import com.perrigogames.life4ddr.nextgen.util.getSensorRotation
+import kotlinx.io.files.Path
 import java.io.File
 import java.util.concurrent.Executors
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-actual fun CameraBottomSheetContent(
-    onPhotoTaken: (String) -> Unit,
+actual fun CameraView(
+    callback: CameraCallback,
 ) {
     var photoUri by remember { mutableStateOf<Uri?>(null) }
     val permissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
@@ -54,7 +55,7 @@ actual fun CameraBottomSheetContent(
     }
 
     LaunchedEffect(photoUri) {
-        photoUri?.let { onPhotoTaken(it.toString()) }
+        photoUri?.let { callback.onCaptureImage(Path(it.toString())) }
     }
 
     Box(

@@ -105,9 +105,9 @@ fun TrialSessionScreen(
                     when (val state = bottomSheetState) {
                         is UITrialBottomSheet.ImageCapture -> {
                             BackHandler { sendBottomSheetAction() }
-                            CameraBottomSheetContent(
-                                onPhotoTaken = { uri ->
-                                    viewModel.handleAction(state.createResultAction(uri))
+                            ImageCaptureView(
+                                onImageCaptured = { path ->
+                                    viewModel.handleAction(state.createResultAction(path))
                                 },
                             )
                         }
