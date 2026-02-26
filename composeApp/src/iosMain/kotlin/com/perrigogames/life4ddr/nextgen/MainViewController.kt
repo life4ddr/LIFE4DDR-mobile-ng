@@ -15,8 +15,10 @@ import com.russhwolf.settings.coroutines.toFlowSettings
 import dev.icerock.moko.resources.FileResource
 import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
+import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.Platform
 
-@OptIn(ExperimentalSettingsApi::class)
+@OptIn(ExperimentalSettingsApi::class, ExperimentalNativeApi::class)
 fun MainViewController(
     defaults: NSUserDefaults,
 ) = ComposeUIViewController {
@@ -24,7 +26,7 @@ fun MainViewController(
         appModule = makeNativeModule(
             appInfo = object : AppInfo {
                 override val appId: String get() = "LIFE4iOS"
-                override val isDebug: Boolean get() = true
+                override val isDebug: Boolean get() = Platform.isDebugBinary
                 override val version: String get() = NSBundle.mainBundle.infoDictionary
                     ?.get("CFBundleShortVersionString") as? String ?: "unknown"
                 override val platform: PlatformType get() = PlatformType.IOS
