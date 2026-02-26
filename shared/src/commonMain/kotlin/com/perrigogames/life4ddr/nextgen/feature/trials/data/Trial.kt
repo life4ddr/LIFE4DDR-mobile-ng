@@ -89,16 +89,7 @@ sealed class Course {
 
         override val availableRanks: List<TrialRank> = goals.map { it.rank }
 
-        fun highestGoal(): TrialGoalSet? = goals.maxByOrNull { it.rank.stableId }
-
-        fun rankAfter(rank: TrialRank): TrialRank = goals.let { goals ->
-            val startIdx = goals.indexOfFirst { it.rank == rank }
-            val idx = min(
-                startIdx + 1,
-                goals.size - 1
-            )
-            return goals[idx].rank
-        }
+        val currentExScore get() = songs.sumOf { it.ex }
     }
 
     @Serializable

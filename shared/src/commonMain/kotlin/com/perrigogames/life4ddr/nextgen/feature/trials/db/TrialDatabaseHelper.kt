@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trials.db
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlDriver
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.db.DatabaseHelper
 import com.perrigogames.life4ddr.nextgen.db.TrialSession
 import com.perrigogames.life4ddr.nextgen.db.TrialSong
@@ -14,7 +15,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
-class TrialDatabaseHelper(sqlDriver: SqlDriver): DatabaseHelper(sqlDriver) {
+class TrialDatabaseHelper(sqlDriver: SqlDriver, logger: Logger): DatabaseHelper(sqlDriver, logger) {
 
     private val queries get() = dbRef.trialQueries
 
@@ -27,24 +28,36 @@ class TrialDatabaseHelper(sqlDriver: SqlDriver): DatabaseHelper(sqlDriver) {
         targetRank: TrialRank,
         datetime: Instant? = null
     ) = withContext(Dispatchers.Default) {
-        queries.insertSession(null,
-            session.trial.id,
-            (datetime ?: Clock.System.now()).toString(),
-            targetRank,
-            session.goalObtained)
-        val sId = queries.lastInsertRowId().executeAsOne()
-        dbRef.transaction {
-            session.results.forEachIndexed { idx, result ->
-                queries.insertSong(null, sId,
-                    idx.toLong(),
-                    result!!.score?.toLong() ?: 0L,
-                    result.exScore?.toLong() ?: 0L,
-                    result.misses?.toLong(),
-                    result.goods?.toLong(),
-                    result.greats?.toLong(),
-                    result.perfects?.toLong(),
-                    result.passed)
+        try {
+            logger.d { "Inserting trial session for ${session.trial.name}" }
+
+            queries.insertSession(
+                null,
+                session.trial.id,
+                (datetime ?: Clock.System.now()).toString(),
+                targetRank,
+                session.goalObtained
+            )
+
+            val sId = queries.lastInsertRowId().executeAsOne().MAX ?: -1L
+            logger.d { "Inserting songs for trial session for ${session.trial.name}, SID=$sId" }
+            dbRef.transaction {
+                session.results.forEachIndexed { idx, result ->
+                    queries.insertSong(
+                        null, sId,
+                        idx.toLong(),
+                        result!!.score?.toLong() ?: 0L,
+                        result.exScore?.toLong() ?: 0L,
+                        result.misses?.toLong(),
+                        result.goods?.toLong(),
+                        result.greats?.toLong(),
+                        result.perfects?.toLong(),
+                        result.passed
+                    )
+                }
             }
+        } catch (e: Exception) {
+            logger.e { "Exception inserting trial session for ${session.trial.name}\n${e.stackTraceToString()}" }
         }
     }
 
@@ -108,7 +121,7 @@ class TrialDatabaseHelper(sqlDriver: SqlDriver): DatabaseHelper(sqlDriver) {
                     queries.insertSession(null, trialId, date, goalRank, goalObtained)
                     val sId = queries.lastInsertRowId().executeAsOne()
                     var idx = 0L
-                    newSongs.forEach { queries.insertSong(null, sId, idx++, it.score, it.exScore, it.misses, it.goods, it.greats, it.perfects, it.passed) }
+                    newSongs.forEach { queries.insertSong(null, sId.MAX ?: -1, idx++, it.score, it.exScore, it.misses, it.goods, it.greats, it.perfects, it.passed) }
                 }
             }
         }

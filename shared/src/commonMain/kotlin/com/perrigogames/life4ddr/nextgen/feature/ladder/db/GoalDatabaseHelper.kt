@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.ladder.db
 
 import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.SqlDriver
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.db.DatabaseHelper
 import com.perrigogames.life4ddr.nextgen.db.GoalState
 import com.perrigogames.life4ddr.nextgen.enums.GoalStatus
@@ -11,7 +12,7 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-class GoalDatabaseHelper(sqlDriver: SqlDriver): DatabaseHelper(sqlDriver) {
+class GoalDatabaseHelper(sqlDriver: SqlDriver, logger: Logger): DatabaseHelper(sqlDriver, logger) {
 
     fun allStates(): List<GoalState> = dbRef.goalStatusQueries.getAll().executeAsList()
 

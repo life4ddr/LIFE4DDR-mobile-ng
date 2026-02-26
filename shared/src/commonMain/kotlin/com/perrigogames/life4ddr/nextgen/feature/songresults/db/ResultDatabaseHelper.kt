@@ -1,6 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.db
 
 import app.cash.sqldelight.db.SqlDriver
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.db.ChartResult
 import com.perrigogames.life4ddr.nextgen.db.DatabaseHelper
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
@@ -10,7 +11,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.data.SASongEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ResultDatabaseHelper(sqlDriver: SqlDriver): DatabaseHelper(sqlDriver) {
+class ResultDatabaseHelper(sqlDriver: SqlDriver, logger: Logger): DatabaseHelper(sqlDriver, logger) {
 
     private val queries = dbRef.songResultQueries
 

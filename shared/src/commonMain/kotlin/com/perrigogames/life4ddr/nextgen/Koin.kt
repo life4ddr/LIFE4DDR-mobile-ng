@@ -118,9 +118,9 @@ fun initKoin(
 }
 
 val coreModule = module {
-    single { GoalDatabaseHelper(get()) }
-    single { ResultDatabaseHelper(get()) }
-    single { TrialDatabaseHelper(get()) }
+    single { GoalDatabaseHelper(get(), getLogger("GoalDatabase")) }
+    single { ResultDatabaseHelper(get(), getLogger("ResultDatabase")) }
+    single { TrialDatabaseHelper(get(), getLogger("TrialDatabase")) }
 
     single<GithubDataAPI> { DefaultGithubDataAPI() }
     single<SanbaiAPI> { DefaultSanbaiAPI() }
@@ -146,7 +146,7 @@ val coreModule = module {
     single { LadderGoalProgressManager(get()) }
     single<TrialDataManager> { DefaultTrialDataManager(get(), get(), get(), get(), getLogger("TrialDataManager")) }
     single<TrialScraper> { DefaultTrialScraper(get(), get(), get(), getLogger("TrialScraper")) }
-    single<TrialRecordsManager> { DefaultTrialRecordsManager(get(), get()) }
+    single<TrialRecordsManager> { DefaultTrialRecordsManager(get(), get(), getLogger("TrialRecords")) }
     single<SongDataManager> { DefaultSongDataManager() }
     single<ChartResultOrganizer> { DefaultChartResultOrganizer(get()) }
     single<FilterPanelSettings> { DefaultFilterPanelSettings() }

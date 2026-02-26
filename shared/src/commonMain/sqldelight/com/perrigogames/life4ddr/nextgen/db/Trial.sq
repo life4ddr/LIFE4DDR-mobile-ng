@@ -59,7 +59,7 @@ INSERT OR REPLACE INTO TrialSong(id, sessionId, position, score, exScore, misses
 VALUES (?,?,?,?,?,?,?,?,?,?);
 
 lastInsertRowId:
-SELECT last_insert_rowid();
+SELECT MAX(id) FROM TrialSession;
 
 deleteSession:
 DELETE FROM TrialSession WHERE id = ?;

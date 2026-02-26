@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.trials.manager
 
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.db.SelectFullSessions
 import com.perrigogames.life4ddr.nextgen.db.TrialSong
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
@@ -38,6 +39,7 @@ interface TrialRecordsManager {
 class DefaultTrialRecordsManager(
     private val dbHelper: TrialDatabaseHelper,
     private val trialSettings: TrialSettings,
+    private val logger: Logger,
 ): BaseModel(), TrialRecordsManager {
 
     private val _refresh = MutableSharedFlow<Unit>()
@@ -67,6 +69,7 @@ class DefaultTrialRecordsManager(
         targetRank: TrialRank
     ) {
         mainScope.launch {
+            logger.d { "Adding trial session for ${record.trial.name} - ${record.trial.currentExScore}" }
             dbHelper.insertSession(record, targetRank)
             refreshSessions()
         }
@@ -74,6 +77,7 @@ class DefaultTrialRecordsManager(
 
     override fun saveSessions(records: List<Pair<InProgressTrialSession, TrialRank>>) {
         mainScope.launch {
+            logger.d { "Adding ${records.size} trial sessions" }
             records.forEach { (session, targetRank) ->
                 dbHelper.insertSession(session, targetRank)
             }
