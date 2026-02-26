@@ -13,7 +13,7 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import dev.icerock.moko.resources.FileResource
-import platform.Foundation.NSFileManager
+import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
 
 @OptIn(ExperimentalSettingsApi::class)
@@ -25,7 +25,8 @@ fun MainViewController(
             appInfo = object : AppInfo {
                 override val appId: String get() = "LIFE4iOS"
                 override val isDebug: Boolean get() = true
-                override val version: String get() = "0.1"
+                override val version: String get() = NSBundle.mainBundle.infoDictionary
+                    ?.get("CFBundleShortVersionString") as? String ?: "unknown"
                 override val platform: PlatformType get() = PlatformType.IOS
             },
             motdReader = IosDataReader(MR.files.motd_json, MOTD_FILE_NAME),
