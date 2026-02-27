@@ -14,6 +14,7 @@ sealed class FilterPanelInput {
     data class SetClearTypeRange(val range: IntRange): FilterPanelInput() {
         constructor(min: Int, max: Int) : this(min..max)
     }
-    data class SetScoreRange(val first: Int? = null, val last: Int? = null): FilterPanelInput()
+    data class SetScoreRangeMin(val amount: Int): FilterPanelInput()
+    data class SetScoreRangeMax(val amount: Int): FilterPanelInput()
     data object ResetFilter : FilterPanelInput()
 }

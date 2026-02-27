@@ -1,6 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel
 
 import co.touchlab.kermit.Logger
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ChartFilterState
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.FilterState
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.ResultFilterState
@@ -14,6 +15,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.math.max
+import kotlin.math.min
 
 class FilterPanelViewModel : ViewModel(), KoinComponent {
 
@@ -34,7 +37,9 @@ class FilterPanelViewModel : ViewModel(), KoinComponent {
 
     init {
         viewModelScope.launch {
-            filterSettings.songListFilterState.collect(_state)
+            filterSettings.songListFilterState
+                .onEach { state -> println(state) }
+                .collect(_state)
         }
     }
 
@@ -51,10 +56,17 @@ class FilterPanelViewModel : ViewModel(), KoinComponent {
         is FilterPanelInput.SetDifficultyNumberRange -> {
             mutateChartFilter { it.copy(difficultyNumberRange = input.range) }
         }
-        is FilterPanelInput.SetScoreRange -> {
+        is FilterPanelInput.SetScoreRangeMin -> {
             mutateResultFilter {
-                val first = input.first ?: it.scoreRange.first
-                val last = input.last ?: it.scoreRange.last
+                val first = input.amount.coerceIn(GameConstants.SCORE_RANGE)
+                val last = max(it.scoreRange.last, first)
+                it.copy(scoreRange = (input.amount .. last))
+            }
+        }
+        is FilterPanelInput.SetScoreRangeMax -> {
+            mutateResultFilter {
+                val last = input.amount.coerceIn(GameConstants.SCORE_RANGE)
+                val first = min(it.scoreRange.first, last)
                 it.copy(scoreRange = (first .. last))
             }
         }

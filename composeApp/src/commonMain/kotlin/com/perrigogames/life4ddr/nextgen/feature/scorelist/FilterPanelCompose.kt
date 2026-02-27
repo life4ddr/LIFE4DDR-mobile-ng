@@ -3,16 +3,24 @@ package com.perrigogames.life4ddr.nextgen.feature.scorelist
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.songresults.view.UIFilterView
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.FilterPanelInput
 import dev.icerock.moko.resources.compose.localized
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -153,15 +161,36 @@ fun FilterPanel(
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            var rangeBottom by remember { mutableStateOf(data.scoreRangeBottomString) }
+            var rangeTop by remember { mutableStateOf(data.scoreRangeTopString) }
+            LaunchedEffect(data.scoreRangeBottomString) {
+                if (data.scoreRangeBottomString != rangeBottom) {
+                    rangeBottom = data.scoreRangeBottomString
+                }
+            }
+            LaunchedEffect(data.scoreRangeTopString) {
+                if (data.scoreRangeTopString != rangeTop) {
+                    rangeTop = data.scoreRangeTopString
+                }
+            }
+
             TextField(
-                value = data.scoreRangeBottomValue?.toString().orEmpty(),
-                onValueChange = { onAction(FilterPanelInput.SetScoreRange(first = it.trim().toInt())) },
+                value = rangeBottom.orEmpty(),
+                onValueChange = {
+                    rangeBottom = it
+                    val bottomInt = it.trim().toIntOrNull()?.coerceIn(data.scoreRangeAllowed) ?: 0
+                    onAction(FilterPanelInput.SetScoreRangeMin(bottomInt))
+                },
                 placeholder = { Text(text = data.scoreRangeBottomHint.localized()) },
                 modifier = Modifier.weight(1f)
             )
             TextField(
-                value = data.scoreRangeTopValue?.toString().orEmpty(),
-                onValueChange = { onAction(FilterPanelInput.SetScoreRange(last = it.toInt())) },
+                value = rangeTop.orEmpty(),
+                onValueChange = {
+                    rangeTop = it
+                    val topInt = it.trim().toIntOrNull()?.coerceIn(data.scoreRangeAllowed) ?: GameConstants.MAX_SCORE
+                    onAction(FilterPanelInput.SetScoreRangeMax(topInt))
+                },
                 placeholder = { Text(text = data.scoreRangeTopHint.localized()) },
                 modifier = Modifier.weight(1f)
             )

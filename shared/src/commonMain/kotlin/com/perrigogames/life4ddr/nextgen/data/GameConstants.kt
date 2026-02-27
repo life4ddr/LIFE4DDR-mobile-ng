@@ -12,4 +12,5 @@ object GameConstants {
 
     val SUPPORTED_VERSIONS = listOf(GameVersion.WORLD, GameVersion.A20_PLUS)
     val DEFAULT_VERSION = GameVersion.WORLD
+    val SCORE_RANGE = 0..MAX_SCORE
 }

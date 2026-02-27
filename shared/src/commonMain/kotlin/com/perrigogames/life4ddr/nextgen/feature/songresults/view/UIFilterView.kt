@@ -1,6 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.view
 
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.data.GameConstants
 import com.perrigogames.life4ddr.nextgen.data.GameConstants.HIGHEST_DIFFICULTY
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
@@ -26,8 +27,11 @@ data class UIFilterView(
     val scoreRangeBottomValue: Int? = null,
     val scoreRangeBottomHint: StringDesc = StringDesc.Raw("0"),
     val scoreRangeTopValue: Int? = null,
-    val scoreRangeTopHint: StringDesc = StringDesc.Raw("1,000,000"),
+    val scoreRangeTopHint: StringDesc = StringDesc.Raw("1000000"),
+    val scoreRangeAllowed: IntRange = 0..GameConstants.MAX_SCORE,
 ) {
+    val scoreRangeBottomString: String? get() = scoreRangeBottomValue?.toString()
+    val scoreRangeTopString: String? get() = scoreRangeTopValue?.toString()
 
     constructor(
         settingsFlags: FilterFlags = FilterFlags(),
@@ -98,6 +102,6 @@ fun FilterState.toUIFilterView(
     selectedDifficultyClasses = chartFilter.difficultyClassSelection,
     difficultyNumberSelection = chartFilter.difficultyNumberRange,
     clearTypeSelection = resultFilter.clearTypeRange,
-    scoreRangeBottomValue = resultFilter.scoreRange.first,
-    scoreRangeTopValue = resultFilter.scoreRange.last,
+    scoreRangeBottomValue = resultFilter.scoreRange.first.takeIf { it != 0 },
+    scoreRangeTopValue = resultFilter.scoreRange.last.takeIf { it != GameConstants.MAX_SCORE },
 )
