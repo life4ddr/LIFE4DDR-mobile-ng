@@ -36,12 +36,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.io.files.Path
-import life4ddr.composeapp.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
+// Thanks to ProAndroidDev: https://proandroiddev.com/compose-multi-platform-custom-camera-with-common-capture-design-386dbc2aa03e
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraBottomSheet(
@@ -153,9 +151,7 @@ fun ImageCaptureView(
 }
 
 @Composable
-expect fun CameraView(
-    callback: CameraCallback,
-)
+expect fun CameraView(callback: CameraCallback)
 
 sealed class CameraEvent {
     object CaptureImage : CameraEvent()

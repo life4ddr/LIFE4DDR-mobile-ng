@@ -6,7 +6,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
@@ -18,14 +17,11 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -35,17 +31,16 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.perrigogames.life4ddr.nextgen.util.correctImageOrientation
+import com.perrigogames.life4ddr.nextgen.util.currentDateTimeFilename
 import com.perrigogames.life4ddr.nextgen.util.getSensorRotation
 import kotlinx.io.files.Path
 import java.io.File
 import java.util.concurrent.Executors
 
+// Thanks to ProAndroidDev: https://proandroiddev.com/compose-multi-platform-custom-camera-with-common-capture-design-386dbc2aa03e
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-actual fun CameraView(
-    callback: CameraCallback,
-) {
-    var photoUri by remember { mutableStateOf<Uri?>(null) }
+actual fun CameraView(callback: CameraCallback) {
     val permissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
 
     LaunchedEffect(Unit) {
@@ -54,18 +49,12 @@ actual fun CameraView(
         }
     }
 
-    LaunchedEffect(photoUri) {
-        photoUri?.let { callback.onCaptureImage(Path(it.toString())) }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
         if (permissionState.status.isGranted) {
-            CameraPreview(
-                onPhotoCaptured = { uri -> photoUri = uri }
-            )
+            CameraPreview(callback = callback)
         } else {
             PermissionReminder()
         }
@@ -73,9 +62,7 @@ actual fun CameraView(
 }
 
 @Composable
-fun CameraPreview(
-    onPhotoCaptured: (Uri) -> Unit
-) {
+fun CameraPreview(callback: CameraCallback) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
@@ -88,27 +75,73 @@ fun CameraPreview(
     val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        val imageCapture = remember { ImageCapture.Builder().build() }
+    val imageCapture = remember { ImageCapture.Builder().build() }
 
-        val sensorEventListener = object : SensorEventListener {
-            override fun onSensorChanged(event: SensorEvent) {
-                imageCapture.targetRotation = getSensorRotation(
-                    x = event.values[0],
-                    y = event.values[1]
-                )
-            }
-
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    val sensorEventListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent) {
+            imageCapture.targetRotation = getSensorRotation(
+                x = event.values[0],
+                y = event.values[1]
+            )
         }
 
-        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
-        lifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_DESTROY) {
-                sensorManager.unregisterListener(sensorEventListener)
-            }
-        })
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
 
+    sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+    lifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            sensorManager.unregisterListener(sensorEventListener)
+        }
+    })
+
+    fun capturePhoto() {
+        // Ensure the output directory exists
+        if (!outputDirectory.exists()) {
+            outputDirectory.mkdirs()
+        }
+
+        val photoFile = File(
+            outputDirectory, "photo_${currentDateTimeFilename()}.jpg"
+        )
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        imageCapture.takePicture(
+            outputOptions,
+            cameraExecutor,
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    correctImageOrientation(photoFile)
+
+                    context.contentResolver.insert(
+                        imageCollection,
+                        ContentValues().apply {
+                            put(MediaStore.Images.Media.DISPLAY_NAME, photoFile.name)
+                        }
+                    )
+
+                    callback.onCaptureImage(Path(photoFile.path))
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    exception.printStackTrace()
+                }
+            }
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        callback.eventFlow.collect { event ->
+            when (event) {
+                CameraEvent.CaptureImage -> capturePhoto()
+                CameraEvent.SwitchCamera -> {
+                    // Handle camera switch if needed
+                }
+            }
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             factory = { _: Context ->
                 PreviewView(context).apply {
@@ -137,47 +170,5 @@ fun CameraPreview(
             },
             modifier = Modifier.fillMaxSize()
         )
-    
-        Button(
-            onClick = {
-                // Ensure the output directory exists
-                if (!outputDirectory.exists()) {
-                    outputDirectory.mkdirs()
-                }
-
-                val photoFile = File(
-                    outputDirectory, "photo_${System.currentTimeMillis()}.jpg"
-                )
-                val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-
-                imageCapture.takePicture(
-                    outputOptions,
-                    cameraExecutor,
-                    object : ImageCapture.OnImageSavedCallback {
-                        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                            correctImageOrientation(photoFile)
-
-                            context.contentResolver.insert(
-                                imageCollection,
-                                ContentValues().apply {
-                                    put(MediaStore.Images.Media.DISPLAY_NAME, photoFile.name)
-                                }
-                            )
-
-                            onPhotoCaptured(Uri.fromFile(photoFile))
-                        }
-
-                        override fun onError(exception: ImageCaptureException) {
-                            exception.printStackTrace()
-                        }
-                    }
-                )
-            },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(32.dp)
-        ) {
-            Text(text = "Take Photo")
-        }
     }
 }

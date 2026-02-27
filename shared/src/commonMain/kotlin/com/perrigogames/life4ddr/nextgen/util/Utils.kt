@@ -1,8 +1,13 @@
 package com.perrigogames.life4ddr.nextgen.util
 
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 fun <T> List<T>.split(matchBlock: (T) -> Boolean): Pair<List<T>, List<T>> {
     val match = mutableListOf<T>()
@@ -74,6 +79,10 @@ val DATETIME_FORMAT_12H = LocalDateTime.Format {
     char(' ')
     amPmMarker("AM", "PM")
 }
+
+@OptIn(ExperimentalTime::class)
+fun currentDateTimeFilename(): String =
+    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).format(DATETIME_FORMAT_FILENAME_24H)
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 val DATETIME_FORMAT_FILENAME_24H = LocalDateTime.Format {

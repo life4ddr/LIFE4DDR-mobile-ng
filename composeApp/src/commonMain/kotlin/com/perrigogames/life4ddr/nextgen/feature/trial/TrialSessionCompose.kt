@@ -109,6 +109,11 @@ fun TrialSessionScreen(
                                 onImageCaptured = { path ->
                                     viewModel.handleAction(state.createResultAction(path))
                                 },
+                                onClose = {
+                                    coroutineScope.launch {
+                                        scaffoldState.bottomSheetState.hide()
+                                    }
+                                }
                             )
                         }
                         is UITrialBottomSheet.Details -> {

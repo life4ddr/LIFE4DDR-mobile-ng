@@ -6,12 +6,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitInteropProperties
 import androidx.compose.ui.viewinterop.UIKitView
-import com.perrigogames.life4ddr.nextgen.util.DATETIME_FORMAT_FILENAME_24H
+import com.perrigogames.life4ddr.nextgen.util.currentDateTimeFilename
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.readValue
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.io.files.Path
 import platform.AVFoundation.*
 import platform.CoreGraphics.CGRectZero
@@ -23,8 +20,8 @@ import platform.QuartzCore.CATransaction
 import platform.QuartzCore.kCATransactionDisableActions
 import platform.UIKit.UIImage
 import platform.UIKit.UIView
-import kotlin.time.Clock
 
+// Thanks to ProAndroidDev: https://proandroiddev.com/compose-multi-platform-custom-camera-with-common-capture-design-386dbc2aa03e
 @OptIn(ExperimentalForeignApi::class)
 @Composable
 actual fun CameraView(callback: CameraCallback) {
@@ -62,7 +59,7 @@ actual fun CameraView(callback: CameraCallback) {
                                 val imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
                                 if (imageData != null) {
                                     val image = UIImage(data = imageData)
-                                    val fileName = "IMG_${Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).format(DATETIME_FORMAT_FILENAME_24H)}"
+                                    val fileName = "IMG_${currentDateTimeFilename()}"
                                     val filePath = NSTemporaryDirectory() + fileName + ".jpg"
                                     imageData.writeToFile(filePath, true)
 
