@@ -1,6 +1,7 @@
 package com.perrigogames.life4ddr.nextgen.feature.scorelist
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.perrigogames.life4ddr.nextgen.data.GameConstants
@@ -181,6 +183,9 @@ fun FilterPanel(
                     val bottomInt = it.trim().toIntOrNull()?.coerceIn(data.scoreRangeAllowed) ?: 0
                     onAction(FilterPanelInput.SetScoreRangeMin(bottomInt))
                 },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
                 placeholder = { Text(text = data.scoreRangeBottomHint.localized()) },
                 modifier = Modifier.weight(1f)
             )
@@ -191,6 +196,9 @@ fun FilterPanel(
                     val topInt = it.trim().toIntOrNull()?.coerceIn(data.scoreRangeAllowed) ?: GameConstants.MAX_SCORE
                     onAction(FilterPanelInput.SetScoreRangeMax(topInt))
                 },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
                 placeholder = { Text(text = data.scoreRangeTopHint.localized()) },
                 modifier = Modifier.weight(1f)
             )
