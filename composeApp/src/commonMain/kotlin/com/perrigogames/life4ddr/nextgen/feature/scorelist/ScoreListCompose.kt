@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,6 +41,7 @@ fun ScoreListScreen(
     onBackPressed: () -> Unit,
     showSanbaiLogin: (String) -> Unit = {},
 ) {
+    val focusManager = LocalFocusManager.current
     val viewModel = koinViewModel<ScoreListViewModel>()
     val scope = rememberCoroutineScope()
     val state by viewModel.state.collectAsState()
@@ -50,6 +52,14 @@ fun ScoreListScreen(
             skipHiddenState = false,
         )
     )
+
+    LaunchedEffect(scaffoldState.bottomSheetState.currentValue) {
+        println("SheetValue = ${scaffoldState.bottomSheetState.currentValue}")
+        if (scaffoldState.bottomSheetState.currentValue in listOf(SheetValue.Hidden, SheetValue.PartiallyExpanded)) {
+            println("Bottom sheet hidden")
+            focusManager.clearFocus()
+        }
+    }
 
     BackHandler {
         if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded) {
