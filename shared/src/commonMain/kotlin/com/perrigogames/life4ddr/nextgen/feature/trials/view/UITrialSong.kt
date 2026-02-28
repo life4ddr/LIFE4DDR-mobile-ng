@@ -3,12 +3,13 @@ package com.perrigogames.life4ddr.nextgen.feature.trials.view
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
+import com.perrigogames.life4ddr.nextgen.view.UISongJacket
 import dev.icerock.moko.resources.ColorResource
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 
 data class UITrialSong(
-    val jacketUrl: StringDesc?,
+    val jacket: UISongJacket,
     val songNameText: StringDesc,
     val subtitleText: StringDesc,
     val playStyle: PlayStyle,
@@ -20,8 +21,8 @@ data class UITrialSong(
     val chartString = playStyle.aggregateString(difficultyClass)
 }
 
-fun TrialSong.toUITrialSong(url: String?) = UITrialSong(
-    jacketUrl = url?.desc(),
+fun TrialSong.toUITrialSong(jacket: UISongJacket) = UITrialSong(
+    jacket = jacket,
     songNameText = chart.song.title.desc(),
     subtitleText = chart.song.version.uiString,
     playStyle = playStyle,

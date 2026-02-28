@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trials.view
 
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
+import com.perrigogames.life4ddr.nextgen.view.UISongJacket
 import dev.icerock.moko.resources.desc.desc
 
 fun createUITrialSong(
@@ -13,7 +14,7 @@ fun createUITrialSong(
     difficultyText: String = "13",
     difficultyNumber: Int = 13,
 ) = UITrialSong(
-    jacketUrl = jacketUrl.desc(),
+    jacket = UISongJacket.WithUrl(jacketUrl),
     songNameText = songNameText.desc(),
     subtitleText = artistText.desc(),
     playStyle = playStyle,

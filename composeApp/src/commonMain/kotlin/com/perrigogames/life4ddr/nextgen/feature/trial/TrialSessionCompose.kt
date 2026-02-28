@@ -22,9 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.*
@@ -33,10 +30,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSes
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionViewModel
 import com.perrigogames.life4ddr.nextgen.util.MokoImage
 import com.perrigogames.life4ddr.nextgen.util.ViewState
-import com.perrigogames.life4ddr.nextgen.view.AutoResizedText
-import com.perrigogames.life4ddr.nextgen.view.LargeCTAButton
-import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
-import com.perrigogames.life4ddr.nextgen.view.SystemBackButton
+import com.perrigogames.life4ddr.nextgen.view.*
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
@@ -411,16 +405,9 @@ fun SongFocusedContent(
 
         SizedSpacer(32.dp)
 
-        AsyncImage(
-            model = ImageRequest.Builder(LocalPlatformContext.current)
-                .data(viewData.focusedJacketUrl)
-//                .fallback(MR.images.trial_default)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f),
-            contentScale = ContentScale.Crop,
+        SongJacket(
+            data = viewData.focusedJacket,
+            modifier = Modifier.weight(1f),
         )
 
         SizedSpacer(16.dp)
@@ -534,16 +521,12 @@ fun SummaryJacketItem(
 ) {
     Column(modifier = modifier) {
         Box {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(viewData.jacketUrl)
-//                .fallback(MR.images.trial_default)
-                    .build(),
-                contentDescription = null,
+            SongJacket(
+                data = viewData.jacket,
                 modifier = Modifier
-                    .aspectRatio(1f)
-                    .clickable(enabled = viewData.tapAction != null) { viewData.tapAction?.let { onAction(it) } },
-                contentScale = ContentScale.Crop,
+                    .clickable(enabled = viewData.tapAction != null) {
+                        viewData.tapAction?.let { onAction(it) }
+                    },
             )
             ErrorOverlayLarge(viewData.hasError)
         }
@@ -616,16 +599,9 @@ fun RowScope.InProgressJacketItem(
             .clickable(enabled = onClick != null) { onClick?.invoke() }
     ) {
         Box {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(viewData.jacketUrl)
-//                    .fallback(MR.images.trial_default)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                contentScale = ContentScale.Crop,
+            SongJacket(
+                data = viewData.jacket,
+                modifier = Modifier.fillMaxWidth(),
             )
 
             ErrorOverlaySmall(viewData.hasError)

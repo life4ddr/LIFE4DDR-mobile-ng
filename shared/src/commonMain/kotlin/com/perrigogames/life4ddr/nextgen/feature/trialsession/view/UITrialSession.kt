@@ -4,6 +4,7 @@ import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
+import com.perrigogames.life4ddr.nextgen.view.UISongJacket
 import dev.icerock.moko.resources.ColorResource
 import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.StringDesc
@@ -113,7 +114,7 @@ sealed class UITrialSessionContent {
     ) : UITrialSessionContent() {
 
         data class Item(
-            val jacketUrl: String?,
+            val jacket: UISongJacket,
             val difficultyClassText: StringDesc,
             val difficultyClassColor: ColorResource,
             val difficultyNumberText: StringDesc,
@@ -137,7 +138,7 @@ sealed class UITrialSessionContent {
      */
     data class SongFocused(
         val items: List<Item>,
-        val focusedJacketUrl: String?,
+        val focusedJacket: UISongJacket,
         val songTitleText: StringDesc,
         val difficultyClassText: StringDesc,
         val difficultyClassColor: ColorResource,
@@ -147,7 +148,7 @@ sealed class UITrialSessionContent {
     ) : UITrialSessionContent() {
 
         data class Item(
-            val jacketUrl: String?,
+            val jacket: UISongJacket,
             val topText: StringDesc?,
             val bottomBoldText: StringDesc?,
             val bottomTagColor: ColorDesc,

@@ -3,6 +3,7 @@ package com.perrigogames.life4ddr.nextgen.feature.trialsession.view
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.trials.enums.TrialRank
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
+import com.perrigogames.life4ddr.nextgen.view.UISongJacket
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.desc.image.ImageDescUrl
 
@@ -26,25 +27,25 @@ object UITrialSessionMocks {
         content = UITrialSessionContent.Summary(
             items = listOf(
                 UITrialSessionContent.Summary.Item(
-                    jacketUrl = "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Be_a_Hero!.webp",
+                    jacket = UISongJacket.WithUrl("https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Be_a_Hero!.webp"),
                     difficultyClassText = "DIFFICULT".desc(),
                     difficultyClassColor = MR.colors.difficultyDifficult,
                     difficultyNumberText = "13".desc(),
                 ),
                 UITrialSessionContent.Summary.Item(
-                    jacketUrl = "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Role-playing_game.webp",
+                    jacket = UISongJacket.WithUrl("https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Role-playing_game.webp"),
                     difficultyClassText = "EXPERT".desc(),
                     difficultyClassColor = MR.colors.difficultyExpert,
                     difficultyNumberText = "14".desc(),
                 ),
                 UITrialSessionContent.Summary.Item(
-                    jacketUrl = "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Kanata_no_Reflesia.webp",
+                    jacket = UISongJacket.WithUrl("https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Kanata_no_Reflesia.webp"),
                     difficultyClassText = "EXPERT".desc(),
                     difficultyClassColor = MR.colors.difficultyExpert,
                     difficultyNumberText = "15".desc(),
                 ),
                 UITrialSessionContent.Summary.Item(
-                    jacketUrl = "https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Boss+Rush-jacket.webp",
+                    jacket = UISongJacket.WithUrl("https://life4-mobile.s3.us-west-1.amazonaws.com/images/jackets/songs/Boss+Rush-jacket.webp"),
                     difficultyClassText = "DIFFICULT".desc(),
                     difficultyClassColor = MR.colors.difficultyDifficult,
                     difficultyNumberText = "14".desc(),

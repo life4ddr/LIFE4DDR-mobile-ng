@@ -13,6 +13,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialData
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.toUITrialSong
 import com.perrigogames.life4ddr.nextgen.injectLogger
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
+import com.perrigogames.life4ddr.nextgen.view.UISongJacket
 import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -85,7 +86,14 @@ class PlacementManager: BaseModel() {
                     }
                     "L$lowest-L$highest" // FIXME resource
                 },
-                songs = placement.songs.map { it.toUITrialSong(jacketsDatabaseHelper.getUrl(it.skillId)) },
+                songs = placement.songs.map {
+                    val jacket = UISongJacket.fromChart(
+                        chart = it.chart,
+                        url = jacketsDatabaseHelper.getUrl(it.skillId),
+                        placeholderType = UISongJacket.PlaceholderType.THUMBNAIL
+                    )
+                    it.toUITrialSong(jacket)
+                },
                 selectedInput = PlacementListInput.PlacementSelected(placement.id)
             )
         },

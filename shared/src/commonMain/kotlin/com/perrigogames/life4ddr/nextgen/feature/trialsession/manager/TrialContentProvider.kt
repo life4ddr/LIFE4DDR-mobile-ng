@@ -6,7 +6,6 @@ import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
 import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
-import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Song
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
@@ -15,6 +14,7 @@ import com.perrigogames.life4ddr.nextgen.feature.trialsession.view.UITrialSessio
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.data.InProgressTrialSession
 import com.perrigogames.life4ddr.nextgen.feature.trialsession.viewmodel.TrialSessionInput
 import com.perrigogames.life4ddr.nextgen.longNumberString
+import com.perrigogames.life4ddr.nextgen.view.UISongJacket
 import dev.icerock.moko.resources.desc.Resource
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
@@ -32,9 +32,9 @@ class TrialContentProvider(
 
     fun provideSummary() : UITrialSessionContent.Summary {
         return UITrialSessionContent.Summary(
-            items = trial.songs.mapToSongInfoUrlPair().map { (chart, url) ->
+            items = trial.songs.mapToSongInfoUrlPair().map { (chart, jacket) ->
                 UITrialSessionContent.Summary.Item(
-                    jacketUrl = url,
+                    jacket = jacket,
                     difficultyClassText = chart.difficultyClass.nameRes.desc(),
                     difficultyClassColor = chart.difficultyClass.colorRes,
                     difficultyNumberText = chart.difficultyNumber.toString().desc(),
@@ -56,7 +56,7 @@ class TrialContentProvider(
             items = trial.songs.mapIndexed { index, song ->
                 val result = session.results[index]
                 UITrialSessionContent.SongFocused.Item(
-                    jacketUrl = getSongJacketUrl(song),
+                    jacket = getSongJacket(song),
                     topText = result?.score?.longNumberString()?.desc(),
                     bottomBoldText = when {
                         index == stage -> MR.strings.next_caps.desc()
@@ -74,7 +74,7 @@ class TrialContentProvider(
                             && !result.hasAllInfoSpecified(currentGoalSet)
                 )
             },
-            focusedJacketUrl = getSongJacketUrl(trial.songs[stage]),
+            focusedJacket = getSongJacket(trial.songs[stage]),
             songTitleText = KsoupEntities.decodeHtml(currentSong.chart.song.title).desc(),
             difficultyClassText = currentChart.difficultyClass.nameRes.desc(),
             difficultyClassColor = currentChart.difficultyClass.colorRes,
@@ -115,7 +115,7 @@ class TrialContentProvider(
                 .mapIndexed { idx, song -> idx to song }
                 .zip(session.results) { (idx, song), result ->
                 UITrialSessionContent.Summary.Item(
-                    jacketUrl = getSongJacketUrl(song),
+                    jacket = getSongJacket(song),
                     difficultyClassText = song.chart.difficultyClass.nameRes.desc(),
                     difficultyClassColor = song.chart.difficultyClass.colorRes,
                     difficultyNumberText = song.chart.difficultyNumber.toString().desc(),
@@ -131,10 +131,14 @@ class TrialContentProvider(
         )
     }
 
-    private fun getSongJacketUrl(song: TrialSong): String? = jacketsDatabaseHelper.getUrl(song.skillId)
+    private fun getSongJacket(song: TrialSong) = UISongJacket.fromChart(
+        chart = song.chart,
+        url = jacketsDatabaseHelper.getUrl(song.skillId),
+        placeholderType = UISongJacket.PlaceholderType.FULL,
+    )
 
-    private fun List<TrialSong>.mapToSongInfoUrlPair() : List<Pair<Chart, String?>> = map { song ->
-        song.chart to getSongJacketUrl(song)
+    private fun List<TrialSong>.mapToSongInfoUrlPair() : List<Pair<Chart, UISongJacket>> = map { song ->
+        song.chart to getSongJacket(song)
     }
 
     private fun findChart(song: TrialSong) : Chart? = songDataManager.getChart(

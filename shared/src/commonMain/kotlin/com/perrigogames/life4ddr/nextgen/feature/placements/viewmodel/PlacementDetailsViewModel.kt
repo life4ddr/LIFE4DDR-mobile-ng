@@ -10,6 +10,7 @@ import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelpe
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.toUITrialSong
+import com.perrigogames.life4ddr.nextgen.view.UISongJacket
 import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,7 +53,12 @@ class PlacementDetailsViewModel(
                             MR.strings.placement_detail_description_3.desc(),
                         ),
                         songs = placement.songs.map { song ->
-                            song.toUITrialSong(jacketsDatabaseHelper.getUrl(song.skillId))
+                            val jacket = UISongJacket.fromChart(
+                                chart = song.chart,
+                                url = jacketsDatabaseHelper.getUrl(song.skillId),
+                                placeholderType = UISongJacket.PlaceholderType.FULL
+                            )
+                            song.toUITrialSong(jacket)
                         }
                     )
                 }

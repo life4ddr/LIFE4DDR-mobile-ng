@@ -127,8 +127,13 @@ val coreModule = module {
 
     single<GithubDataAPI> { DefaultGithubDataAPI() }
     single<SanbaiAPI> { DefaultSanbaiAPI() }
-    single { Json { classDiscriminator = "t" } }
-    single(named(Course.COURSE_NAME)) {
+    single {
+        Json {
+            classDiscriminator = "t"
+            ignoreUnknownKeys = true
+        }
+    }
+    single(named(COURSE_NAME)) {
         Json {
             classDiscriminator = "type"
             ignoreUnknownKeys = true
