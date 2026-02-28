@@ -56,7 +56,7 @@ class TrialContentProvider(
             items = trial.songs.mapIndexed { index, song ->
                 val result = session.results[index]
                 UITrialSessionContent.SongFocused.Item(
-                    jacketUrl = getSongJacketUrl(),
+                    jacketUrl = getSongJacketUrl(song),
                     topText = result?.score?.longNumberString()?.desc(),
                     bottomBoldText = when {
                         index == stage -> MR.strings.next_caps.desc()
@@ -74,7 +74,7 @@ class TrialContentProvider(
                             && !result.hasAllInfoSpecified(currentGoalSet)
                 )
             },
-            focusedJacketUrl = trial.songs[stage].url,
+            focusedJacketUrl = getSongJacketUrl(trial.songs[stage]),
             songTitleText = KsoupEntities.decodeHtml(currentSong.chart.song.title).desc(),
             difficultyClassText = currentChart.difficultyClass.nameRes.desc(),
             difficultyClassColor = currentChart.difficultyClass.colorRes,
@@ -115,7 +115,7 @@ class TrialContentProvider(
                 .mapIndexed { idx, song -> idx to song }
                 .zip(session.results) { (idx, song), result ->
                 UITrialSessionContent.Summary.Item(
-                    jacketUrl = getSongJacketUrl,
+                    jacketUrl = getSongJacketUrl(song),
                     difficultyClassText = song.chart.difficultyClass.nameRes.desc(),
                     difficultyClassColor = song.chart.difficultyClass.colorRes,
                     difficultyNumberText = song.chart.difficultyNumber.toString().desc(),
@@ -131,8 +131,7 @@ class TrialContentProvider(
         )
     }
 
-    private fun getSongJacketUrl(song: TrialSong): String? =
-        song.url ?: jacketsDatabaseHelper.getUrl(song.skillId)
+    private fun getSongJacketUrl(song: TrialSong): String? = jacketsDatabaseHelper.getUrl(song.skillId)
 
     private fun List<TrialSong>.mapToSongInfoUrlPair() : List<Pair<Chart, String?>> = map { song ->
         song.chart to getSongJacketUrl(song)

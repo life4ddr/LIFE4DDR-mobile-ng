@@ -158,7 +158,6 @@ data class TrialSong(
     @SerialName("play_style") val playStyle: PlayStyle = PlayStyle.SINGLE,
     @SerialName("difficulty_class") val difficultyClass: DifficultyClass,
     val ex: Int,
-    val url: String? = null,
 ) {
     @Transient lateinit var chart: Chart
 }

@@ -79,6 +79,7 @@ import com.perrigogames.life4ddr.nextgen.api.base.baseHttpClient
 import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ManualScoreInputViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
+import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course.Companion.COURSE_NAME
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.DefaultTrialScraper
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialScraper
 import com.perrigogames.life4ddr.nextgen.feature.trials.manager.DefaultTrialDataManager
@@ -137,7 +138,7 @@ val coreModule = module {
     single { LadderRemoteData(get(), get(), get(named(RANKS_FILE_NAME)), logger = get { parametersOf("LadderRemoteData") }) }
     single { MotdLocalRemoteData(get(), get(), get(named(MOTD_FILE_NAME)), logger = get { parametersOf("MotdLocalRemoteData") }) }
     single { SongListRemoteData(get(), get(), get(named(SONGS_FILE_NAME)), logger = get { parametersOf("SongListRemoteData") }) }
-    single { TrialRemoteData(get(), get(), get(named(TRIALS_FILE_NAME)), logger = get { parametersOf("TrialRemoteData") }) }
+    single { TrialRemoteData(get(named(COURSE_NAME)), get(), get(named(TRIALS_FILE_NAME)), logger = get { parametersOf("TrialRemoteData") }) }
     single { baseHttpClient(get(), getLogger("HttpClient")) }
 
     single { PlacementManager() }
@@ -172,15 +173,15 @@ val coreModule = module {
 
     viewModel { LaunchViewModel(get()) }
     viewModel { FirstRunInfoViewModel(get(), get(), get(), getLogger("FirstRunInfoViewModel")) }
-    viewModel { PlacementListViewModel(get(), get()) }
-    viewModel { params -> PlacementDetailsViewModel(placementId = params.get(), get(), get(), getLogger("PlacementDetailsViewModel")) }
+    viewModel { PlacementListViewModel(get(), get(), get()) }
+    viewModel { params -> PlacementDetailsViewModel(placementId = params.get(), get(), get(), get(), getLogger("PlacementDetailsViewModel")) }
     viewModel { params -> RankListViewModel(isFirstRun = params.get(), get(), get(), get()) }
     viewModel { MainScreenViewModel() }
     viewModel { PlayerProfileViewModel(get(), get(), get(), get()) }
     viewModel { ScoreListViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { TrialListViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModel { params -> TrialSessionViewModel(trialId = params.get(), get(), get(), get(), get(), getLogger("TrialSessionViewModel")) }
+    viewModel { params -> TrialSessionViewModel(trialId = params.get(), get(), get(), get(), get(), get(), getLogger("TrialSessionViewModel")) }
     viewModel { params -> ManualScoreInputViewModel(chart = params.get(), get()) }
     viewModel { VersionsDialogViewModel() }
 }

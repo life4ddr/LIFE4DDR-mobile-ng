@@ -20,7 +20,7 @@ data class UITrialSong(
     val chartString = playStyle.aggregateString(difficultyClass)
 }
 
-fun TrialSong.toUITrialSong() = UITrialSong(
+fun TrialSong.toUITrialSong(url: String?) = UITrialSong(
     jacketUrl = url?.desc(),
     songNameText = chart.song.title.desc(),
     subtitleText = chart.song.version.uiString,

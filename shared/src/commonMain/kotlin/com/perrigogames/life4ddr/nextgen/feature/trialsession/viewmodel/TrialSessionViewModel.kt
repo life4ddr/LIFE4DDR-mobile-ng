@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.LadderRank
+import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.profile.manager.UserRankSettings
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialState
@@ -41,6 +42,7 @@ class TrialSessionViewModel(
     private val trialDataManager: TrialDataManager,
     private val trialRecordsManager: TrialRecordsManager,
     private val trialSettings: TrialSettings,
+    private val jacketsDatabaseHelper: JacketsDatabaseHelper,
     private val logger: Logger
 ) : ViewModel(), KoinComponent {
 
@@ -143,7 +145,7 @@ class TrialSessionViewModel(
             combine(
                 inProgressSessionFlow.filterNotNull(),
                 stage.filterNotNull(),
-                targetRank
+                targetRank,
             ) { session, stage, _ ->
                 logger.d { "Creating stage $stage" }
                 val complete = stage >= 4

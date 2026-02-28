@@ -6,6 +6,7 @@ import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.FirstRunSettings
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
+import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementDetails
 import com.perrigogames.life4ddr.nextgen.feature.trials.view.toUITrialSong
@@ -15,11 +16,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
 class PlacementDetailsViewModel(
     placementId: String,
+    private val jacketsDatabaseHelper: JacketsDatabaseHelper,
     private val placementManager: PlacementManager,
     private val settings: FirstRunSettings,
     private val logger: Logger,
@@ -33,24 +37,27 @@ class PlacementDetailsViewModel(
 
     init {
         viewModelScope.launch {
-            placementManager.findPlacement(placementId)
-                .collect { placement ->
-                    if (placement == null) {
-                        logger.e("Placement ID $placementId not found")
-                    } else {
-                        _state.value = _state.value.copy(
-                            rankIcon = placement.placementRank!!.toLadderRank(),
-                            descriptionPoints = listOf(
-                                MR.strings.placement_detail_description_1.desc(),
-                                MR.strings.placement_detail_description_2.desc(),
-                                MR.strings.placement_detail_description_3.desc(),
-                            ),
-                            songs = placement.songs.map { song ->
-                                song.toUITrialSong()
-                            }
-                        )
-                    }
+            combine(
+                placementManager.findPlacement(placementId),
+                jacketsDatabaseHelper.updates
+            ) { placement, _ ->
+                if (placement == null) {
+                    logger.e("Placement ID $placementId not found")
+                } else {
+                    _state.value = _state.value.copy(
+                        rankIcon = placement.placementRank!!.toLadderRank(),
+                        descriptionPoints = listOf(
+                            MR.strings.placement_detail_description_1.desc(),
+                            MR.strings.placement_detail_description_2.desc(),
+                            MR.strings.placement_detail_description_3.desc(),
+                        ),
+                        songs = placement.songs.map { song ->
+                            song.toUITrialSong(jacketsDatabaseHelper.getUrl(song.skillId))
+                        }
+                    )
                 }
+            }
+                .collect()
         }
     }
 

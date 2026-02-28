@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.FirstRunDestination
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.FirstRunSettings
 import com.perrigogames.life4ddr.nextgen.feature.firstrun.manager.InitState
+import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.placements.manager.PlacementManager
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementListScreen
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementSkipConfirmation
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -22,6 +24,7 @@ import org.koin.core.component.KoinComponent
 class PlacementListViewModel(
     private val firstRunSettingsManager: FirstRunSettings,
     private val placementManager: PlacementManager,
+    private val jacketsDatabaseHelper: JacketsDatabaseHelper,
 ) : ViewModel(), KoinComponent {
 
     private val _screenData = MutableStateFlow(placementManager.createUiData())
@@ -32,8 +35,10 @@ class PlacementListViewModel(
 
     init {
         viewModelScope.launch {
-            placementManager.placements
-                .map { placementManager.createUiData(it) }
+            combine(
+                placementManager.placements,
+                jacketsDatabaseHelper.updates
+            ) { placements, _ -> placementManager.createUiData(placements) }
                 .collect(_screenData)
         }
     }

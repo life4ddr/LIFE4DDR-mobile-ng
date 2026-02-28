@@ -3,6 +3,7 @@ package com.perrigogames.life4ddr.nextgen.feature.placements.manager
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.PLACEMENTS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
+import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacement
 import com.perrigogames.life4ddr.nextgen.feature.placements.view.UIPlacementListScreen
 import com.perrigogames.life4ddr.nextgen.feature.placements.viewmodel.PlacementListInput
@@ -16,7 +17,6 @@ import dev.icerock.moko.resources.desc.desc
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.json.Json
@@ -31,6 +31,7 @@ class PlacementManager: BaseModel() {
     private val json: Json by inject(named(Course.COURSE_NAME))
     private val dataReader: LocalUncachedDataReader by inject(named(PLACEMENTS_FILE_NAME))
     private val logger by injectLogger("PlacementManager")
+    private val jacketsDatabaseHelper: JacketsDatabaseHelper by inject()
 
     private val baseData: List<Course.Placement> = json
         .decodeFromString(TrialData.serializer(), dataReader.loadInternalString())
@@ -84,7 +85,7 @@ class PlacementManager: BaseModel() {
                     }
                     "L$lowest-L$highest" // FIXME resource
                 },
-                songs = placement.songs.map { it.toUITrialSong() },
+                songs = placement.songs.map { it.toUITrialSong(jacketsDatabaseHelper.getUrl(it.skillId)) },
                 selectedInput = PlacementListInput.PlacementSelected(placement.id)
             )
         },
