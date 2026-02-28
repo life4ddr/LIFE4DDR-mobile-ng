@@ -1,0 +1,14 @@
+CREATE TABLE Jackets (
+skillId TEXT NOT NULL,
+url TEXT NOT NULL,
+PRIMARY KEY (skillId)
+);
+
+selectJacket:
+SELECT url FROM Jackets WHERE skillId = ?;
+
+insertJacket:
+INSERT OR REPLACE INTO Jackets(skillId, url) VALUES (?,?);
+
+clearJackets:
+DELETE FROM Jackets;

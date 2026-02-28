@@ -76,6 +76,7 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreList
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.api.base.baseHttpClient
+import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ManualScoreInputViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.DefaultTrialScraper
@@ -121,6 +122,7 @@ val coreModule = module {
     single { GoalDatabaseHelper(get(), getLogger("GoalDatabase")) }
     single { ResultDatabaseHelper(get(), getLogger("ResultDatabase")) }
     single { TrialDatabaseHelper(get(), getLogger("TrialDatabase")) }
+    single { JacketsDatabaseHelper(get(), get(), getLogger("JacketsDatabase")) }
 
     single<GithubDataAPI> { DefaultGithubDataAPI() }
     single<SanbaiAPI> { DefaultSanbaiAPI() }
