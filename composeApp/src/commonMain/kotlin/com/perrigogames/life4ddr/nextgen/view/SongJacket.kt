@@ -1,17 +1,27 @@
 package com.perrigogames.life4ddr.nextgen.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -23,10 +33,13 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.perrigogames.life4ddr.nextgen.MR
+import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun SongJacket(
@@ -47,11 +60,27 @@ fun SongJacket(
             )
         }
         is UISongJacket.Placeholder -> {
+            val jacketsDatabaseHelper = koinInject<JacketsDatabaseHelper>()
+            val scope = rememberCoroutineScope()
+            var showDialog by remember { mutableStateOf(false) }
+
+            if (showDialog) {
+                UrlEntryDialog(
+                    onUrlConfirmed = { url ->
+                        scope.launch {
+                            jacketsDatabaseHelper.putUrl(id = data.chart.song.skillId, url = url)
+                        }
+                    },
+                    onDismiss = { showDialog = false }
+                )
+            }
+
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = modifier
                     .aspectRatio(1f)
                     .background(colorResource(data.chart.difficultyClass.colorRes))
+                    .clickable { showDialog = true }
             ) {
                 @Composable
                 fun warningIcon(size: Dp) {
@@ -114,4 +143,44 @@ fun SongJacket(
             }
         }
     }
+}
+
+@Composable
+private fun UrlEntryDialog(
+    onUrlConfirmed: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var urlInput by remember { mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Enter URL") },
+        text = {
+            OutlinedTextField(
+                value = urlInput,
+                onValueChange = { urlInput = it },
+                label = { Text("URL") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (urlInput.isNotEmpty()) {
+                        onUrlConfirmed.invoke(urlInput)
+                    }
+                    onDismiss()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text("Cancel")
+            }
+        }
+    )
 }
