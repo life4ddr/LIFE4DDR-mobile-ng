@@ -4,7 +4,9 @@ import com.mohamedrejeb.ksoup.entities.KsoupEntities
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
+import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Chart
+import com.perrigogames.life4ddr.nextgen.feature.songlist.data.Song
 import com.perrigogames.life4ddr.nextgen.feature.songlist.manager.SongDataManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialSong
@@ -21,9 +23,12 @@ import dev.icerock.moko.resources.desc.desc
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
+class TrialContentProvider(
+    private val trial: Course.Trial
+) : KoinComponent {
 
     private val songDataManager: SongDataManager by inject()
+    private val jacketsDatabaseHelper: JacketsDatabaseHelper by inject()
 
     fun provideSummary() : UITrialSessionContent.Summary {
         return UITrialSessionContent.Summary(
@@ -51,7 +56,7 @@ class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
             items = trial.songs.mapIndexed { index, song ->
                 val result = session.results[index]
                 UITrialSessionContent.SongFocused.Item(
-                    jacketUrl = song.url,
+                    jacketUrl = getSongJacketUrl(),
                     topText = result?.score?.longNumberString()?.desc(),
                     bottomBoldText = when {
                         index == stage -> MR.strings.next_caps.desc()
@@ -110,7 +115,7 @@ class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
                 .mapIndexed { idx, song -> idx to song }
                 .zip(session.results) { (idx, song), result ->
                 UITrialSessionContent.Summary.Item(
-                    jacketUrl = song.url,
+                    jacketUrl = getSongJacketUrl,
                     difficultyClassText = song.chart.difficultyClass.nameRes.desc(),
                     difficultyClassColor = song.chart.difficultyClass.colorRes,
                     difficultyNumberText = song.chart.difficultyNumber.toString().desc(),
@@ -126,8 +131,11 @@ class TrialContentProvider(private val trial: Course.Trial) : KoinComponent {
         )
     }
 
+    private fun getSongJacketUrl(song: TrialSong): String? =
+        song.url ?: jacketsDatabaseHelper.getUrl(song.skillId)
+
     private fun List<TrialSong>.mapToSongInfoUrlPair() : List<Pair<Chart, String?>> = map { song ->
-        song.chart to song.url
+        song.chart to getSongJacketUrl(song)
     }
 
     private fun findChart(song: TrialSong) : Chart? = songDataManager.getChart(
