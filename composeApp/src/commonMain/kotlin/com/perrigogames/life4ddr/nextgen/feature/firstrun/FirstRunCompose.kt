@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -82,11 +83,22 @@ fun FirstRunContent(
         contentAlignment = Alignment.Center,
         modifier = modifier,
     ) {
+        Image(
+            painter = painterResource(
+                if (isSystemInDarkTheme()) {
+                    MR.images.entry_top_dark
+                } else {
+                    MR.images.entry_top_light
+                }),
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.TopStart)
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth(0.75f)
                 .fillMaxHeight()
+                .systemBarsPadding()
         ) {
             val contentModifier = Modifier.fillMaxWidth()
 
