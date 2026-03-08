@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 import com.perrigogames.life4ddr.nextgen.enums.LadderRankClass
 
 @Composable
-fun LIFE4Theme(
+fun CoreLIFE4Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -20,6 +20,12 @@ fun LIFE4Theme(
         content = content
     )
 }
+
+@Composable
+expect fun LIFE4Theme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+)
 
 internal val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
