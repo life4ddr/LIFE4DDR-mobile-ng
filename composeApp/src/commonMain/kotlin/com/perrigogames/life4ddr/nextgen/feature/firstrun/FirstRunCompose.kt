@@ -93,12 +93,24 @@ fun FirstRunContent(
             contentDescription = null,
             modifier = Modifier.align(Alignment.TopStart)
         )
+        Image(
+            painter = painterResource(
+                if (isSystemInDarkTheme()) {
+                    MR.images.entry_bottom_dark
+                } else {
+                    MR.images.entry_bottom_light
+                }),
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.BottomEnd)
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth(0.75f)
                 .fillMaxHeight()
                 .systemBarsPadding()
+                .navigationBarsPadding()
+                .padding(vertical = 32.dp)
         ) {
             val contentModifier = Modifier.fillMaxWidth()
 

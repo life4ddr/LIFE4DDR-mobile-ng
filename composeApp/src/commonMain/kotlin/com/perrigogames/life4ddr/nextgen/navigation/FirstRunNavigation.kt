@@ -33,18 +33,16 @@ fun NavGraphBuilder.firstRunNavigation(
     deeplinkManager: DeeplinkManager,
     onExit: () -> Unit,
 ) {
-    val mostScreenModifier = Modifier
+    val fullScreenModifier = Modifier
         .fillMaxSize()
-        .navigationBarsPadding()
-//        .systemBarsPadding()
-    val fullScreenModifier = mostScreenModifier
         .systemBarsPadding()
+        .navigationBarsPadding()
 
     composable<FirstRunDestination.Landing> {}
 
     composable<FirstRunDestination.FirstRun> {
         FirstRunScreen(
-            modifier = mostScreenModifier,
+            modifier = Modifier.fillMaxSize(),
             onComplete = { when (it) {
                 InitState.PLACEMENTS -> navController.popAndNavigate(FirstRunDestination.PlacementList)
                 InitState.RANKS -> navController.popAndNavigate(FirstRunDestination.InitialRankList)
