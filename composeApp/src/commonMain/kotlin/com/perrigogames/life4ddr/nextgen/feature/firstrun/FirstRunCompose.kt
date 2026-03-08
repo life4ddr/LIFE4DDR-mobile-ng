@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,12 +21,14 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.compose.LIFE4Theme
 import com.perrigogames.life4ddr.nextgen.compose.primaryButtonColors
@@ -40,6 +43,7 @@ import com.perrigogames.life4ddr.nextgen.feature.firstrun.viewmodel.FirstRunStep
 import com.perrigogames.life4ddr.nextgen.util.numeralRegex
 import com.perrigogames.life4ddr.nextgen.view.ErrorText
 import com.perrigogames.life4ddr.nextgen.view.SizedSpacer
+import com.perrigogames.life4ddr.nextgen.view.SystemForwardButton
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
@@ -78,6 +82,15 @@ fun FirstRunContent(
     onComplete: (InitState) -> Unit = {},
 ) {
     var completeHandled by remember { mutableStateOf(false) }
+    val isLandscape = LocalWindowInfo.current.containerSize.let { it.width > it.height }
+
+    fun Modifier.photoWidthLandscape() = this.then(
+        if (isLandscape) {
+            Modifier.fillMaxWidth(0.5f)
+        } else {
+            Modifier.fillMaxWidth()
+        }
+    )
 
     Box(
         contentAlignment = Alignment.Center,
@@ -91,7 +104,9 @@ fun FirstRunContent(
                     MR.images.entry_top_light
                 }),
             contentDescription = null,
-            modifier = Modifier.align(Alignment.TopStart)
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .photoWidthLandscape()
         )
         Image(
             painter = painterResource(
@@ -101,7 +116,9 @@ fun FirstRunContent(
                     MR.images.entry_bottom_light
                 }),
             contentDescription = null,
-            modifier = Modifier.align(Alignment.BottomEnd)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .photoWidthLandscape()
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -110,7 +127,7 @@ fun FirstRunContent(
                 .fillMaxHeight()
                 .systemBarsPadding()
                 .navigationBarsPadding()
-                .padding(vertical = 32.dp)
+                .padding(vertical = if (isLandscape) 0.dp else 64.dp)
         ) {
             val contentModifier = Modifier.fillMaxWidth()
 
@@ -140,16 +157,6 @@ fun FirstRunContent(
                     }
                 }
             }
-        }
-
-        if (step.showNextButton) {
-            Button(
-                onClick = { onInput(FirstRunInput.NavigateNext) },
-                content = { Text("Next") },
-                colors = primaryButtonColors(),
-                modifier = Modifier.align(Alignment.BottomEnd)
-                    .padding(16.dp)
-            )
         }
     }
 }
@@ -269,6 +276,9 @@ fun FirstRunUsername(
                     ErrorText { step.usernameError?.errorText?.localized() }
                 }
             },
+            trailingIcon = {
+                SystemForwardButton { onInput(FirstRunInput.NavigateNext) }
+            },
             onValueChange = {
                 usernameText = it
                 onInput(FirstRunInput.UsernameUpdated(it))
@@ -350,31 +360,53 @@ fun FirstRunRivalCode(
     modifier: Modifier = Modifier,
     onInput: (FirstRunInput) -> Unit = {},
 ) {
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(MR.strings.first_run_rival_code_header),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.headlineMedium,
-        )
-        SizedSpacer(16.dp)
-        Text(
-            text = stringResource(MR.strings.first_run_rival_code_description_1),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-        SizedSpacer(8.dp)
-        Text(
-            text = stringResource(MR.strings.first_run_rival_code_description_2),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyMedium,
-        )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(MR.strings.first_run_rival_code_header),
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.headlineMedium,
+            )
+            SizedSpacer(16.dp)
+            Text(
+                text = stringResource(MR.strings.first_run_rival_code_description_1),
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            SizedSpacer(8.dp)
+            Text(
+                text = stringResource(MR.strings.first_run_rival_code_description_2),
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
         RivalCodeEntry(
             rivalCode = step.rivalCode,
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+                .widthIn(max = 500.dp)
+                .weight(1f)
                 .padding(top = 32.dp, bottom = 8.dp),
             onInput = onInput,
         )
+        SizedSpacer(8.dp)
+        TextButton(
+            onClick = {
+                onInput(FirstRunInput.RivalCodeUpdated(""))
+                onInput(FirstRunInput.NavigateNext)
+            },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text(
+                text = stringResource(MR.strings.skip),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
         AnimatedVisibility(visible = step.rivalCodeError != null) {
             ErrorText { step.rivalCodeError?.errorText?.localized() }
         }
@@ -414,6 +446,9 @@ fun RivalCodeEntry(
                 selection = TextRange(index = safeValue.length)
             )
             onInput(FirstRunInput.RivalCodeUpdated(safeValue))
+            if (rivalCodeValue.text.length == 8) {
+                onInput(FirstRunInput.NavigateNext)
+            }
         },
         textStyle = MaterialTheme.typography.labelMedium,
         keyboardOptions = KeyboardOptions(
@@ -452,7 +487,8 @@ fun RowScope.RivalCodeCell(text: Char?) {
     Text(
         text = text?.toString() ?: "",
         color = MaterialTheme.colorScheme.onSurface,
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.labelMedium,
+        autoSize = TextAutoSize.StepBased(maxFontSize = 128.sp),
         textAlign = TextAlign.Center,
         modifier = Modifier
             .weight(1f)
@@ -461,7 +497,8 @@ fun RowScope.RivalCodeCell(text: Char?) {
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.onSurface,
                 shape = RoundedCornerShape(8.dp)
-            ),
+            )
+            .padding(vertical = 6.dp),
     )
 }
 
@@ -542,22 +579,31 @@ fun FirstRunGameVersion(
             onInput(FirstRunInput.GameVersionUpdated(version))
         }
 
-        step.versions.forEach { version ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onItemClicked(version) },
-                verticalAlignment = Alignment.CenterVertically
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
             ) {
-                RadioButton(
-                    selected = currentlySelected == version,
-                    onClick = { onItemClicked(version) }
-                )
-                Text(
-                    text = version.uiString.localized(),
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                step.versions.forEach { version ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onItemClicked(version) },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = currentlySelected == version,
+                            onClick = { onItemClicked(version) }
+                        )
+                        Text(
+                            text = version.uiString.localized(),
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
             }
+            SystemForwardButton { onInput(FirstRunInput.NavigateNext) }
         }
         SizedSpacer(16.dp)
         Text(

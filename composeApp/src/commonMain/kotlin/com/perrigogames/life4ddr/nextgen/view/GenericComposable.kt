@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.Dp
 import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.MR
 import com.perrigogames.life4ddr.nextgen.PlatformType
+import dev.icerock.moko.resources.ImageResource
 import dev.icerock.moko.resources.compose.painterResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
@@ -35,6 +36,34 @@ fun SystemBackButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
+    SystemSpecialButton(
+        androidRes = MR.images.arrow_back,
+        iosRes = MR.images.arrow_back_ios_new,
+        modifier = modifier,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun SystemForwardButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+) {
+    SystemSpecialButton(
+        androidRes = MR.images.arrow_forward,
+        iosRes = MR.images.arrow_forward_ios,
+        modifier = modifier,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun SystemSpecialButton(
+    androidRes: ImageResource,
+    iosRes: ImageResource,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+) {
     val appInfo = koinInject<AppInfo>()
     IconButton(
         modifier = modifier,
@@ -43,9 +72,9 @@ fun SystemBackButton(
         Icon(
             painter = painterResource(
                 if (appInfo.platform == PlatformType.IOS) {
-                    MR.images.arrow_back_ios_new
+                    iosRes
                 } else {
-                    MR.images.arrow_back
+                    androidRes
                 }
             ),
             contentDescription = "Back"

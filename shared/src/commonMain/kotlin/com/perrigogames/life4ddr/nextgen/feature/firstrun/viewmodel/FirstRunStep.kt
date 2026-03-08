@@ -9,14 +9,10 @@ import dev.icerock.moko.resources.desc.ResourceStringDesc
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 
-sealed class FirstRunStep(
-    val showNextButton: Boolean = true
-) {
-    data object Landing : FirstRunStep(showNextButton = false)
+sealed class FirstRunStep {
+    data object Landing : FirstRunStep()
 
-    sealed class PathStep(
-        showNextButton: Boolean = true,
-    ) : FirstRunStep(showNextButton) {
+    sealed class PathStep : FirstRunStep() {
 
         abstract val path: FirstRunPath
 
@@ -61,11 +57,11 @@ sealed class FirstRunStep(
         data class InitialRankSelection(
             override val path: FirstRunPath,
             val availableMethods: List<InitState> = path.allowedRankSelectionTypes(),
-        ) : PathStep(showNextButton = false)
+        ) : PathStep()
 
         data class Completed(
             override val path: FirstRunPath,
             val initStep: InitState,
-        ) : PathStep(showNextButton = false)
+        ) : PathStep()
     }
 }
