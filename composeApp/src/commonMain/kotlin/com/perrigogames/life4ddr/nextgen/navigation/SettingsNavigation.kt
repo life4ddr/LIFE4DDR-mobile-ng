@@ -9,7 +9,9 @@ import com.perrigogames.life4ddr.nextgen.feature.settings.SettingsDestination
 fun NavGraphBuilder.settingsNavigation(
     navController: NavController,
 ) {
-    composable(SettingsDestination.SongLock.route) {
-        SongLockScreen()
+    composable<SettingsDestination.SongLock> {
+        SongLockScreen {
+            navController.navigateUp()
+        }
     }
 }

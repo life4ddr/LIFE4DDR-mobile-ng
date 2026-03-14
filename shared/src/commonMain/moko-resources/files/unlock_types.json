@@ -1,0 +1,17 @@
+{
+    "version": 1,
+    "types": [
+        { "key": 10,  "name": "Asia Exclusive" },
+        { "key": 20,  "name": "Gold Cabinet" },
+        { "key": 190, "name": "Grand Prix" },
+        { "key": 240, "name": "BEMANI Pro League" },
+        { "key": 250, "name": "Flare Locked", "isExpanded": false },
+        { "key": 260, "name": "Time Event Locked" },
+        { "key": 270, "name": "Golden League" },
+        { "key": 280, "name": "Extra Savior", "isExpanded": false },
+        { "key": 290, "name": "Galaxy Brave" },
+        { "key": 300, "name": "Platinum Pass" },
+        { "key": 310, "name": "BEMANI Pro League Triple" },
+        { "key": 320, "name": "pop'n & DDR Cheers × Cheers!!" }
+    ]
+}

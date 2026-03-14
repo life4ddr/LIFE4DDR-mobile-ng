@@ -9,6 +9,7 @@ import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.MOTD_FILE_N
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE_NAME
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.UNLOCKS_FILE_NAME
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.datastore.DataStoreSettings
 import okio.Path.Companion.toPath
@@ -32,6 +33,7 @@ class Life4Application: Application(), KoinComponent {
                 ranksReader = AndroidDataReader(MR.files.ranks_json, RANKS_FILE_NAME),
                 songsReader = AndroidDataReader(MR.files.songs_json, SONGS_FILE_NAME),
                 trialsReader = AndroidDataReader(MR.files.trials_json, TRIALS_FILE_NAME),
+                unlocksReader = AndroidDataReader(MR.files.unlock_types_json, UNLOCKS_FILE_NAME),
             ) {
                 single<Context> { this@Life4Application }
                     single<DataStore<Preferences>> {

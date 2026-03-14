@@ -26,6 +26,7 @@ import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.MOTD_FILE_N
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE_NAME
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.UNLOCKS_FILE_NAME
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.datastore.DataStoreSettings
 import dev.datlag.kcef.KCEF
@@ -49,6 +50,7 @@ fun main() = application {
             ranksReader = JvmDataReader(MR.files.ranks_json.readText(), File("../desktopData/$RANKS_FILE_NAME")),
             songsReader = JvmDataReader(MR.files.songs_json.readText(), File("../desktopData/$SONGS_FILE_NAME")),
             trialsReader = JvmDataReader(MR.files.trials_json.readText(), File("../desktopData/$TRIALS_FILE_NAME")),
+            unlocksReader = JvmDataReader(MR.files.unlock_types_json.readText(), File("../desktopData/$UNLOCKS_FILE_NAME")),
         ) {
             single<DataStore<Preferences>> {
                 PreferenceDataStoreFactory.createWithPath(

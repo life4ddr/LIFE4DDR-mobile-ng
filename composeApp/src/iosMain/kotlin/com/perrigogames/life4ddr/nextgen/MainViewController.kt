@@ -5,6 +5,7 @@ import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.MOTD_FILE_N
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE_NAME
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.UNLOCKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.base.LocalDataReader
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
 import com.russhwolf.settings.ExperimentalSettingsApi
@@ -36,6 +37,7 @@ fun MainViewController(
             ranksReader = IosDataReader(MR.files.ranks_json, RANKS_FILE_NAME),
             songsReader = IosDataReader(MR.files.songs_json, SONGS_FILE_NAME),
             trialsReader = IosDataReader(MR.files.trials_json, TRIALS_FILE_NAME),
+            unlocksReader = IosDataReader(MR.files.unlock_types_json, UNLOCKS_FILE_NAME),
         ) {
             val settings = NSUserDefaultsSettings(defaults)
             single<Settings> { settings }

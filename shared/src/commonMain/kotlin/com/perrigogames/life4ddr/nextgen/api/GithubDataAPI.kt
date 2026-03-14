@@ -2,6 +2,7 @@ package com.perrigogames.life4ddr.nextgen.api
 
 import com.perrigogames.life4ddr.nextgen.AppInfo
 import com.perrigogames.life4ddr.nextgen.api.base.baseHttpClient
+import com.perrigogames.life4ddr.nextgen.feature.unlocks.data.UnlockTypes
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.LadderRankData
 import com.perrigogames.life4ddr.nextgen.feature.motd.data.MessageOfTheDay
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialData
@@ -28,6 +29,7 @@ interface GithubDataAPI {
     suspend fun getSongList(): String
     suspend fun getTrials(): TrialData
     suspend fun getMotd(): MessageOfTheDay
+    suspend fun getUnlockTypes(): UnlockTypes
 
     companion object {
         const val MOTD_FILE_NAME = "motd.json"
@@ -35,6 +37,7 @@ interface GithubDataAPI {
         const val RANKS_FILE_NAME = "ranks.json"
         const val SONGS_FILE_NAME = "songs.json"
         const val TRIALS_FILE_NAME = "trials.json"
+        const val UNLOCKS_FILE_NAME = "unlock_types.json"
     }
 }
 
@@ -60,6 +63,9 @@ class DefaultGithubDataAPI: GithubDataAPI, KoinComponent {
 
     override suspend fun getMotd(): MessageOfTheDay =
         client.get { appGithub(GithubDataAPI.MOTD_FILE_NAME) }.body()
+
+    override suspend fun getUnlockTypes(): UnlockTypes =
+        client.get { appGithub(GithubDataAPI.UNLOCKS_FILE_NAME) }.body()
 
     private fun HttpRequestBuilder.appGithub(
         filename: String,

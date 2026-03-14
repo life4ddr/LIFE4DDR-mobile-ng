@@ -1,5 +1,6 @@
 package com.perrigogames.life4ddr.nextgen.feature.songresults.manager
 
+import co.touchlab.kermit.Logger
 import com.perrigogames.life4ddr.nextgen.enums.ClearType
 import com.perrigogames.life4ddr.nextgen.enums.DifficultyClass
 import com.perrigogames.life4ddr.nextgen.enums.PlayStyle
@@ -8,13 +9,12 @@ import com.perrigogames.life4ddr.nextgen.feature.ladder.data.MAPointsGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.MAPointsStackedGoal
 import com.perrigogames.life4ddr.nextgen.feature.ladder.data.SongsClearGoal
 import com.perrigogames.life4ddr.nextgen.feature.songresults.data.*
-import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer.Companion.BASIC_LOCKS
-import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ChartResultOrganizer.Companion.EXPANDED_LOCKS
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.ResultPresentation.*
-import com.perrigogames.life4ddr.nextgen.injectLogger
+import com.perrigogames.life4ddr.nextgen.feature.unlocks.manager.UnlockTypeManager
 import com.perrigogames.life4ddr.nextgen.model.BaseModel
 import com.perrigogames.life4ddr.nextgen.util.split
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlin.time.ExperimentalTime
 
@@ -46,60 +46,14 @@ interface ChartResultOrganizer {
         config: FilterState,
         enableDifficultyTiers: Boolean = false,
     ): Flow<ResultsBundle>
-
-    companion object {
-        const val ASIA_EXCLUSIVE = 10
-        const val GOLD_CAB = 20
-        const val GRAND_PRIX = 190
-        const val BEMANI_PRO_LEAGUE = 240
-        const val FLARE_LOCKED = 250
-        const val TIME_EVENT_LOCKED = 260
-        const val GOLDEN_LEAGUE = 270
-        const val EXTRA_SAVIOR = 280
-        const val GALAXY_BRAVE = 290
-        const val PLATINUM_PASS = 300
-        const val BEMANI_PRO_LEAGUE_TRIPLE = 310
-
-        val EXPANDED_LOCKS = listOf(
-            ASIA_EXCLUSIVE,
-            GOLD_CAB,
-            GRAND_PRIX,
-            TIME_EVENT_LOCKED,
-            GALAXY_BRAVE,
-            GOLDEN_LEAGUE,
-            PLATINUM_PASS,
-            BEMANI_PRO_LEAGUE,
-            BEMANI_PRO_LEAGUE_TRIPLE
-        )
-
-        val BASIC_LOCKS = EXPANDED_LOCKS + listOf(
-            FLARE_LOCKED,
-            EXTRA_SAVIOR,
-        )
-
-        fun lockTypeName(lockType: Int?) = when(lockType) {
-            ASIA_EXCLUSIVE -> "Asia Exclusive ($lockType)"
-            BEMANI_PRO_LEAGUE_TRIPLE,
-            BEMANI_PRO_LEAGUE -> "BEMANI Pro League ($lockType)"
-            EXTRA_SAVIOR -> "Extra Savior ($lockType)"
-            FLARE_LOCKED -> "Flare Locked ($lockType)"
-            GALAXY_BRAVE -> "Galaxy Brave ($lockType)"
-            GOLD_CAB -> "Gold Cab ($lockType)"
-            GOLDEN_LEAGUE -> "Golden League ($lockType)"
-            GRAND_PRIX -> "Grand Prix ($lockType)"
-            PLATINUM_PASS -> "DDR Platinum Pass ($lockType)"
-            TIME_EVENT_LOCKED -> "Time Event Locked ($lockType)"
-            else -> "Unspecified reason ($lockType)"
-        }
-    }
 }
 
 @OptIn(ExperimentalTime::class)
 class DefaultChartResultOrganizer(
     private val songResultsManager: SongResultsManager,
+    private val unlockTypeManager: UnlockTypeManager,
+    private val logger: Logger
 ): BaseModel(), ChartResultOrganizer {
-
-    private val logger by injectLogger("ChartResultOrganizer")
 
     private val basicOrganizer = songResultsManager.library.map { base ->
         base.groupByPlayStyle().mapValues { (_, l1) ->
@@ -115,21 +69,24 @@ class DefaultChartResultOrganizer(
         return if (config in chartListCache) {
             chartListCache[config]!!
         } else {
-            basicOrganizer
-                .map { it[config.selectedPlayStyle] ?: emptyMap() }
-                .map { diffClassMap: DifficultyClassMap ->
+            combine(
+                basicOrganizer
+                    .map { it[config.selectedPlayStyle] ?: emptyMap() },
+                unlockTypeManager.basicLockKeys,
+                unlockTypeManager.expandedLockKeys,
+            ) { diffClassMap: DifficultyClassMap, basicLocks, expandedLocks ->
                     val result = config.difficultyClassSelection.flatMap { diffClass ->
                         val diffNumMap = diffClassMap[diffClass] ?: emptyMap()
                         config.difficultyNumberRange.flatMap { diffNum ->
                             diffNumMap[diffNum] ?: emptyList()
                         }
                     }
-                    return@map when(config.ignoreFilterType) {
+                    return@combine when(config.ignoreFilterType) {
                         IgnoreFilterType.BASIC -> {
-                            result.filterNot { it.chart.song.deleted || (it.chart.lockType ?: 0) in BASIC_LOCKS }
+                            result.filterNot { it.chart.song.deleted || (it.chart.lockType ?: 0) in basicLocks }
                         }
                         IgnoreFilterType.EXPANDED -> {
-                            result.filterNot { it.chart.song.deleted || (it.chart.lockType ?: 0) in EXPANDED_LOCKS }
+                            result.filterNot { it.chart.song.deleted || (it.chart.lockType ?: 0) in expandedLocks }
                         }
                         IgnoreFilterType.ALL_ACTIVE -> {
                             result.filterNot { it.chart.song.deleted }

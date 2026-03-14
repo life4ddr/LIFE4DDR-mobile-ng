@@ -12,6 +12,7 @@ import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.PLACEMENTS_
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.RANKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.SONGS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.TRIALS_FILE_NAME
+import com.perrigogames.life4ddr.nextgen.api.GithubDataAPI.Companion.UNLOCKS_FILE_NAME
 import com.perrigogames.life4ddr.nextgen.api.base.LocalDataReader
 import com.perrigogames.life4ddr.nextgen.api.base.LocalUncachedDataReader
 import com.perrigogames.life4ddr.nextgen.feature.banners.manager.DefaultBannerManager
@@ -74,9 +75,13 @@ import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultS
 import com.perrigogames.life4ddr.nextgen.feature.songresults.manager.SongResultsManager
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ScoreListViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.TrialRemoteData
+import com.perrigogames.life4ddr.nextgen.feature.unlocks.data.UnlockTypesRemoteData
+import com.perrigogames.life4ddr.nextgen.feature.unlocks.manager.DefaultUnlockTypeManager
+import com.perrigogames.life4ddr.nextgen.feature.unlocks.manager.UnlockTypeManager
 import com.perrigogames.life4ddr.nextgen.feature.trials.db.TrialDatabaseHelper
 import com.perrigogames.life4ddr.nextgen.api.base.baseHttpClient
 import com.perrigogames.life4ddr.nextgen.feature.jackets.db.JacketsDatabaseHelper
+import com.perrigogames.life4ddr.nextgen.feature.settings.viewmodel.SongLockPageProvider
 import com.perrigogames.life4ddr.nextgen.feature.songresults.viewmodel.ManualScoreInputViewModel
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course
 import com.perrigogames.life4ddr.nextgen.feature.trials.data.Course.Companion.COURSE_NAME
@@ -144,6 +149,7 @@ val coreModule = module {
     single { MotdLocalRemoteData(get(), get(), get(named(MOTD_FILE_NAME)), logger = get { parametersOf("MotdLocalRemoteData") }) }
     single { SongListRemoteData(get(), get(), get(named(SONGS_FILE_NAME)), logger = get { parametersOf("SongListRemoteData") }) }
     single { TrialRemoteData(get(named(COURSE_NAME)), get(), get(named(TRIALS_FILE_NAME)), logger = get { parametersOf("TrialRemoteData") }) }
+    single { UnlockTypesRemoteData(get(), get(), get(named(UNLOCKS_FILE_NAME)), logger = get { parametersOf("UnlockTypesRemoteData") }) }
     single { baseHttpClient(get(), getLogger("HttpClient")) }
 
     single { PlacementManager() }
@@ -156,7 +162,8 @@ val coreModule = module {
     single<TrialScraper> { DefaultTrialScraper(get(), get(), get(), getLogger("TrialScraper")) }
     single<TrialRecordsManager> { DefaultTrialRecordsManager(get(), get(), getLogger("TrialRecords")) }
     single<SongDataManager> { DefaultSongDataManager() }
-    single<ChartResultOrganizer> { DefaultChartResultOrganizer(get()) }
+    single<UnlockTypeManager> { DefaultUnlockTypeManager(get()) }
+    single<ChartResultOrganizer> { DefaultChartResultOrganizer(get(), get(), getLogger("ChartResultOrganizer")) }
     single<FilterPanelSettings> { DefaultFilterPanelSettings() }
     single<FirstRunSettings> { DefaultFirstRunSettings() }
     single<LadderSettings> { DefaultLadderSettings() }
@@ -167,6 +174,7 @@ val coreModule = module {
     single<UserRankSettings> { DefaultUserRankSettings() }
     single<AlertSettings> { DefaultAlertSettings() }
     single { SettingsPageProvider() }
+    single { SongLockPageProvider(get(), get()) }
     single { GoalStateManager() }
     single { LadderGoalMapper() }
     single<DeeplinkManager> { DefaultDeeplinkManager() }
@@ -223,6 +231,7 @@ fun makeNativeModule(
     ranksReader: LocalDataReader,
     songsReader: LocalDataReader,
     trialsReader: LocalDataReader,
+    unlocksReader: LocalDataReader,
     additionalItems: Module.() -> Unit = {},
 ) = module {
     single { appInfo }
@@ -231,5 +240,6 @@ fun makeNativeModule(
     single(named(RANKS_FILE_NAME)) { ranksReader }
     single(named(SONGS_FILE_NAME)) { songsReader }
     single(named(TRIALS_FILE_NAME)) { trialsReader }
+    single(named(UNLOCKS_FILE_NAME)) { unlocksReader }
     additionalItems()
 }
